@@ -377,4 +377,46 @@
     </div>
   </section>
 
-  <!-- ===================== FUTURE PLANS (trimmed, grounded) =====================
+  <!-- ===================== FUTURE PLANS (trimmed, grounded) ===================== -->
+  <section class="section" id="future">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Right Now</h2></div>
+      <div class="future-box">
+        <p><strong>The focus this year:</strong> a strong CGPA, ACCA Applied Knowledge cleared, and real client work continuing alongside AI automation skill-building.</p>
+        <p style="margin-top:14px;">Everything else on this site gets built one real, completed thing at a time — not planned in advance and back-filled later.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="wrap" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px; align-items:center; width:100%;">
+      <span class="mono">© 2026 Yash Chaudhary — a record kept, not a résumé performed.</span>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  function toggleTL(btn){
+    const item = btn.closest('.tl-item');
+    item.classList.toggle('open');
+  }
+  function toggleFolio(btn){
+    const folio = btn.closest('.folio');
+    folio.classList.toggle('open');
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.folio').forEach(folio=>{
+      const realCards = folio.querySelectorAll('.card').length;
+      const countEl = folio.querySelector('.count');
+      if(countEl) countEl.textContent = realCards + ' logged';
+    });
+    const total = document.querySelectorAll('.folio .card').length;
+    const heroCount = document.getElementById('ledger-count');
+    if(heroCount) heroCount.textContent = total;
+  });
+</script>
+
+</body>
+</html>
