@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yash Chaudhary — The Ledger</title>
+<meta name="description" content="A working record of finance, AI, and strategy credentials — Yash Chaudhary">
+
+<!--
+  ============================================================
+  HOW TO EDIT THIS FILE (no coding knowledge needed)
+  ============================================================
+  1. TO ADD A NEW CARD: find the <section> for the right Folio
+     (Finance, AI/Tech, Strategy, Marketing) and copy one whole
+     <article class="card">...</article> block, paste it right
+     after, then just change the text inside.
+
+  2. TO MARK SOMETHING AS DONE: change class="card" status-planned"
+     to class="card status-done" on that <article> tag, and change
+     the <span class="status-tag"> text from "Planned" to "Completed"
+     (you can also add the date, e.g. "Completed — Sep 2026").
+
+  3. TO CHANGE THE BIG NUMBER at the top (currently 56), edit the
+     <span id="ledger-count"> text near the top of the <body>.
+
+  4. Nothing else needs to change. Save the file and re-upload to
+     GitHub — the site updates automatically.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0B1B2B;
+    --ink-2:#112B42;
+    --ink-3:#16344F;
+    --parchment:#F1E9D6;
+    --parchment-dim:#DCD0AF;
+    --gold:#C6A24D;
+    --gold-dim:#8A742F;
+    --teal:#4E8577;
+    --text:#EAE3D3;
+    --text-dim:#9FB0BE;
+    --line: rgba(198,162,77,0.35);
+    --radius: 2px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold); color:var(--ink);}
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:0.01em;
+  }
+
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  a{color:var(--gold); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+
+  /* ============ LAYOUT SHELL ============ */
+  .shell{
+    display:grid;
+    grid-template-columns:88px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width:820px){
+    .shell{grid-template-columns:1fr;}
+  }
+
+  /* ============ SPINE (left nav) ============ */
+  .spine{
+    background:var(--ink-2);
+    border-right:1px solid var(--line);
+    position:sticky; top:0; height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:28px 0;
+    gap:36px;
+  }
+  @media (max-width:820px){
+    .spine{
+      position:sticky; height:auto; width:100%;
+      flex-direction:row; justify-content:space-between;
+      padding:14px 18px; gap:0; border-right:none;
+      border-bottom:1px solid var(--line);
+      z-index:20;
+    }
+  }
+  .spine-mark{
+    writing-mode:vertical-rl;
+    font-family:'Fraunces', serif;
+    font-size:13px;
+    letter-spacing:0.28em;
+    color:var(--gold-dim);
+    text-transform:uppercase;
+  }
+  @media (max-width:820px){ .spine-mark{writing-mode:horizontal-tb; font-size:11px;} }
+
+  .folio-nav{display:flex; flex-direction:column; gap:22px; align-items:center;}
+  @media (max-width:820px){ .folio-nav{flex-direction:row; gap:16px;} }
+  .folio-nav a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    writing-mode:vertical-rl;
+    letter-spacing:0.08em;
+    padding:6px 2px;
+    border-left:2px solid transparent;
+    transition:color .25s ease, border-color .25s ease;
+  }
+  @media (max-width:820px){ .folio-nav a{writing-mode:horizontal-tb; border-left:none; border-bottom:2px solid transparent;} }
+  .folio-nav a:hover, .folio-nav a.active{
+    color:var(--gold); text-decoration:none; border-color:var(--gold);
+  }
+
+  /* ============ MAIN ============ */
+  main{padding:0 0 120px 0;}
+
+  /* ---- HERO ---- */
+  .hero{
+    padding:96px 64px 72px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  @media (max-width:820px){ .hero{padding:56px 24px 48px;} }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at top right, rgba(198,162,77,0.10), transparent 55%);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 5vw, 4rem);
+    color:var(--parchment);
+    max-width:14ch;
+    line-height:1.05;
+  }
+  .hero p.lede{
+    max-width:52ch;
+    color:var(--text-dim);
+    font-size:1.05rem;
+    margin-top:22px;
+  }
+
+  .ledger-strip{
+    margin-top:52px;
+    display:flex; flex-wrap:wrap; gap:0;
+    border:1px solid var(--line);
+    background:var(--ink-2);
+  }
+  .ledger-stat{
+    flex:1 1 160px;
+    padding:22px 26px;
+    border-right:1px solid var(--line);
+  }
+  .ledger-stat:last-child{border-right:none;}
+  .ledger-stat .num{
+    font-family:'Fraunces', serif;
+    font-size:2.1rem;
+    color:var(--gold);
+    display:block;
+    line-height:1;
+  }
+  .ledger-stat .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--text-dim);
+    margin-top:8px; display:block;
+  }
+
+  /* ---- FOLIO SECTIONS ---- */
+  .folio{
+    padding:72px 64px 24px;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:24px;
+  }
+  @media (max-width:820px){ .folio{padding:56px 22px 12px;} }
+
+  .folio-head{
+    display:flex; align-items:baseline; gap:18px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+  .folio-num{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--gold-dim);
+    font-size:14px;
+    letter-spacing:0.1em;
+  }
+  .folio-head h2{font-size:clamp(1.5rem,3vw,2rem); color:var(--parchment);}
+  .folio-desc{color:var(--text-dim); max-width:60ch; margin:14px 0 40px;}
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+
+  .card{
+    background:var(--ink);
+    padding:22px 22px 20px;
+    position:relative;
+    opacity:0; transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease, background .25s ease;
+  }
+  .card.in-view{opacity:1; transform:translateY(0);}
+  .card:hover{background:var(--ink-3);}
+
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .card h3{font-size:1.05rem; color:var(--parchment); line-height:1.3;}
+  .issuer{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--teal);
+    margin-top:6px;
+  }
+  .card p.desc{font-size:0.9rem; color:var(--text-dim); margin-top:12px;}
+
+  .status-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:4px 8px;
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .status-done .status-tag{color:var(--ink); background:var(--gold); border-color:var(--gold);}
+  .status-progress .status-tag{color:var(--gold); border-color:var(--gold-dim);}
+
+  /* seal, appears once a card is marked done */
+  .seal{
+    display:none;
+    position:absolute; top:16px; right:16px;
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1.5px solid var(--gold);
+    align-items:center; justify-content:center;
+    color:var(--gold);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9px;
+  }
+  .status-done .seal{display:flex;}
+  .status-done .card-top{padding-right:44px;}
+
+  /* ---- empty state (folio 4 client work) ---- */
+  .empty-state{
+    border:1px dashed var(--line);
+    padding:34px 28px;
+    color:var(--text-dim);
+    font-size:0.95rem;
+    max-width:64ch;
+  }
+  .empty-state .mono{color:var(--gold-dim); font-size:12px; display:block; margin-bottom:10px; letter-spacing:0.06em;}
+
+  /* ---- FOOTER ---- */
+  footer{
+    padding:56px 64px 40px;
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px;
+    align-items:center;
+  }
+  @media (max-width:820px){ footer{padding:40px 22px;} }
+  footer .mono{color:var(--text-dim); font-size:12px;}
+  .footer-links{display:flex; gap:24px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .card{transition:none; opacity:1; transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <nav class="spine" aria-label="Section navigation">
+    <div class="spine-mark">THE LEDGER</div>
+    <div class="folio-nav">
+      <a href="#folio-finance">I — Finance</a>
+      <a href="#folio-tech">II — AI &amp; Tech</a>
+      <a href="#folio-strategy">III — Strategy</a>
+      <a href="#folio-marketing">IV — Marketing</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero">
+      <div class="eyebrow">Personal Record · Est. 2026</div>
+      <h1>A working ledger of what I've actually built.</h1>
+      <p class="lede">B.Com (Hons) student, Delhi University — pursuing ACCA, US CMA, and CFA alongside a self-directed run through global finance, strategy, and AI-automation credentials. Every entry below is something I sat down and completed, not something I merely watched.</p>
+
+      <div class="ledger-strip">
+        <div class="ledger-stat">
+          <span class="num" id="ledger-count">56</span>
+          <span class="label">Items Logged</span>
+        </div>
+        <div class="ledger-stat">
+          <span class="num">4</span>
+          <span class="label">Folios</span>
+        </div>
+        <div class="ledger-stat">
+          <span class="num">Aug '26 –</span>
+          <span class="label">Record Opened</span>
+        </div>
+        <div class="ledger-stat">
+          <span class="num"><a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" style="color:var(--gold)">↗</a></span>
+          <span class="label">LinkedIn Profile</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FOLIO I — FINANCE & VALUATION ===================== -->
+    <section class="folio" id="folio-finance">
+      <div class="folio-head">
+        <span class="folio-num">FOLIO I</span>
+        <h2>Finance &amp; Valuation</h2>
+      </div>
+      <p class="folio-desc">Investment banking, audit, and core credentialing work — the foundation underneath ACCA, CMA, and CFA.</p>
+
+      <div class="card-grid">
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Investment Foundations Certificate</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">CFA Institute</div>
+          <p class="desc">Ethics, financial reporting, corporate finance, equity, fixed income, and derivatives — direct groundwork for CFA Level 1.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Investment Banking Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">J.P. Morgan</div>
+          <p class="desc">M&amp;A company profiling, target screening, and a pitch recommendation memo.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Financial Modeling Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Goldman Sachs</div>
+          <p class="desc">Built a full revenue and expense forecast model used to evaluate a live investment decision.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Investment Banking Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Citi</div>
+          <p class="desc">Five-year revenue forecasting, comparable-company analysis, and an M&amp;A growth memo.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Investment Banking Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Bank of America</div>
+          <p class="desc">DCF valuation, acquisition target selection, and client-facing presentation work.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Audit &amp; Data Analytics Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">KPMG</div>
+          <p class="desc">Reviewed client financial statements and flagged audit risk using data analysis.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Audit &amp; Assurance Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Deloitte</div>
+          <p class="desc">Client risk assessment, reporting analysis, and a formal recommendation memo.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Assurance / Tax Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">PwC</div>
+          <p class="desc">Financial data review for assurance purposes and a corporate tax scenario.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Financial Accounting Advisory</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">EY</div>
+          <p class="desc">Advised a client on financial reporting standards — closes out all four Big Four firms.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Financial Modeling — Intro</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Corporate Finance Institute</div>
+          <p class="desc">Core modeling fundamentals using the same templates junior analysts use in real jobs.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Financial Modeling Crash Course</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Wall Street Prep</div>
+          <p class="desc">Three-statement modeling basics, the same material used to train actual bank analysts.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Diploma in Business Finance</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Alison</div>
+          <p class="desc">Budgeting, financial statement literacy, and cost analysis fundamentals.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Sustainable Finance Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">S&amp;P Global</div>
+          <p class="desc">A ratings and market-intelligence style case, core to credit and fixed-income thinking.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Financial Inclusion Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Mastercard</div>
+          <p class="desc">Used data to design a financial-inclusion product strategy for underserved customers.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Market Concepts Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Bloomberg</div>
+          <p class="desc">Worked with real market data to build a data-driven market insight.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================== FOLIO II — AI AUTOMATION & TECH ===================== -->
+    <section class="folio" id="folio-tech">
+      <div class="folio-head">
+        <span class="folio-num">FOLIO II</span>
+        <h2>AI Automation &amp; Tech</h2>
+      </div>
+      <p class="folio-desc">Applied AI, data, and cloud fundamentals — the technical layer underneath a finance-and-automation freelance practice.</p>
+
+      <div class="card-grid">
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>n8n &amp; AI Agent Systems</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Self-Directed, 90-Day Build</div>
+          <p class="desc">Multi-tool AI agents, MCP, RAG pipelines, and real business-automation workflows built from scratch.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>AI Fundamentals</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Microsoft Learn</div>
+          <p class="desc">Core AI/ML concepts, how AI services work, and responsible AI principles.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Power BI / Data Fundamentals</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Microsoft Learn</div>
+          <p class="desc">Data modeling, visualization, and dashboard-building.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Quantitative Research Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">J.P. Morgan</div>
+          <p class="desc">Python-based price estimation, contract pricing, and credit-risk bucketing.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Software Engineering Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">J.P. Morgan</div>
+          <p class="desc">Backend fundamentals — APIs, data validation, transaction processing.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>AI / Data Fundamentals</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">IBM SkillsBuild</div>
+          <p class="desc">AI basics, data fundamentals, and career-readiness modules.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Cloud Practitioner Essentials</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">AWS Skill Builder</div>
+          <p class="desc">Cloud computing fundamentals — how modern businesses run infrastructure.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Business Fundamentals Trail</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Salesforce Trailhead</div>
+          <p class="desc">CRM fundamentals, business-process automation, and data management.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Pandas &amp; Intro to ML + Titanic Competition</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Kaggle</div>
+          <p class="desc">Practical data analysis and basic machine learning applied to real, messy datasets.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Applied Digital Skills</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Google</div>
+          <p class="desc">Spreadsheet automation, data organization, and presentation building.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Google Data Analytics</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Coursera (Audit)</div>
+          <p class="desc">Data cleaning, spreadsheets, SQL basics, and data visualization.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================== FOLIO III — STRATEGY & CONSULTING ===================== -->
+    <section class="folio" id="folio-strategy">
+      <div class="folio-head">
+        <span class="folio-num">FOLIO III</span>
+        <h2>Strategy &amp; Consulting</h2>
+      </div>
+      <p class="folio-desc">Structured business problem-solving — case-method thinking borrowed from top consulting firms and business schools.</p>
+
+      <div class="card-grid">
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Strategy Consulting Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">BCG</div>
+          <p class="desc">Built a business turnaround strategy for a client with declining profits.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Strategy / Consulting Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Accenture</div>
+          <p class="desc">Client project scoping and a stakeholder-ready recommendation.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Consulting / Digital Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Cognizant / Tata Group</div>
+          <p class="desc">A technology-consulting case blending business analysis with digital transformation.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Advanced Strategy / Pricing Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Forage — Closing Program</div>
+          <p class="desc">A deeper case in pricing, market entry, or competitive analysis.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>15.401 Finance Theory</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">MITx (Audit)</div>
+          <p class="desc">Time value of money, valuation, capital budgeting, risk and return.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>HarvardX Coursework</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Harvard (Audit)</div>
+          <p class="desc">Self-studied coursework in behavioral economics and data-driven decision making.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>e-corner &amp; Technology Entrepreneurship</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Stanford (Audit)</div>
+          <p class="desc">Faculty resources and a full audited course on startup fundamentals.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Google Project Management</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Coursera (Audit)</div>
+          <p class="desc">Project planning, stakeholder management, and agile fundamentals.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================== FOLIO IV — MARKETING & CLIENT WORK ===================== -->
+    <section class="folio" id="folio-marketing">
+      <div class="folio-head">
+        <span class="folio-num">FOLIO IV</span>
+        <h2>Marketing &amp; Client Work</h2>
+      </div>
+      <p class="folio-desc">Digital marketing credentials, plus real work done for real clients — added only once actually completed.</p>
+
+      <div class="card-grid">
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Digital Marketing Certification</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">HubSpot Academy</div>
+          <p class="desc">SEO, content strategy, social media, and email marketing fundamentals.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Content Marketing Certification</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">HubSpot Academy</div>
+          <p class="desc">Content strategy, storytelling, and distribution.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Social Media Marketing</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Meta Blueprint</div>
+          <p class="desc">Instagram/Facebook ad strategy, audience targeting, and content planning.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Social Media Marketing Certification</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">HootSuite Academy</div>
+          <p class="desc">Social strategy, scheduling, and cross-platform analytics.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Google Analytics Certification (GAIQ)</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Google Skillshop</div>
+          <p class="desc">Digital analytics — tracking, reporting, audience insight.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Google Ads Search Certification</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Google Skillshop</div>
+          <p class="desc">Search advertising fundamentals and campaign structure.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Sales / Marketing Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">PepsiCo</div>
+          <p class="desc">Consumer-goods sales strategy and marketing decision-making.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+        <article class="card status-planned">
+          <div class="card-top"><h3>Marketing Simulation</h3><span class="status-tag">Planned</span></div>
+          <div class="issuer">Red Bull</div>
+          <p class="desc">Brand marketing strategy and campaign planning.</p>
+          <div class="seal">VERIF.</div>
+        </article>
+
+      </div>
+
+      <div class="empty-state" style="margin-top:1px;">
+        <span class="mono">REAL CLIENT WORK — CASE STUDIES</span>
+        Entries here will be added only once a real, completed client project exists — freelance social media work, and later, automation projects for paying clients. Nothing is listed until it's actually done.
+      </div>
+    </section>
+
+    <footer>
+      <span class="mono">© 2026 — Yash Chaudhary. A record kept, not a résumé performed.</span>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // Scroll-reveal for cards
+  const cards = document.querySelectorAll('.card');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  cards.forEach(c=>io.observe(c));
+
+  // Active folio-nav highlight
+  const navLinks = document.querySelectorAll('.folio-nav a');
+  const sections = document.querySelectorAll('.folio');
+  const navIO = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      const id = entry.target.getAttribute('id');
+      const link = document.querySelector(`.folio-nav a[href="#${id}"]`);
+      if(!link) return;
+      if(entry.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, {rootMargin:"-40% 0px -50% 0px"});
+  sections.forEach(s=>navIO.observe(s));
+
+  // Auto-count items logged based on actual card elements present
+  const total = document.querySelectorAll('.card').length;
+  const countEl = document.getElementById('ledger-count');
+  if(countEl) countEl.textContent = total;
+</script>
+
+</body>
+</html>
