@@ -44,6 +44,9 @@
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .hint{color:var(--dim);font-size:.72rem;margin-top:4px;}
 
+  .tabs{display:flex;gap:8px;margin:18px 0 22px;flex-wrap:wrap;}
+  .tab{padding:10px 18px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--dim);font-size:.85rem;font-weight:600;cursor:pointer;}
+  .tab.active{background:var(--pink);border-color:var(--pink);color:#fff;}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
   .btn{padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;}
   .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;flex:1;}
@@ -81,7 +84,13 @@
       <a class="back" href="unfiltered.html">← back to Unfiltered Yash</a>
       <span class="saved-note" id="draft-note"></span>
     </div>
-    <h1>Write Today's <span>Entry</span></h1>
+    <h1 id="mode-title">Write Today's <span>Entry</span></h1>
+
+    <div class="tabs" id="mode-tabs">
+      <button class="tab active" data-mode="entry">✏️ Daily Entry</button>
+      <button class="tab" data-mode="edit">🖊️ Edit Past Entry</button>
+      <button class="tab" data-mode="section">📌 Post to Section</button>
+    </div>
     <p style="color:var(--dim);font-size:.88rem;margin-top:0;">Pick the date, write the whole day on the big note, and drop a YouTube link if there's a video. Everything else — Day number, video title, thumbnail — happens automatically.</p>
 
     <fieldset>
@@ -130,13 +139,13 @@
       </div>
     </fieldset>
 
-    <div class="actions">
-      <button class="btn primary" onclick="generate()">Generate entry code</button>
+      <div class="actions">
+      <button class="btn primary" id="btn-generate" onclick="generate()">Generate entry code</button>
       <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
     </div>
 
     <div class="output" id="output-wrap" style="display:none;">
-      <div class="steps">
+      <div class="steps" id="publish-steps">
         <b>How to publish this entry:</b><br>
         1. Copy the code below.<br>
         2. Open <b>entries-data.js</b> in your site files (github.com → your repo → entries-data.js → pencil icon).<br>
@@ -148,6 +157,98 @@
       <textarea id="output" readonly onclick="this.select()"></textarea>
       <div class="actions">
         <button class="btn primary" onclick="copyOutput()">📋 Copy code</button>
+      </div>
+    </div>
+
+    <!-- ========== EDIT PAST ENTRY ========== -->
+    <div class="section-wrap" id="edit-wrap" style="display:none;">
+      <fieldset>
+        <legend>Edit a past daily entry</legend>
+        <label class="first">Pick the day you want to edit</label>
+        <select id="edit-select"></select>
+        <div class="hint">Load it, change whatever you want, then Generate again. Paste the new code in the SAME place of the OLD entry (replace the whole old block).</div>
+        <div class="actions" style="margin-top:12px;">
+          <button class="btn" onclick="loadEntryForEdit()">Load this entry</button>
+        </div>
+      </fieldset>
+      <div class="steps" style="margin-top:8px;">
+        <b>Editing rule:</b> after generating, open entries-data.js, find the SAME old day block (search its date), <b>delete that whole block and paste the new one in its place</b>. Keep the comma after it. Same Commit changes step as always.
+      </div>
+    </div>
+
+    <!-- ========== POST TO SECTION ========== -->
+    <div class="section-wrap" id="sec-wrap" style="display:none;">
+      <fieldset>
+        <legend>Post to a section</legend>
+        <label class="first">Which section?</label>
+        <select id="sec-select" onchange="onSecTypeChange()">
+          <option value="random">🖼️ Random Stuff</option>
+          <option value="tried">🧪 Things I Tried</option>
+          <option value="learned">📘 Things I Learned</option>
+        </select>
+
+        <div id="sec-random-fields">
+          <label class="first">Your post</label>
+          <textarea id="s-random-text" placeholder="Bro the ARSD canteen queue is genuinely a full workout 😭"></textarea>
+          <div class="hint">A thought, meme caption, screenshot, half-idea — anything.</div>
+        </div>
+
+        <div id="sec-tried-fields" style="display:none;">
+          <label class="first">What did you try? (title)</label>
+          <input type="text" id="s-tried-title" placeholder="e.g. Editing my first YouTube documentary in CapCut">
+          <div class="row2">
+            <div>
+              <label class="first">Expected</label>
+              <input type="text" id="s-tried-expected" placeholder="What you thought would happen">
+            </div>
+            <div>
+              <label class="first">What actually happened</label>
+              <input type="text" id="s-tried-actual" placeholder="The reality">
+            </div>
+          </div>
+          <label>What you learned</label>
+          <textarea id="s-tried-learned" placeholder="The takeaway…"></textarea>
+          <div class="row2">
+            <div>
+              <label class="first">Result</label>
+              <select id="s-tried-outcome">
+                <option value="worked">✅ Worked</option>
+                <option value="failed">❌ Failed</option>
+                <option value="mixed">🔀 Mixed</option>
+              </select>
+            </div>
+            <div>
+              <label class="first">Date</label>
+              <input type="text" id="s-tried-date" placeholder="e.g. 12 August 2026">
+            </div>
+          </div>
+        </div>
+
+        <div id="sec-learned-fields" style="display:none;">
+          <label class="first">Course / skill name</label>
+          <input type="text" id="s-learned-course" placeholder="e.g. Financial Accounting — Basics">
+          <div class="row2">
+            <div>
+              <label class="first">Status</label>
+              <select id="s-learned-status">
+                <option value="in">🔄 In progress</option>
+                <option value="done">✅ Completed</option>
+              </select>
+            </div>
+            <div>
+              <label class="first">Completed date (if done)</label>
+              <input type="text" id="s-learned-done" placeholder="e.g. August 2026">
+            </div>
+          </div>
+          <label>What you learned (separate points with • or new lines)</label>
+          <textarea id="s-learned-items" placeholder="Double-entry system • Journal vs ledger • Trial balance"></textarea>
+          <label>How are you using it</label>
+          <input type="text" id="s-learned-used" placeholder="e.g. ACCA foundation + freelance invoices">
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn primary" onclick="generateSection()">Generate post code</button>
       </div>
     </div>
   </div>
@@ -163,11 +264,26 @@
       document.getElementById('lock').classList.remove('show');
       document.getElementById('form-card').classList.add('show');
       loadDraft();
+      if(window._prefillSection){
+        const tab = document.querySelector('.tab[data-mode="section"]');
+        tab.click();
+        const sel = document.getElementById('sec-select');
+        for(const o of sel.options){ if(o.value===window._prefillSection){ sel.value = o.value; break; } }
+        onSecTypeChange();
+      }
     } else {
       document.getElementById('lock-error').style.display = 'block';
     }
   }
   document.getElementById('passcode').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+  // deep link: unfiltered.html → "Post to Section" tab with the right section preselected
+  (function(){
+    try{
+      const p = new URLSearchParams(location.search);
+      const sec = p.get('section');
+      if(sec){ window._prefillSection = sec==='learned-tried' ? 'learned' : sec; }
+    }catch(e){}
+  })();
 
   // ---- Auto day count: Day 01 = 2026-08-11. Pick a date and the day number fills itself. ----
   const START_DATE = new Date('2026-08-11T00:00:00');
@@ -277,14 +393,20 @@
     document.getElementById('output-wrap').style.display = 'block';
     document.getElementById('output-wrap').scrollIntoView({behavior:'smooth'});
     saveDraft();
+    rememberPublished(e);
+  }
+  function rememberPublished(e){
+    try{
+      const raw = localStorage.getItem('uy_published2');
+      let arr = raw ? JSON.parse(raw) : [];
+      // update existing same-day entry, else append
+      const idx = arr.findIndex(x=>x.day===e.day && x.date===e.date);
+      const rec = { day:e.day, date:e.date, dateLabel:e.dateLabel, journal:e.journal, photo:e.photo, documentary:e.documentary ? { youtubeUrl:e.documentary.youtubeUrl } : null };
+      if(idx>=0) arr[idx] = rec; else arr.push(rec);
+      localStorage.setItem('uy_published2', JSON.stringify(arr));
+    }catch(err){}
   }
 
-  function copyOutput(){
-    const t = document.getElementById('output');
-    t.select();
-    document.execCommand('copy');
-    alert('Copied! Now paste it into entries-data.js (right above the closing ];, with a comma after the previous entry).');
-  }
 
   // autosave draft to localStorage so nothing is lost mid-writing
   function saveDraft(){
@@ -312,6 +434,127 @@
     if(!confirm("Clear everything you have written on this page?")) return;
     localStorage.removeItem('uy_draft2');
     location.reload();
+  }
+
+  // ---------- MODE TABS: daily entry / edit past / post to section ----------
+  let currentMode = 'entry';
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      switchMode(btn.dataset.mode);
+    });
+  });
+  function switchMode(mode){
+    currentMode = mode;
+    const isEntry = (mode==='entry');
+    // show/hide daily form parts
+    document.querySelectorAll('#form-card > fieldset').forEach(fs=>{ fs.style.display = isEntry ? '' : 'none'; });
+    document.getElementById('btn-generate').style.display = isEntry ? '' : 'none';
+    document.getElementById('draft-note').style.display = isEntry ? '' : 'none';
+    document.getElementById('edit-wrap').style.display = (mode==='edit') ? '' : 'none';
+    document.getElementById('sec-wrap').style.display = (mode==='section') ? '' : 'none';
+    document.getElementById('output-wrap').style.display = 'none';
+    document.getElementById('mode-title').innerHTML =
+      mode==='entry' ? 'Write Today\u2019s <span>Entry</span>' :
+      mode==='edit'  ? 'Edit a <span>Past Entry</span>' :
+                       'Post to a <span>Section</span>';
+    if(mode==='edit') populateEditSelect();
+  }
+  function populateEditSelect(){
+    const sel = document.getElementById('edit-select');
+    sel.innerHTML = '';
+    try{
+      const raw = localStorage.getItem('uy_published2');
+      const published = raw ? JSON.parse(raw) : [];
+      if(published.length===0){ sel.innerHTML = '<option>No entries saved yet — write your first entry on the Daily Entry tab.</option>'; return; }
+      published.forEach((e,i)=>{
+        const o = document.createElement('option');
+        o.value = i;
+        o.textContent = 'Day '+String(e.day||'?').padStart(2,'0')+' — '+e.dateLabel+' — '+((e.journal||'').slice(0,40)+(e.journal.length>40?'…':''));
+        sel.appendChild(o);
+      });
+    }catch(err){ sel.innerHTML='<option>Error reading saved entries</option>'; }
+  }
+  function loadEntryForEdit(){
+    const sel = document.getElementById('edit-select');
+    if(!sel.options.length || sel.options[0].disabled) return;
+    let entry;
+    try{ entry = JSON.parse(localStorage.getItem('uy_published2'))[sel.value]; }catch(e){ alert('Could not load entry'); return; }
+    if(!entry){ alert('Entry not found'); return; }
+    // switch to entry mode and fill the form
+    const daily = document.querySelector('.tab[data-mode="entry"]');
+    daily.click();
+    if(entry.day) document.getElementById('f-day').value = entry.day;
+    if(entry.date) document.getElementById('f-date').value = entry.date;
+    if(entry.journal) document.getElementById('f-journal').value = entry.journal;
+    if(entry.photo){ document.getElementById('f-photo-src').value = entry.photo.src||''; document.getElementById('f-photo-cap').value = entry.photo.caption||''; }
+    if(entry.documentary && entry.documentary.youtubeUrl){ document.getElementById('f-doc-url').value = entry.documentary.youtubeUrl; previewVideo(); }
+    window._editMode = entry; // generate() will replace-in-place message
+    alert('Entry loaded on the Daily Entry tab. Edit anything, then press Generate entry code — the new code replaces the OLD block for this day.');
+  }
+
+  function copyOutput(){
+    const t = document.getElementById('output');
+    t.select();
+    document.execCommand('copy');
+    const msg = window._editMode
+      ? 'Copied! Open entries-data.js, find the OLD block for this same day, DELETE it completely and paste this new block in its place. Then Commit changes.'
+      : 'Copied! Paste it into entries-data.js right above the closing ];, with a comma after the previous entry. Then Commit changes.';
+    alert(msg);
+  }
+
+  // ---------- SECTION POST GENERATOR ----------
+  function onSecTypeChange(){
+    const t = document.getElementById('sec-select').value;
+    document.getElementById('sec-random-fields').style.display = t==='random' ? '' : 'none';
+    document.getElementById('sec-tried-fields').style.display  = t==='tried'   ? '' : 'none';
+    document.getElementById('sec-learned-fields').style.display= t==='learned' ? '' : 'none';
+  }
+  function esc(s){ return (s||'').replace(/"/g,'\\"'); }
+  function generateSection(){
+    const t = document.getElementById('sec-select').value;
+    let out = '', file = '', array = '', note = '';
+    if(t==='random'){
+      const text = document.getElementById('s-random-text').value.trim();
+      if(!text){ alert('Write something first.'); return; }
+      out = `  { type: "text", text: "${esc(text)}" }`;
+      file='sections-data.js'; array='RANDOM_STUFF'; note='';
+    } else if(t==='tried'){
+      const title = document.getElementById('s-tried-title').value.trim();
+      if(!title){ alert('At least a title is needed.'); return; }
+      out = `  {\n    title: "${esc(title)}",\n`;
+      const td = document.getElementById('s-tried-date').value.trim();
+      if(td) out += `    date: "${esc(td)}",\n`;
+      out += `    outcome: "${document.getElementById('s-tried-outcome').value}",\n`;
+      const exp = document.getElementById('s-tried-expected').value.trim();
+      if(exp) out += `    expected: "${esc(exp)}",\n`;
+      const act = document.getElementById('s-tried-actual').value.trim();
+      if(act) out += `    actual: "${esc(act)}",\n`;
+      const lrn = document.getElementById('s-tried-learned').value.trim();
+      if(lrn) out += `    learned: "${esc(lrn)}",\n`;
+      out += `  }`;
+      file='sections-data.js'; array='THINGS_TRIED';
+    } else {
+      const course = document.getElementById('s-learned-course').value.trim();
+      if(!course){ alert('At least the course/skill name is needed.'); return; }
+      const status = document.getElementById('s-learned-status').value;
+      out = `  {\n    course: "${esc(course)}",\n`;
+      out += `    completedDate: ${status==='done' ? '"'+esc(document.getElementById('s-learned-done').value.trim())+'"' : 'null'},\n`;
+      out += `    inProgress: ${status==='in'},\n`;
+      const items = document.getElementById('s-learned-items').value.trim().replace(/\n+/g,' ').trim();
+      if(items) out += `    learned: "${esc(items)}",\n`;
+      const used = document.getElementById('s-learned-used').value.trim();
+      if(used) out += `    usedFor: "${esc(used)}",\n`;
+      out += `    proofUrl: ""\n  }`;
+      file='sections-data.js'; array='THINGS_LEARNED';
+    }
+    document.getElementById('output').value = out;
+    document.getElementById('publish-steps').innerHTML =
+      '<b>How to publish this post:</b><br>1. Copy the code below.<br>2. Open <b>'+file+'</b> in your repo (pencil icon).<br>3. Paste it inside the <b>'+array+'</b> array — right above its closing <b>];</b>, with a comma <b>,</b> after the item above it.<br>4. Click <b>Commit changes</b>. It shows up on the site within a minute or two.';
+    document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('output-wrap').scrollIntoView({behavior:'smooth'});
+    window._editMode = null;
   }
 
   document.getElementById('form-card').addEventListener('input', ()=>{ clearTimeout(window._sd); window._sd=setTimeout(saveDraft, 600); });

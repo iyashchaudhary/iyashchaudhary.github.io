@@ -214,7 +214,9 @@
   .empty-state .big{font-family:'Fraunces',serif; font-size:1.4rem; color:var(--uy-text); margin-bottom:8px;}
 
   /* ---------- SECTION HEADER ---------- */
-  .sec-head{margin-bottom:22px;}
+  .sec-head{margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .btn-add{padding:10px 18px;border-radius:20px;border:1px solid var(--uy-pink);background:rgba(226,85,123,.14);color:var(--uy-pink);font-weight:600;font-size:.82rem;cursor:pointer;}
+  .btn-add:hover{background:var(--uy-pink);color:#fff;}
   .sec-head .day-num{font-size:clamp(2rem,4.4vw,2.6rem);}
   .sec-head p{color:var(--uy-text-dim);margin-top:8px;font-size:.95rem;}
 
@@ -524,9 +526,13 @@
     random: { icon:'🖼️', title:'Random Stuff', sub:"Thoughts, screenshots, half-ideas — things that don't belong anywhere else." }
   };
 
+  function secAddButton(view){
+    if(view==='daily') return '';
+    return '<button class="btn btn-add" onclick="location.href=\'admin.html?section='+view+'\'">+ Add new</button>';
+  }
   function secHeader(view){
     const m = secMeta[view];
-    return `<div class="sec-head"><div class="day-num">${m.icon} ${m.title}</div><p>${m.sub}</p></div>`;
+    return `<div class="sec-head"><div class="day-num">${m.icon} ${m.title}</div><div class="btn btn-add" onclick="location.href='admin.html?section=${view}'">+ Add new</div><p>${m.sub}</p></div>`;
   }
   function emptyBlock(msg){
     return `<div class="empty-state" style="padding:40px 10px;"><div class="big">Nothing here yet</div>${msg} 🌸</div>`;
@@ -559,7 +565,7 @@
           <div class="lt-card">
             <div class="tc-top"><h4>${esc(c.course)}</h4><span class="pill course">${c.inProgress ? 'In progress' : 'Completed'}</span></div>
             <div class="tc-date">${esc(c.completedDate||'')}</div>
-            ${c.learned && c.learned.length ? `<div class="tc-row"><b>Learned</b>${esc(c.learned.join(' · '))}</div>`:''}
+              ${c.learned && (c.learned.length ? `<div class="tc-row"><b>Learned</b>${esc(c.learned.join ? c.learned.join(' · ') : c.learned)}</div>` : '')}
             ${c.usedFor ? `<div class="tc-row"><b>Used for</b>${esc(c.usedFor)}</div>` : ''}
             ${c.proofUrl ? `<div class="tc-row"><a style="color:var(--uy-pink);font-size:.85rem;" href="${esc(c.proofUrl)}" target="_blank" rel="noopener">View certificate →</a></div>` : ''}
           </div>`;
