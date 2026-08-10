@@ -57,6 +57,16 @@
   .btn.publish{background:#2da44e; border-color:#2da44e; color:#fff; flex:1;}
   .btn.publish:disabled{opacity:0.5; cursor:not-allowed;}
   .btn.ghost{color:var(--dim);}
+  .upload-area{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;}
+  .upload-area .btn{flex:none;display:inline-flex;align-items:center;gap:8px;}
+  .upload-area input[type=file]{display:none;}
+  .upload-status{font-size:.76rem;color:var(--dim);min-height:16px;}
+  .upload-status.ok{color:#7ee787;}
+  .upload-status.err{color:#e2557b;}
+  .up-preview{display:none;margin-top:10px;border:1px dashed var(--pink-soft);border-radius:10px;padding:8px;max-width:220px;background:rgba(226,85,123,.05);}
+  .up-preview.show{display:block;}
+  .up-preview img{width:100%;border-radius:8px;max-height:180px;object-fit:cover;}
+  .up-preview .meta{font-size:.72rem;color:var(--dim);margin-top:6px;font-family:'IBM Plex Mono',monospace;word-break:break-all;}
 
   .yt-preview{display:none;margin-top:14px;border:1px dashed var(--pink-soft);border-radius:12px;padding:12px;background:rgba(226,85,123,.06);}
   .yt-preview.show{display:block;}
@@ -71,6 +81,8 @@
   .steps{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--dim);margin-bottom:12px;}
   .steps b{color:var(--text);}
   .saved-note{font-size:.76rem;color:var(--dim);margin-top:4px;}
+  .search-wrap{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-bottom:10px;}
+  .search-wrap .btn{flex:none;}
 </style>
 </head>
 <body>
@@ -128,7 +140,16 @@
 
       <fieldset>
         <legend>Photo (optional)</legend>
-        <label class="first">Image URL or filename</label>
+        <div class="upload-area">
+          <button class="btn" type="button" onclick="document.getElementById('f-photo-file').click()">📁 Upload Image</button>
+          <input type="file" id="f-photo-file" accept="image/*" onchange="onPhotoFilePicked(this)">
+          <div class="upload-status" id="up-status"></div>
+        </div>
+        <div class="up-preview" id="up-preview">
+          <img id="up-preview-img" alt="preview">
+          <div class="meta" id="up-preview-meta"></div>
+        </div>
+        <label class="first">Image URL or filename <span style="color:#7ee787;">(filled automatically when you upload)</span></label>
         <input type="text" id="f-photo-src" placeholder="e.g. photos/day02.jpg">
         <label>Caption</label>
         <input type="text" id="f-photo-cap" placeholder="e.g. Sunset from the terrace">
@@ -151,6 +172,14 @@
     <div class="section-wrap" id="edit-wrap" style="display:none;">
       <fieldset>
         <legend>Edit a past daily entry</legend>
+        <div class="search-wrap">
+          <div>
+            <label class="first">Search by Day number or Date</label>
+            <input type="text" id="edit-search" placeholder="e.g. 12 or 2026-08-12" oninput="filterEditList()">
+            <div class="hint">Type a day number like <b>12</b> or a date like <b>2026-08-12</b> to filter. Leave blank to show all.</div>
+          </div>
+          <button class="btn" onclick="clearEditSearch()" style="margin-bottom:2px;">✕</button>
+        </div>
         <label class="first">Pick the day you want to edit</label>
         <select id="edit-select"></select>
         <div class="actions" style="margin-top:12px;">
@@ -371,6 +400,87 @@
 
   function esc(s){ return (s||'').toString().replace(/"/g,'\\"'); }
 
+  // ============ AUTOMATIC IMAGE UPLOAD (gallery → GitHub) ============
+  let uploadedPhotoFilename = null;
+
+  async function onPhotoFilePicked(input){
+    const file = input.files && input.files[0];
+    if(!file) return;
+    const status = document.getElementById('up-status');
+    status.className = 'upload-status';
+    status.textContent = 'Preparing image…';
+    try {
+      // 1. Compress image to a web-friendly size (max 1440px wide, webp)
+      const dataUrl = await compressImage(file);
+      // 2. Show local preview immediately
+      document.getElementById('up-preview-img').src = dataUrl;
+      document.getElementById('up-preview').classList.add('show');
+      // 3. Build filename: photos/dayNN.{jpg|webp|png}
+      const day = document.getElementById('f-day').value || '??';
+      const ext = file.type === 'image/png' ? 'png' : 'webp';
+      const filename = `photos/day${String(day).padStart(2,'0')}.${ext}`;
+      document.getElementById('up-preview-meta').textContent = filename;
+      // 4. Upload straight to GitHub (if token available), else keep local-only
+      const token = localStorage.getItem('uy_gh_token');
+      if(!token){
+        uploadedPhotoFilename = filename;
+        document.getElementById('f-photo-src').value = filename;
+        status.className = 'upload-status';
+        status.textContent = 'Image ready. Add GitHub token first — it will be uploaded when you Publish.';
+        return;
+      }
+      status.textContent = 'Uploading to GitHub… (this may take a few seconds)';
+      await uploadImageToGitHub(token, filename, dataUrl);
+      uploadedPhotoFilename = filename;
+      document.getElementById('f-photo-src').value = filename;
+      status.className = 'upload-status ok';
+      status.textContent = '✅ Uploaded to GitHub. Filename added automatically!';
+    } catch(e){
+      status.className = 'upload-status err';
+      status.textContent = '❌ Upload failed: ' + e.message;
+      console.error(e);
+    } finally { input.value = ''; }
+  }
+
+  function compressImage(file){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1440;
+        let w = img.width, h = img.height;
+        if(w > MAX || h > MAX){ const r = Math.min(MAX/w, MAX/h); w = Math.round(w*r); h = Math.round(h*r); }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        // webp if browser supports, else jpeg
+        const mime = canvas.toDataURL('image/webp').length > 0 && canvas.toDataURL('image/webp').startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
+        resolve(canvas.toDataURL(mime, 0.82));
+      };
+      img.onerror = () => reject(new Error('Could not read image file'));
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  async function uploadImageToGitHub(token, filename, dataUrl){
+    const base64 = dataUrl.split(',')[1];
+    const ghUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`;
+    // Check if file already exists (create vs update)
+    const head = await fetch(ghUrl, { headers: { 'Authorization': `token ${token}` } });
+    let sha = undefined;
+    if(head.status === 200){ sha = (await head.json()).sha; }
+    else if(head.status === 403){ throw new Error('GitHub API rate limit or auth error. Check your token.'); }
+    const res = await fetch(ghUrl, {
+      method: 'PUT',
+      headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: `Add image ${filename}`, content: base64, ...(sha ? { sha } : {}) })
+    });
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error((err && err.message) ? err.message : 'HTTP ' + res.status);
+    }
+    return res.json();
+  }
+
   function handleGenerate(){
     if(currentMode==='entry') generateEntry();
     else if(currentMode==='section') generateSection();
@@ -383,7 +493,8 @@
     const journal = document.getElementById('f-journal').value.trim();
     if(!date || !journal) return alert('Date and Journal needed');
     const paras = journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    const photoSrc = document.getElementById('f-photo-src').value.trim();
+    let photoSrc = document.getElementById('f-photo-src').value.trim();
+    if(!photoSrc && uploadedPhotoFilename) photoSrc = uploadedPhotoFilename;
     const docUrl = document.getElementById('f-doc-url').value.trim();
     let out = `  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
     if(photoSrc) out += `    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
@@ -520,16 +631,21 @@
     document.getElementById('output-wrap').style.display = 'block';
   }
 
-  function populateEditSelect(){
+  function populateEditSelect(filter){
     const sel = document.getElementById('edit-select');
     sel.innerHTML = '';
+    const f = (filter||'').trim().toLowerCase();
     (window.UNFILTERED_ENTRIES || []).slice().reverse().forEach(e=>{
+      if(f && String(e.day) !== f && e.date !== f) return;
       const o = document.createElement('option');
       o.value = e.day;
       o.textContent = `Day ${String(e.day).padStart(2,'0')} — ${e.date} — ${e.journal.slice(0,40)}...`;
       sel.appendChild(o);
     });
+    if(!sel.options.length) sel.innerHTML = '<option disabled>No entries match your search</option>';
   }
+  function filterEditList(){ populateEditSelect(document.getElementById('edit-search').value); }
+  function clearEditSearch(){ document.getElementById('edit-search').value = ''; populateEditSelect(); }
   function loadEntryForEdit(){ loadEntryFromData(parseInt(document.getElementById('edit-select').value)); }
   function loadEntryFromData(dayNum){
     const e = (window.UNFILTERED_ENTRIES || []).find(x=>x.day===dayNum);
@@ -542,6 +658,16 @@
     document.getElementById('f-photo-cap').value = e.photo?.caption || '';
     document.getElementById('f-doc-url').value = e.documentary?.youtubeUrl || '';
     previewVideo();
+    uploadedPhotoFilename = e.photo?.src || null;
+    const prev = document.getElementById('up-preview');
+    if(e.photo?.src){
+      document.getElementById('up-preview-img').src = e.photo.src;
+      document.getElementById('up-preview-meta').textContent = e.photo.src;
+      prev.classList.add('show');
+      const st = document.getElementById('up-status');
+      st.className = 'upload-status ok';
+      st.textContent = '✅ Image linked. Upload a new one to replace it.';
+    } else { prev.classList.remove('show'); }
     window._editMode = e; window._isEditingExisting = true;
   }
 
