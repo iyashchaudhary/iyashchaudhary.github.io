@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write Entry — Unfiltered Yash</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#150A0F; --panel:#1D1017; --panel2:#241420; --line:rgba(255,255,255,0.09);
+    --pink:#E2557B; --pink-soft:#F2A6BE; --text:#F5EEE6; --dim:#B9A3AC;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(ellipse 900px 500px at 85% -5%, rgba(226,85,123,0.14), transparent 60%),var(--bg);
+    color:var(--text); font-family:'Inter',sans-serif; padding:0 0 80px;}
+  a{color:var(--pink-soft);}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 18px 40px;}
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+  .top .back{font-size:.82rem;color:var(--dim);}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:1.7rem;margin:0 0 4px;}
+  h1 span{color:var(--pink);}
+  .lock, .form-card{display:none;}
+  .lock.show, .form-card.show{display:block;}
+
+  .lock{max-width:360px;margin:80px auto;text-align:center;}
+  .lock input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:1rem;margin:14px 0;}
+  .lock button{width:100%;padding:13px;border-radius:12px;border:none;background:var(--pink);color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;}
+  .lock p{color:var(--dim);font-size:.85rem;}
+
+  fieldset{border:1px solid var(--line);border-radius:16px;padding:18px 18px 20px;margin-bottom:16px;}
+  legend{font-family:'Fraunces',serif;font-weight:600;color:var(--pink-soft);padding:0 8px;font-size:.95rem;}
+  label{display:block;font-size:.8rem;color:var(--dim);margin:12px 0 6px;font-weight:600;}
+  label.first{margin-top:0;}
+  input[type=text], input[type=date], input[type=number], input[type=url], textarea{
+    width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--text);font-family:'Inter',sans-serif;font-size:.92rem;resize:vertical;
+  }
+  textarea{min-height:64px;font-family:'Inter',sans-serif;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .hint{color:var(--dim);font-size:.72rem;margin-top:4px;}
+
+  .card-block{border:1px dashed var(--line);border-radius:12px;padding:12px;margin-bottom:10px;position:relative;}
+  .card-block select{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text);margin-bottom:8px;}
+  .card-block .rm{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:.9rem;}
+  .add-btn{background:none;border:1px dashed var(--pink-soft);color:var(--pink-soft);padding:9px 14px;border-radius:10px;font-size:.82rem;cursor:pointer;width:100%;}
+
+  .line-list .li-row{display:flex;gap:8px;margin-bottom:8px;}
+  .line-list .li-row input{flex:1;}
+  .line-list .li-row button{background:none;border:none;color:var(--dim);cursor:pointer;font-size:1rem;flex:none;}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+  .btn{padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;}
+  .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;flex:1;}
+  .btn.ghost{color:var(--dim);}
+
+  .output{margin-top:22px;}
+  .output textarea{width:100%;min-height:280px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;background:#0f080c;border:1px solid var(--line);border-radius:12px;padding:14px;color:#dfe;line-height:1.5;}
+  .steps{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--dim);margin-bottom:12px;}
+  .steps b{color:var(--text);}
+  .saved-note{font-size:.76rem;color:var(--dim);margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lock show" id="lock">
+    <h1 style="justify-content:center;">✏️ Unfiltered <span>Yash</span></h1>
+    <p>This page is just for you. Enter your passcode.</p>
+    <input type="text" id="passcode" placeholder="Passcode" autocomplete="off">
+    <button onclick="tryUnlock()">Unlock</button>
+    <p id="lock-error" style="color:#e2557b;display:none;">Wrong passcode, try again.</p>
+  </div>
+
+  <div class="form-card" id="form-card">
+    <div class="top">
+      <a class="back" href="unfiltered.html">← back to Unfiltered Yash</a>
+      <span class="saved-note" id="draft-note"></span>
+    </div>
+    <h1>Write Today's <span>Entry</span></h1>
+    <p style="color:var(--dim);font-size:.88rem;margin-top:0;">Fill only what happened. Skip anything that doesn't apply — a lazy day can be five lines and nothing else.</p>
+
+    <fieldset>
+      <legend>Basics</legend>
+      <div class="row2">
+        <div>
+          <label class="first">Day number</label>
+          <input type="number" id="f-day" placeholder="auto-filled from date">
+          <div class="hint">Auto = (date − 14 Aug 2026) + 1. You can still type your own.</div>
+        </div>
+        <div>
+          <label class="first">Date</label>
+          <input type="date" id="f-date">
+        </div>
+      </div>
+      <label>One-line title (optional)</label>
+      <input type="text" id="f-title" placeholder="e.g. The day I finally slept on time.">
+    </fieldset>
+
+    <fieldset>
+      <legend>Sticky notes</legend>
+      <div id="cards-list"></div>
+      <button type="button" class="add-btn" onclick="addCard()">+ Add a sticky note</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Today in 5 lines</legend>
+      <div class="line-list" id="five-list"></div>
+      <button type="button" class="add-btn" onclick="addLine('five-list')">+ Add a line</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Reminder for tomorrow (optional)</legend>
+      <div class="line-list" id="reminder-list"></div>
+      <button type="button" class="add-btn" onclick="addLine('reminder-list')">+ Add a reminder</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Photo (optional)</legend>
+      <label class="first">Image URL or filename</label>
+      <input type="text" id="f-photo-src" placeholder="e.g. photos/day02.jpg">
+      <div class="hint">Upload the photo to the same folder as this page, then put its filename here.</div>
+      <label>Caption</label>
+      <input type="text" id="f-photo-cap" placeholder="e.g. Sunset from the terrace">
+    </fieldset>
+
+    <fieldset>
+      <legend>Today's stats (optional, 1–10)</legend>
+      <div class="row4">
+        <div><label class="first">📈 Productivity</label><input type="number" min="1" max="10" id="f-productivity"></div>
+        <div><label class="first">⚡ Energy</label><input type="number" min="1" max="10" id="f-energy"></div>
+        <div><label class="first">🎯 Focus</label><input type="number" min="1" max="10" id="f-focus"></div>
+        <div><label class="first">💛 Happiness</label><input type="number" min="1" max="10" id="f-happiness"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Today's documentary (optional)</legend>
+      <label class="first">Video title</label>
+      <input type="text" id="f-doc-title" placeholder="e.g. Slower Than Yesterday">
+      <label>YouTube URL</label>
+      <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=...">
+      <label>Duration</label>
+      <input type="text" id="f-doc-dur" placeholder="e.g. 9:32">
+    </fieldset>
+
+    <fieldset>
+      <legend>Tags (optional)</legend>
+      <label class="first">Comma-separated</label>
+      <input type="text" id="f-tags" placeholder="college, gym, lowenergy">
+    </fieldset>
+
+    <fieldset>
+      <legend>Quote (optional)</legend>
+      <label class="first">Quote text</label>
+      <input type="text" id="f-quote-text">
+      <label>Author</label>
+      <input type="text" id="f-quote-author">
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn primary" onclick="generate()">Generate entry code</button>
+      <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
+    </div>
+
+    <div class="output" id="output-wrap" style="display:none;">
+      <div class="steps">
+        <b>How to publish this entry:</b><br>
+        1. Copy the code below.<br>
+        2. Open <b>entries-data.js</b> in your site files.<br>
+        3. Paste it as a new object inside the <b>UNFILTERED_ENTRIES</b> array (add a comma before it if it's not the first entry).<br>
+        4. If you added a photo, upload that image file into the same folder.<br>
+        5. Save and re-upload/push your site files. Done — the new day appears automatically.
+      </div>
+      <textarea id="output" readonly onclick="this.select()"></textarea>
+      <div class="actions">
+        <button class="btn primary" onclick="copyOutput()">📋 Copy code</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const PASSCODE = "yash2026"; // change this to whatever you want
+
+  function tryUnlock(){
+    const val = document.getElementById('passcode').value.trim();
+    if(val === PASSCODE){
+      document.getElementById('lock').classList.remove('show');
+      document.getElementById('form-card').classList.add('show');
+      loadDraft();
+    } else {
+      document.getElementById('lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('passcode').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+
+  const cardTypes = [
+    ['college','🏫 College'], ['workout','🏋️ Workout'], ['study','📖 Study'],
+    ['work','💻 Work'], ['mood','😊 Mood'], ['note','📌 Other']
+  ];
+
+  function addCard(type, label, text){
+    const wrap = document.createElement('div');
+    wrap.className = 'card-block';
+    wrap.innerHTML = `
+      <button type="button" class="rm" onclick="this.parentElement.remove()">✕</button>
+      <select class="c-type">${cardTypes.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join('')}</select>
+      <input type="text" class="c-label" placeholder="Label (e.g. College)" style="margin-bottom:8px;">
+      <textarea class="c-text" placeholder="What happened..."></textarea>
+    `;
+    document.getElementById('cards-list').appendChild(wrap);
+    if(type) wrap.querySelector('.c-type').value = type;
+    if(label) wrap.querySelector('.c-label').value = label;
+    if(text) wrap.querySelector('.c-text').value = text;
+  }
+
+  function addLine(listId, val){
+    const wrap = document.createElement('div');
+    wrap.className = 'li-row';
+    wrap.innerHTML = `<input type="text" value="${val?val.replace(/"/g,'&quot;'):''}" placeholder="..."><button type="button" onclick="this.parentElement.remove()">✕</button>`;
+    document.getElementById(listId).appendChild(wrap);
+  }
+
+  // start with a couple blank rows
+  addCard(); addLine('five-list'); addLine('five-list'); addLine('five-list');
+
+  // ---- Auto day count: Day 01 = 2026-08-14. Pick a date and the day number fills itself. ----
+  const START_DATE = new Date('2026-08-14T00:00:00');
+  const DAY_MS = 86400000;
+  function fillDayNumber(){
+    const dateVal = document.getElementById('f-date').value;
+    if(!dateVal) return;
+    const picked = new Date(dateVal+'T00:00:00');
+    const diff = Math.round((picked - START_DATE)/DAY_MS);
+    if(diff >= 0) document.getElementById('f-day').value = diff + 1;
+  }
+  document.getElementById('f-date').addEventListener('input', fillDayNumber);
+  document.getElementById('f-date').addEventListener('change', fillDayNumber);
+  // default the date field to today when the form opens
+  (function(){
+    const now = new Date();
+    const iso = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    if(!document.getElementById('f-date').value) document.getElementById('f-date').value = iso;
+    fillDayNumber();
+  })();
+
+  function collect(){
+    const cards = [...document.querySelectorAll('#cards-list .card-block')].map(b=>({
+      type: b.querySelector('.c-type').value,
+      label: b.querySelector('.c-label').value.trim(),
+      text: b.querySelector('.c-text').value.trim()
+    })).filter(c=>c.text);
+
+    const five = [...document.querySelectorAll('#five-list input')].map(i=>i.value.trim()).filter(Boolean);
+    const reminder = [...document.querySelectorAll('#reminder-list input')].map(i=>i.value.trim()).filter(Boolean);
+    const tags = document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+
+    const stats = {};
+    ['productivity','energy','focus','happiness'].forEach(k=>{
+      const v = document.getElementById('f-'+k).value;
+      if(v) stats[k] = parseInt(v,10);
+    });
+
+    const dateVal = document.getElementById('f-date').value;
+    let dateLabel = '', weekday = '';
+    if(dateVal){
+      const d = new Date(dateVal+'T00:00:00');
+      dateLabel = d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+      weekday = d.toLocaleDateString('en-US',{weekday:'long'});
+    }
+
+    return {
+      day: parseInt(document.getElementById('f-day').value,10) || null,
+      date: dateVal,
+      dateLabel, weekday,
+      title: document.getElementById('f-title').value.trim(),
+      cards,
+      photo: { src: document.getElementById('f-photo-src').value.trim(), caption: document.getElementById('f-photo-cap').value.trim() },
+      fiveLines: five,
+      reminder,
+      stats: Object.keys(stats).length ? stats : null,
+      documentary: (document.getElementById('f-doc-title').value || document.getElementById('f-doc-url').value) ? {
+        title: document.getElementById('f-doc-title').value.trim(),
+        youtubeUrl: document.getElementById('f-doc-url').value.trim(),
+        duration: document.getElementById('f-doc-dur').value.trim()
+      } : null,
+      tags,
+      quote: document.getElementById('f-quote-text').value.trim() ? {
+        text: document.getElementById('f-quote-text').value.trim(),
+        author: document.getElementById('f-quote-author').value.trim()
+      } : null
+    };
+  }
+
+  function js(v){ return JSON.stringify(v, null, 2); }
+
+  function generate(){
+    const e = collect();
+    if(!e.date){
+      alert('Please pick a Date.');
+      return;
+    }
+    if(!e.day){
+      const diff = Math.round((new Date(e.date+'T00:00:00') - new Date('2026-08-14T00:00:00'))/DAY_MS);
+      e.day = diff >= 0 ? diff + 1 : null;
+      if(!e.day){ alert('Date must be on or after 14 August 2026 (Day 01).'); return; }
+      document.getElementById('f-day').value = e.day;
+    }
+    let out = `  {\n`;
+    out += `    day: ${e.day},\n`;
+    out += `    date: "${e.date}",\n`;
+    out += `    dateLabel: "${e.dateLabel}",\n`;
+    out += `    weekday: "${e.weekday}",\n`;
+    if(e.title) out += `    title: "${e.title.replace(/"/g,'\\"')}",\n`;
+    if(e.cards.length){
+      out += `    cards: [\n`;
+      out += e.cards.map(c=>`      { type: "${c.type}", label: "${(c.label||'').replace(/"/g,'\\"')}", text: "${c.text.replace(/"/g,'\\"')}" }`).join(',\n');
+      out += `\n    ],\n`;
+    }
+    if(e.photo.src){
+      out += `    photo: { src: "${e.photo.src}", caption: "${e.photo.caption.replace(/"/g,'\\"')}" },\n`;
+    }
+    if(e.fiveLines.length){
+      out += `    fiveLines: [\n      ${e.fiveLines.map(l=>`"${l.replace(/"/g,'\\"')}"`).join(',\n      ')}\n    ],\n`;
+    }
+    if(e.reminder.length){
+      out += `    reminder: [\n      ${e.reminder.map(l=>`"${l.replace(/"/g,'\\"')}"`).join(',\n      ')}\n    ],\n`;
+    }
+    if(e.stats){
+      out += `    stats: { ${Object.entries(e.stats).map(([k,v])=>`${k}: ${v}`).join(', ')} },\n`;
+    }
+    if(e.documentary){
+      out += `    documentary: { title: "${(e.documentary.title||'').replace(/"/g,'\\"')}", youtubeUrl: "${e.documentary.youtubeUrl}", duration: "${e.documentary.duration}" },\n`;
+    }
+    if(e.tags.length){
+      out += `    tags: [${e.tags.map(t=>`"${t}"`).join(', ')}],\n`;
+    }
+    if(e.quote){
+      out += `    quote: { text: "${e.quote.text.replace(/"/g,'\\"')}", author: "${(e.quote.author||'').replace(/"/g,'\\"')}" },\n`;
+    }
+    out = out.replace(/,\n$/, '\n');
+    out += `  }`;
+
+    document.getElementById('output').value = out;
+    document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('output-wrap').scrollIntoView({behavior:'smooth'});
+    saveDraft();
+  }
+
+  function copyOutput(){
+    const t = document.getElementById('output');
+    t.select();
+    document.execCommand('copy');
+    alert('Copied! Now paste it into entries-data.js');
+  }
+
+  // autosave draft to localStorage so nothing is lost mid-writing
+  function saveDraft(){
+    try{
+      localStorage.setItem('uy_draft', JSON.stringify(collect()));
+      document.getElementById('draft-note').textContent = 'Draft saved locally';
+    }catch(e){}
+  }
+  function loadDraft(){
+    try{
+      const raw = localStorage.getItem('uy_draft');
+      if(!raw) return;
+      const d = JSON.parse(raw);
+      if(d.day) document.getElementById('f-day').value = d.day;
+      if(d.date) document.getElementById('f-date').value = d.date;
+      if(d.title) document.getElementById('f-title').value = d.title;
+      document.getElementById('cards-list').innerHTML = '';
+      (d.cards||[]).forEach(c=>addCard(c.type,c.label,c.text));
+      if(!d.cards || !d.cards.length) addCard();
+      document.getElementById('five-list').innerHTML = '';
+      (d.fiveLines && d.fiveLines.length ? d.fiveLines : ['','','']).forEach(l=>addLine('five-list', l));
+      document.getElementById('reminder-list').innerHTML = '';
+      (d.reminder||[]).forEach(l=>addLine('reminder-list', l));
+      if(d.photo){ document.getElementById('f-photo-src').value = d.photo.src||''; document.getElementById('f-photo-cap').value = d.photo.caption||''; }
+      if(d.stats){ Object.entries(d.stats).forEach(([k,v])=>{ const el=document.getElementById('f-'+k); if(el) el.value=v; }); }
+      if(d.documentary){
+        document.getElementById('f-doc-title').value = d.documentary.title||'';
+        document.getElementById('f-doc-url').value = d.documentary.youtubeUrl||'';
+        document.getElementById('f-doc-dur').value = d.documentary.duration||'';
+      }
+      if(d.tags) document.getElementById('f-tags').value = d.tags.join(', ');
+      if(d.quote){ document.getElementById('f-quote-text').value = d.quote.text||''; document.getElementById('f-quote-author').value = d.quote.author||''; }
+      document.getElementById('draft-note').textContent = 'Draft restored';
+    }catch(e){}
+  }
+
+  function clearDraft(){
+    if(!confirm('Clear everything you have written on this page?')) return;
+    localStorage.removeItem('uy_draft');
+    location.reload();
+  }
+
+  document.getElementById('form-card').addEventListener('input', ()=>{ clearTimeout(window._sd); window._sd=setTimeout(saveDraft, 600); });
+</script>
+</body>
+</html>

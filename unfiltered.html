@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unfiltered Yash — the real side of my journey</title>
+<meta name="description" content="The unfiltered, day-by-day record of Yash Chaudhary's college years — not a portfolio, a diary.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23E2557B'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Georgia,serif' fill='white' text-anchor='middle'%3EY%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --uy-bg:#150A0F;
+    --uy-bg-alt:#1D1017;
+    --uy-panel:rgba(40,22,30,0.55);
+    --uy-panel-solid:#241420;
+    --uy-line:rgba(255,255,255,0.08);
+    --uy-pink:#E2557B;
+    --uy-pink-soft:#F2A6BE;
+    --uy-text:#F5EEE6;
+    --uy-text-dim:#B9A3AC;
+    --uy-cream:#F2E8D5;
+    --uy-cream-ink:#3A2A24;
+    --uy-yellow:#EAD293;
+    --uy-yellow-ink:#4A3A1C;
+    --uy-rose:#EFC0CB;
+    --uy-rose-ink:#5C2A38;
+    --uy-blue:#B7D3E0;
+    --uy-blue-ink:#233F4C;
+    --uy-cream2:#EFE6D4;
+    --shadow-card: 0 14px 34px -14px rgba(0,0,0,0.55);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 85% -5%, rgba(226,85,123,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -5% 100%, rgba(226,85,123,0.10), transparent 60%),
+      var(--uy-bg);
+    color:var(--uy-text);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .hand{font-family:'Caveat',cursive;}
+  ::selection{background:var(--uy-pink);color:#1a0d12;}
+
+  /* decorative blossoms */
+  .uy-blossoms{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.5;}
+  .uy-blossoms svg{position:absolute;}
+  .uy-blossoms .b1{top:-60px;right:-40px;width:340px;height:340px;opacity:.55;}
+  .uy-blossoms .b2{bottom:-80px;left:-60px;width:300px;height:300px;opacity:.35;}
+
+  .uy-shell{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 60px;
+    display:grid; grid-template-columns:250px 1fr 300px; gap:20px;}
+
+  /* ---------- LEFT SIDEBAR ---------- */
+  .uy-side{display:flex;flex-direction:column;gap:18px;}
+  .uy-brand{padding:4px 2px 10px;}
+  .uy-brand .word{font-family:'Fraunces',serif;font-weight:700;font-size:1.5rem;letter-spacing:.2px;}
+  .uy-brand .word span{color:var(--uy-pink);}
+  .uy-brand .tag{color:var(--uy-text-dim);font-size:.82rem;margin-top:3px;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--uy-text-dim);margin-bottom:6px;}
+  .back-link:hover{color:var(--uy-pink-soft);text-decoration:none;}
+
+  .uy-nav{display:flex;flex-direction:column;gap:6px;}
+  .uy-nav a{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;
+    border:1px solid transparent; transition:background .2s ease, border-color .2s ease;
+  }
+  .uy-nav a .ic{font-size:1.15rem;width:22px;text-align:center;flex:none;}
+  .uy-nav a .lbl{font-weight:600;font-size:.92rem;}
+  .uy-nav a .sub{display:block;color:var(--uy-text-dim);font-size:.74rem;font-weight:400;margin-top:1px;}
+  .uy-nav a:hover{background:rgba(255,255,255,0.04);}
+  .uy-nav a.active{background:rgba(226,85,123,0.16);border-color:rgba(226,85,123,0.35);}
+
+  .uy-side-quote{margin-top:auto;padding:18px;border-top:1px solid var(--uy-line);}
+  .uy-side-quote .qmark{color:var(--uy-pink);font-family:'Fraunces',serif;font-size:1.8rem;line-height:.6;display:block;margin-bottom:6px;}
+  .uy-side-quote p{font-family:'Caveat',cursive;font-size:1.3rem;color:var(--uy-text-dim);margin:0;line-height:1.35;}
+
+  /* ---------- TOP BAR (center+right) ---------- */
+  .uy-topbar{grid-column:2 / span 2;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:4px;}
+  .ribbon{
+    background:linear-gradient(135deg,#C96B75,#B85A66);
+    color:#fff; font-family:'Fraunces',serif;font-weight:600;letter-spacing:.06em;
+    font-size:.8rem; padding:9px 20px; clip-path:polygon(0 0,100% 0,96% 100%,0% 100%,4% 50%);
+    text-transform:uppercase;
+  }
+  .uy-topbar .date{color:var(--uy-text-dim);font-size:.85rem;display:flex;align-items:center;gap:6px;}
+  .uy-topbar .spacer{flex:1;}
+  .btn-write{
+    background:var(--uy-panel-solid); border:1px solid var(--uy-line); color:var(--uy-text);
+    padding:11px 18px; border-radius:12px; font-size:.85rem; font-weight:600; cursor:pointer;
+    display:flex;align-items:center;gap:8px; transition:border-color .2s ease, transform .15s ease;
+  }
+  .btn-write:hover{border-color:var(--uy-pink); transform:translateY(-1px);}
+
+  /* ---------- CENTER: DAY CARD ---------- */
+  .uy-day-panel{
+    background:var(--uy-panel); border:1px solid var(--uy-line); border-radius:26px;
+    padding:clamp(20px,3vw,36px); position:relative; overflow:hidden;
+  }
+  .day-head{margin-bottom:22px;}
+  .day-num{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(2.6rem,6vw,3.6rem);letter-spacing:.01em;line-height:1;}
+  .day-date-pill{
+    display:inline-block; margin-top:10px; padding:6px 18px; border:2px solid var(--uy-pink);
+    border-radius:30px; font-family:'Fraunces',serif; font-weight:600; letter-spacing:.05em;
+    font-size:.95rem; color:var(--uy-pink-soft);
+  }
+  .day-sub{margin-top:14px;font-size:1rem;color:var(--uy-text-dim);}
+  .day-sub b{color:var(--uy-pink-soft);font-weight:600;}
+
+  .sticky-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px;
+  }
+  .sticky{
+    border-radius:4px; padding:16px 16px 18px; box-shadow:var(--shadow-card);
+    transform:rotate(var(--r,0deg)); position:relative; min-height:150px;
+  }
+  .sticky:nth-child(3n+1){--r:-1.2deg;}
+  .sticky:nth-child(3n+2){--r:0.8deg;}
+  .sticky:nth-child(3n+3){--r:-0.6deg;}
+  .sticky .s-head{display:flex;align-items:center;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;opacity:.85;}
+  .sticky .s-icon{font-size:1.1rem;}
+  .sticky p{font-family:'Caveat',cursive;font-size:1.28rem;line-height:1.28;margin:0;}
+  .sticky.college{background:var(--uy-yellow);color:var(--uy-yellow-ink);}
+  .sticky.workout{background:var(--uy-rose);color:var(--uy-rose-ink);}
+  .sticky.study{background:var(--uy-cream2);color:var(--uy-cream-ink);}
+  .sticky.work{background:var(--uy-blue);color:var(--uy-blue-ink);}
+  .sticky.mood{background:var(--uy-cream2);color:var(--uy-cream-ink);}
+  .sticky.mood .s-head{color:var(--uy-pink);}
+  .sticky.note{background:var(--uy-cream2);color:var(--uy-cream-ink);}
+
+  .polaroid{
+    background:#efe9df; padding:10px 10px 40px; border-radius:3px; box-shadow:var(--shadow-card);
+    transform:rotate(1.4deg); position:relative;
+  }
+  .polaroid img{width:100%; display:block; border-radius:1px; background:#3a2c33; aspect-ratio:4/5; object-fit:cover;}
+  .polaroid .cap{
+    position:absolute; bottom:10px; left:12px; right:12px; font-family:'Caveat',cursive;
+    color:#3a2c33; font-size:1.05rem; text-align:center;
+  }
+  .tape{position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-2deg);
+    width:64px;height:22px;background:rgba(200,160,90,.55); border:1px solid rgba(255,255,255,.15);}
+
+  .bottom-row{display:grid; grid-template-columns:1.5fr 1fr; gap:16px; margin-top:16px;}
+  .notebook{
+    background:#efe9df; color:#3a2c33; border-radius:4px; padding:20px 22px 22px 46px;
+    position:relative; box-shadow:var(--shadow-card); transform:rotate(-0.4deg);
+    background-image:repeating-linear-gradient(180deg, transparent, transparent 30px, rgba(58,44,51,0.08) 31px);
+  }
+  .notebook::before{content:"";position:absolute;left:26px;top:0;bottom:0;width:1px;background:rgba(226,85,123,0.35);}
+  .notebook h4{font-family:'Fraunces',serif; font-size:1.05rem; color:var(--uy-pink); text-decoration:underline; text-underline-offset:4px; margin:0 0 12px;}
+  .notebook ul{margin:0;padding:0;list-style:none;}
+  .notebook li{font-family:'Caveat',cursive; font-size:1.28rem; margin-bottom:6px; line-height:1.25;}
+  .notebook li::before{content:"• ";}
+
+  .chalk{
+    background:#1c1420; border:1px solid rgba(226,85,123,0.3); border-radius:4px; padding:18px 20px;
+    box-shadow:var(--shadow-card); transform:rotate(0.8deg); position:relative;
+  }
+  .chalk h4{font-family:'Fraunces',serif; font-size:1rem; color:var(--uy-pink-soft); text-decoration:underline; text-underline-offset:4px; margin:0 0 12px;}
+  .chalk ul{margin:0;padding:0;list-style:none;}
+  .chalk li{font-family:'Caveat',cursive; font-size:1.2rem; color:var(--uy-text); margin-bottom:5px;}
+  .chalk li::before{content:"• ";color:var(--uy-pink-soft);}
+
+  /* ---------- RIGHT SIDEBAR ---------- */
+  .uy-right{display:flex;flex-direction:column;gap:16px;}
+  .rcard{background:var(--uy-panel-solid); border:1px solid var(--uy-line); border-radius:18px; padding:18px; box-shadow:var(--shadow-card);}
+  .rcard h5{margin:0 0 12px; font-family:'Fraunces',serif; font-size:.82rem; letter-spacing:.08em; text-transform:uppercase; color:var(--uy-text-dim);}
+  .rcard h5 span{color:var(--uy-pink-soft);}
+  .stat-row{display:flex; align-items:center; justify-content:space-between; padding:7px 0; font-size:.86rem;}
+  .stat-row .ic{margin-right:8px;}
+  .stat-row .val{color:var(--uy-pink-soft); font-weight:600; font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+
+  .doc-card{padding:0; overflow:hidden;}
+  .doc-thumb{position:relative; aspect-ratio:16/10; background:linear-gradient(160deg,#3a2230,#1a0f16); display:flex;align-items:center;justify-content:center;}
+  .doc-thumb .badge{position:absolute; top:10px; right:10px; background:rgba(0,0,0,.55); color:#fff; font-size:.68rem; font-weight:700; padding:3px 8px; border-radius:6px; letter-spacing:.04em;}
+  .doc-thumb .play{width:52px;height:52px;border-radius:50%; background:var(--uy-pink); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(226,85,123,.5);}
+  .doc-body{padding:14px 16px 16px;}
+  .doc-body .t{font-family:'Fraunces',serif; font-weight:600; color:var(--uy-pink-soft); font-size:.98rem;}
+  .doc-body .m{color:var(--uy-text-dim); font-size:.76rem; margin-top:3px; display:flex; align-items:center; justify-content:space-between;}
+
+  .tag-wrap{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag-chip{background:rgba(226,85,123,0.12); border:1px solid rgba(226,85,123,0.3); color:var(--uy-pink-soft); font-size:.76rem; padding:5px 11px; border-radius:20px;}
+
+  .rquote{}
+  .rquote p{font-family:'Caveat',cursive; font-size:1.25rem; line-height:1.3; margin:0 0 8px;}
+  .rquote .by{color:var(--uy-text-dim); font-size:.78rem;}
+
+  /* ---------- BOTTOM STRIP ---------- */
+  .uy-strip{grid-column:2 / span 2; margin-top:18px; background:var(--uy-panel-solid); border:1px solid var(--uy-line); border-radius:18px; padding:12px 16px; display:flex; align-items:center; gap:10px;}
+  .uy-strip .month{font-size:.72rem; color:var(--uy-text-dim); text-transform:uppercase; letter-spacing:.06em; flex:none; margin-right:6px;}
+  .strip-days{display:flex; gap:8px; overflow-x:auto; flex:1; scrollbar-width:none;}
+  .strip-days::-webkit-scrollbar{display:none;}
+  .strip-arrow{background:none;border:none;color:var(--uy-text-dim);cursor:pointer;font-size:1rem;flex:none;padding:4px;}
+  .day-chip{
+    flex:none; width:52px; text-align:center; padding:8px 4px; border-radius:12px; cursor:pointer;
+    border:1px solid transparent; color:var(--uy-text-dim); font-size:.78rem;
+  }
+  .day-chip .n{display:block;font-weight:700;font-size:.95rem;color:var(--uy-text);}
+  .day-chip.active{background:var(--uy-pink); color:#fff;}
+  .day-chip.active .n{color:#fff;}
+  .day-chip.empty{opacity:.35; cursor:default;}
+  .btn-all{flex:none; background:transparent; border:1px solid var(--uy-line); color:var(--uy-text); padding:9px 16px; border-radius:10px; font-size:.8rem; cursor:pointer; white-space:nowrap;}
+
+  .empty-state{padding:60px 20px; text-align:center; color:var(--uy-text-dim);}
+  .empty-state .big{font-family:'Fraunces',serif; font-size:1.4rem; color:var(--uy-text); margin-bottom:8px;}
+
+  /* ---------- SECTION HEADER (non-daily views) ---------- */
+  .sec-head{margin-bottom:22px;}
+  .sec-head .day-num{font-size:clamp(2rem,4.4vw,2.6rem);}
+  .sec-head p{color:var(--uy-text-dim);margin-top:8px;font-size:.95rem;}
+
+  /* ---------- THINGS I TRIED : index cards ---------- */
+  .tried-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  .tried-card{background:#efe9df;color:#3a2c33;border-radius:6px;padding:18px 20px;box-shadow:var(--shadow-card);position:relative;transform:rotate(var(--r,-0.4deg));}
+  .tried-card:nth-child(odd){--r:0.5deg;}
+  .tried-card .tc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .tried-card h4{font-family:'Fraunces',serif;font-size:1.15rem;margin:0;color:#3a2233;}
+  .pill{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:20px;flex:none;}
+  .pill.worked{background:#cfe3cf;color:#2d4a2d;}
+  .pill.failed{background:#e8c6c6;color:#5c2a2a;}
+  .pill.mixed{background:#e9dcb8;color:#5c4a1c;}
+  .tc-date{font-size:.72rem;color:#7a6a63;margin-bottom:12px;}
+  .tc-row{margin-bottom:8px;font-size:.92rem;}
+  .tc-row b{font-family:'Fraunces',serif;font-weight:600;color:var(--uy-pink);font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:2px;}
+
+  /* ---------- THINGS I LEARNED : course tickets ---------- */
+  .learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .learn-card{background:var(--uy-panel-solid);border:1px solid var(--uy-line);border-radius:16px;padding:18px;position:relative;}
+  .learn-card::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;background:var(--uy-pink);border-radius:0 4px 4px 0;}
+  .learn-card h4{font-family:'Fraunces',serif;margin:0 0 4px;font-size:1.05rem;padding-left:8px;}
+  .learn-card .badge-status{display:inline-block;margin:0 0 10px 8px;font-size:.7rem;padding:3px 9px;border-radius:20px;background:rgba(226,85,123,.15);color:var(--uy-pink-soft);}
+  .learn-card ul{margin:8px 0 10px;padding-left:26px;font-size:.86rem;color:var(--uy-text-dim);}
+  .learn-card .used-for{font-size:.84rem;color:var(--uy-text);padding-left:8px;}
+  .learn-card .used-for b{color:var(--uy-pink-soft);}
+  .learn-card a.proof{display:inline-block;margin:10px 0 0 8px;font-size:.8rem;color:var(--uy-pink-soft);}
+
+  /* ---------- THINGS I BUILT : project cards ---------- */
+  .built-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+  .built-card{background:var(--uy-panel-solid);border:1px solid var(--uy-line);border-radius:18px;padding:20px;box-shadow:var(--shadow-card);}
+  .built-card h4{font-family:'Fraunces',serif;font-size:1.15rem;margin:0 0 4px;color:var(--uy-pink-soft);}
+  .built-card .bdate{font-size:.74rem;color:var(--uy-text-dim);margin-bottom:12px;}
+  .built-card .brow{font-size:.88rem;margin-bottom:8px;line-height:1.4;}
+  .built-card .brow b{color:var(--uy-text-dim);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:2px;}
+  .built-card a.plink{display:inline-block;margin-top:8px;font-size:.82rem;color:var(--uy-pink);}
+
+  /* ---------- RANDOM STUFF : corkboard ---------- */
+  .random-grid{column-count:3;column-gap:16px;}
+  @media(max-width:900px){.random-grid{column-count:2;}}
+  @media(max-width:560px){.random-grid{column-count:1;}}
+  .random-note{break-inside:avoid;margin-bottom:16px;background:var(--uy-cream2);color:var(--uy-cream-ink);border-radius:4px;padding:16px;box-shadow:var(--shadow-card);transform:rotate(var(--r,0deg));font-family:'Caveat',cursive;font-size:1.25rem;line-height:1.3;}
+  .random-note:nth-child(4n+1){--r:-1deg;background:var(--uy-yellow);color:var(--uy-yellow-ink);}
+  .random-note:nth-child(4n+2){--r:0.8deg;}
+  .random-note:nth-child(4n+3){--r:-0.5deg;background:var(--uy-rose);color:var(--uy-rose-ink);}
+  .random-note:nth-child(4n+4){--r:1deg;background:var(--uy-blue);color:var(--uy-blue-ink);}
+  .random-note img{width:100%;border-radius:3px;margin-bottom:8px;display:block;}
+
+  /* ---------- SMALL WINS : timeline ---------- */
+  .wins-line{position:relative;padding-left:26px;}
+  .wins-line::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--uy-pink),transparent);}
+  .win-item{position:relative;margin-bottom:22px;}
+  .win-item::before{content:"🏆";position:absolute;left:-26px;top:-2px;font-size:.85rem;}
+  .win-item .wdate{font-size:.72rem;color:var(--uy-text-dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+  .win-item .wtext{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--uy-text);}
+
+  /* ---------- ALL ENTRIES ARCHIVE ---------- */
+  .archive-search{margin-bottom:18px;}
+  .archive-search input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--uy-line);background:var(--uy-panel-solid);color:var(--uy-text);font-size:.9rem;font-family:'Inter',sans-serif;}
+  .archive-search input:focus{outline:none;border-color:var(--uy-pink);}
+  .arch-year{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--uy-pink-soft);margin:26px 0 10px;padding-left:4px;}
+  .arch-year:first-of-type{margin-top:6px;}
+  .arch-month{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--uy-text-dim);margin:14px 0 10px;padding-left:4px;}
+  .arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+  .arch-day{background:var(--uy-panel-solid);border:1px solid var(--uy-line);border-radius:14px;padding:14px 16px;transition:border-color .2s ease;}
+  .arch-day:hover{border-color:rgba(226,85,123,.45);}
+  .ad-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .ad-num{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--uy-text);}
+  .ad-video{font-size:.9rem;}
+  .ad-date{font-size:.72rem;color:var(--uy-text-dim);margin-bottom:4px;}
+  .ad-title{font-family:'Caveat',cursive;font-size:1.1rem;color:var(--uy-text);margin-bottom:6px;}
+  .ad-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+  .ad-tags span{font-size:.66rem;color:var(--uy-pink-soft);opacity:.85;}
+  .ad-actions{display:flex;flex-direction:column;gap:5px;}
+  .ad-actions button{background:none;border:1px solid var(--uy-line);color:var(--uy-text);font-size:.78rem;padding:6px 10px;border-radius:9px;cursor:pointer;}
+  .ad-actions button:hover{border-color:var(--uy-pink);color:var(--uy-pink-soft);}
+  .ad-vlink{font-size:.76rem;color:var(--uy-pink-soft);}
+
+  @media (max-width:980px){
+    .uy-shell{grid-template-columns:1fr; padding:16px;}
+    .uy-side{flex-direction:row; flex-wrap:wrap; order:1;}
+    .uy-brand{width:100%;}
+    .uy-nav{flex-direction:row; flex-wrap:wrap; width:100%;}
+    .uy-nav a{flex:1 1 45%;}
+    .uy-side-quote{display:none;}
+    .uy-topbar{grid-column:1; order:2;}
+    .uy-day-panel{order:3;}
+    .uy-right{order:4;}
+    .uy-strip{grid-column:1; order:5;}
+    .sticky-grid{grid-template-columns:1fr 1fr;}
+    .bottom-row{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .sticky-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="uy-blossoms" aria-hidden="true">
+  <svg class="b1" viewBox="0 0 200 200"><g fill="#E2557B" opacity="0.5"><circle cx="60" cy="40" r="16"/><circle cx="90" cy="30" r="14"/><circle cx="110" cy="55" r="15"/><circle cx="75" cy="65" r="13"/><circle cx="130" cy="35" r="10"/></g></svg>
+  <svg class="b2" viewBox="0 0 200 200"><g fill="#E2557B" opacity="0.35"><circle cx="50" cy="150" r="18"/><circle cx="85" cy="165" r="14"/><circle cx="30" cy="120" r="11"/></g></svg>
+</div>
+
+<div class="uy-shell">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="uy-side">
+    <div class="uy-brand">
+      <a class="back-link" href="index.html">← back to portfolio</a>
+      <div class="word">UNFILTERED <span>YASH</span> 😼</div>
+      <div class="tag">the real side of my journey</div>
+    </div>
+    <nav class="uy-nav" id="uy-nav">
+      <a href="#daily" data-view="daily" class="active"><span class="ic">🏠</span><span><span class="lbl">Daily Life</span><span class="sub">Day by day</span></span></a>
+      <a href="#tried" data-view="tried"><span class="ic">🧪</span><span><span class="lbl">Things I Tried</span><span class="sub">Experiments &amp; new stuff</span></span></a>
+      <a href="#learned" data-view="learned"><span class="ic">📖</span><span><span class="lbl">Things I Learned</span><span class="sub">Courses, skills, notes</span></span></a>
+      <a href="#built" data-view="built"><span class="ic">🔧</span><span><span class="lbl">Things I Built</span><span class="sub">Projects &amp; creations</span></span></a>
+      <a href="#random" data-view="random"><span class="ic">🖼️</span><span><span class="lbl">Random Stuff</span><span class="sub">Thoughts, pics, memes</span></span></a>
+      <a href="#wins" data-view="wins"><span class="ic">🏆</span><span><span class="lbl">Small Wins</span><span class="sub">Milestones &amp; moments</span></span></a>
+    </nav>
+    <div class="uy-side-quote">
+      <span class="qmark">"</span>
+      <p>Some days are productive,<br>some days are not.<br>All days are real.<br>All days matter.</p>
+    </div>
+  </aside>
+
+  <!-- TOP BAR -->
+  <div class="uy-topbar">
+    <div class="ribbon" id="uy-ribbon">Daily Life</div>
+    <div class="date" id="uy-topdate">— — —</div>
+    <div class="spacer"></div>
+    <button class="btn-write" id="btn-write" type="button">✏️ Write Today's Entry</button>
+  </div>
+
+  <!-- CENTER: DAY CONTENT -->
+  <main class="uy-day-panel" id="uy-day-content">
+    <!-- filled by JS -->
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="uy-right" id="uy-right">
+    <!-- filled by JS -->
+  </aside>
+
+  <!-- BOTTOM CALENDAR STRIP -->
+  <div class="uy-strip" id="uy-strip">
+    <span class="month" id="uy-month-label">— —</span>
+    <button class="strip-arrow" id="strip-prev">‹</button>
+    <div class="strip-days" id="strip-days"></div>
+    <button class="strip-arrow" id="strip-next">›</button>
+    <button class="btn-all" id="btn-all">All Entries ⊞</button>
+  </div>
+
+</div>
+
+<script src="entries-data.js"></script>
+<script src="sections-data.js"></script>
+<script>
+(function(){
+  const entries = (window.UNFILTERED_ENTRIES || []).slice().sort((a,b)=>a.day-b.day);
+  let currentDay = entries.length ? entries[entries.length-1].day : null;
+
+  const dayContent = document.getElementById('uy-day-content');
+  const rightPanel = document.getElementById('uy-right');
+  const topDate = document.getElementById('uy-topdate');
+  const stripDays = document.getElementById('strip-days');
+  const monthLabel = document.getElementById('uy-month-label');
+
+  const cardIcons = { college:'🏫', workout:'🏋️', study:'📖', work:'💻', mood:'😊', note:'📌' };
+
+  function esc(s){ return (s||'').toString(); }
+
+  function renderStickies(cards){
+    if(!cards || !cards.length) return '';
+    return '<div class="sticky-grid">' + cards.map(c => `
+      <div class="sticky ${c.type||'note'}">
+        <div class="s-head"><span>${esc(c.label||c.type||'Note')}</span><span class="s-icon">${c.emoji || cardIcons[c.type] || '📌'}</span></div>
+        <p>${esc(c.text)}</p>
+      </div>
+    `).join('') + '</div>';
+  }
+
+  function renderPolaroid(photo){
+    if(!photo || !photo.src) return '';
+    return `
+      <div class="polaroid" style="max-width:260px;justify-self:end;">
+        <div class="tape"></div>
+        <img src="${photo.src}" alt="${esc(photo.caption)}">
+        <div class="cap">${esc(photo.caption)}</div>
+      </div>`;
+  }
+
+  function renderBottomRow(entry){
+    const hasFive = entry.fiveLines && entry.fiveLines.length;
+    const hasReminder = entry.reminder && entry.reminder.length;
+    const photoHtml = renderPolaroid(entry.photo);
+    let inner = '';
+    if(hasFive){
+      inner += `<div class="notebook"><h4>Today in 5 lines</h4><ul>${entry.fiveLines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>`;
+    }
+    if(hasReminder){
+      inner += `<div class="chalk"><h4>Reminder for tomorrow</h4><ul>${entry.reminder.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>`;
+    }
+    if(!inner && !photoHtml) return '';
+    return `<div class="bottom-row">${inner}</div>` + (photoHtml ? `<div style="margin-top:16px;display:flex;justify-content:flex-end;">${photoHtml}</div>` : '');
+  }
+
+  function renderDay(entry){
+    if(!entry){
+      dayContent.innerHTML = `<div class="empty-state"><div class="big">No entries yet</div>Day one is coming soon. 🌸</div>`;
+      rightPanel.innerHTML = '';
+      topDate.textContent = '— — —';
+      return;
+    }
+    topDate.textContent = `${entry.dateLabel}${entry.weekday ? ', '+entry.weekday : ''}`;
+
+    dayContent.innerHTML = `
+      <div class="day-head">
+        <div class="day-num">DAY ${String(entry.day).padStart(2,'0')}</div>
+        <span class="day-date-pill">${entry.dateLabel.toUpperCase()}</span>
+        ${entry.title ? `<div class="day-sub">The day I <b>${esc(entry.title.replace(/^The day I /i,''))}</b></div>` : ''}
+      </div>
+      ${renderStickies(entry.cards)}
+      ${renderBottomRow(entry)}
+    `;
+
+    // right panel
+    let rhtml = `<button class="btn-write" id="btn-write-r" style="width:100%;justify-content:center;">✏️ Write Today's Entry</button>`;
+
+    if(entry.stats){
+      const s = entry.stats;
+      const rows = [['📈','Productivity',s.productivity],['⚡','Energy',s.energy],['🎯','Focus',s.focus],['💛','Happiness',s.happiness]]
+        .filter(r=>r[2]!=null);
+      if(rows.length){
+        rhtml += `<div class="rcard"><h5>Today's Stats</h5>${rows.map(r=>`<div class="stat-row"><span><span class="ic">${r[0]}</span>${r[1]}</span><span class="val">${r[2]} / 10</span></div>`).join('')}</div>`;
+      }
+    }
+
+    if(entry.documentary && (entry.documentary.youtubeUrl || entry.documentary.title)){
+      const d = entry.documentary;
+      const vid = (d.youtubeUrl||'').toString().match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+      if(vid){
+        // real YouTube link → embed the player right on the page
+        rhtml += `
+          <div class="rcard doc-card">
+            <h5 style="padding:14px 16px 0;">Today's <span>Documentary</span></h5>
+            <div style="padding:12px 12px 10px;">
+              <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-card);">
+                <iframe src="https://www.youtube-nocookie.com/embed/${vid[1]}" title="${esc(d.title||'Documentary')} — Day ${String(entry.day).padStart(2,'0')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+              </div>
+            </div>
+            <div class="doc-body">
+              <div class="t">${esc(d.title||'Untitled')}</div>
+              <div class="m"><span>${esc(entry.dateLabel)}</span><span>${esc(d.duration||'')}</span></div>
+            </div>
+          </div>`;
+      } else {
+        // no link yet → placeholder card, same as the design reference
+        rhtml += `
+          <div class="rcard doc-card">
+            <h5 style="padding:14px 16px 0;">Today's <span>Documentary</span></h5>
+            <div class="doc-thumb" style="margin-top:10px;">
+              <span class="badge">DAY ${String(entry.day).padStart(2,'0')}</span>
+              <div class="play">▶</div>
+            </div>
+            <div class="doc-body">
+              <div class="t">${esc(d.title||'Coming soon')}</div>
+              <div class="m"><span>${esc(entry.dateLabel)}</span><span>${esc(d.duration||'')}</span></div>
+            </div>
+          </div>`;
+      }
+    }
+
+    if(entry.tags && entry.tags.length){
+      rhtml += `<div class="rcard"><h5>Tags for Today</h5><div class="tag-wrap">${entry.tags.map(t=>`<span class="tag-chip">#${esc(t)}</span>`).join('')}</div></div>`;
+    }
+
+    if(entry.quote && entry.quote.text){
+      rhtml += `<div class="rcard rquote"><p>"${esc(entry.quote.text)}"</p><div class="by">— ${esc(entry.quote.author||'Unknown')}</div></div>`;
+    }
+
+    rightPanel.innerHTML = rhtml;
+    document.getElementById('btn-write-r')?.addEventListener('click', openWriteModal);
+  }
+
+  function renderStrip(){
+    if(!entries.length){ stripDays.innerHTML=''; monthLabel.textContent='—'; return; }
+    const active = entries.find(e=>e.day===currentDay) || entries[entries.length-1];
+    const d = new Date(active.date);
+    monthLabel.textContent = d.toLocaleDateString('en-US',{month:'long',year:'numeric'}).toUpperCase();
+
+    stripDays.innerHTML = entries.map(e=>{
+      const dd = new Date(e.date);
+      const wd = dd.toLocaleDateString('en-US',{weekday:'short'});
+      const dn = String(dd.getDate()).padStart(2,'0');
+      return `<div class="day-chip ${e.day===active.day?'active':''}" data-day="${e.day}"><span class="n">${dn}</span>${wd}</div>`;
+    }).join('');
+
+    stripDays.querySelectorAll('.day-chip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        currentDay = parseInt(el.dataset.day,10);
+        const e = entries.find(x=>x.day===currentDay);
+        renderDay(e);
+        renderStrip();
+        setActiveNav('daily');
+      });
+    });
+  }
+
+  function setActiveNav(view){
+    document.querySelectorAll('#uy-nav a').forEach(a=>a.classList.toggle('active', a.dataset.view===view));
+  }
+
+  function openWriteModal(){
+    window.location.href = 'admin.html';
+  }
+  document.getElementById('btn-write').addEventListener('click', openWriteModal);
+
+  // ---------- ALL ENTRIES ARCHIVE + SEARCH ----------
+  function ytId(url){
+    if(!url) return null;
+    var m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+    return m ? m[1] : null;
+  }
+
+  function renderArchive(filterText){
+    const f = (filterText || '').trim().toLowerCase();
+    const list = entries.filter(e=>{
+      if(!f) return true;
+      const hay = [
+        'DAY '+String(e.day).padStart(2,'0'), e.dateLabel, e.weekday||'', e.title||'',
+        (e.cards||[]).map(c=>[c.label||'',c.text||''].join(' ')).join(' '),
+        (e.fiveLines||[]).join(' '), (e.reminder||[]).join(' '),
+        (e.tags||[]).join(' '), e.documentary&&e.documentary.title||'',
+        e.quote&&e.quote.text||''
+      ].join(' ').toLowerCase();
+      return hay.includes(f);
+    });
+
+    let body = '<div class="sec-head"><div class="day-num">⊞ All Entries</div><p>Every day in one place — jump to any day, or search by tag, topic, or keyword.</p></div>';
+    body += '<div class="archive-search"><input id="archive-q" type="text" placeholder="Search days… try “college”, “ACCA”, “#gym”" value="' + esc(filterText) + '"></div>';
+
+    if(!list.length){
+      body += '<div class="empty-state"><div class="big">No days found</div>Nothing matches “' + esc(filterText) + '” yet.</div>';
+      dayContent.innerHTML = body;
+      wireSearch();
+      return;
+    }
+
+    // group by year → month
+    const groups = {};
+    list.forEach(e=>{
+      const d = new Date(e.date);
+      const yk = d.getFullYear();
+      const mk = d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      (groups[yk] = groups[yk] || {})[mk] = groups[yk][mk] || [];
+      groups[yk][mk].push(e);
+    });
+
+    Object.keys(groups).sort().forEach(y=>{
+      body += '<div class="arch-year">' + y + '</div>';
+      Object.keys(groups[y]).forEach(m=>{
+        body += '<div class="arch-month">' + m + '</div><div class="arch-grid">';
+        groups[y][m].forEach(e=>{
+          const thumb = ytId(e.documentary && e.documentary.youtubeUrl);
+          const hasVideo = !!thumb;
+          body += '<div class="arch-day"><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasVideo?'<span class="ad-video">🎥</span>':'')+'</div><div class="ad-date">'+esc(e.dateLabel)+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(e.title?'<div class="ad-title">'+esc(e.title)+'</div>':'')+'<div class="ad-tags">'+(e.tags||[]).slice(0,5).map(t=>'<span>#'+esc(t)+'</span>').join('')+'</div><div class="ad-actions"><button data-go="'+e.day+'">Open day →</button>'+(hasVideo?'<a class="ad-vlink" href="https://www.youtube.com/watch?v='+thumb+'" target="_blank" rel="noopener">Watch documentary →</a>':'')+'</div></div>';
+        });
+        body += '</div>';
+      });
+    });
+    dayContent.innerHTML = body;
+    wireSearch();
+    dayContent.querySelectorAll('.ad-actions button[data-go]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        currentDay = parseInt(b.dataset.go,10);
+        setActiveNav('daily');
+        document.getElementById('uy-ribbon').textContent = 'Daily Life';
+        const entry = entries.find(x=>x.day===currentDay);
+        renderDay(entry);
+        topDate.textContent = entry ? entry.dateLabel + (entry.weekday?', '+entry.weekday:'') : '— — —';
+        renderStrip();
+      });
+    });
+  }
+  function wireSearch(){
+    const q = dayContent.querySelector('#archive-q');
+    if(!q) return;
+    q.addEventListener('input', ()=> renderArchive(q.value));
+    q.focus();
+  }
+  document.getElementById('btn-all').addEventListener('click', ()=> renderArchive(''));
+
+  const secMeta = {
+    tried:  { icon:'🧪', title:'Things I Tried',  sub:"Experiments, new tools, things that worked and things that blew up. 😅" },
+    learned:{ icon:'📖', title:'Things I Learned', sub:'Courses and skills — what I actually learned, not just certificates.' },
+    built:  { icon:'🔧', title:'Things I Built',   sub:'Projects, websites, automations, and everything else I made.' },
+    random: { icon:'🖼️', title:'Random Stuff',     sub:"Thoughts, screenshots, half-ideas — things that don't belong anywhere else." },
+    wins:   { icon:'🏆', title:'Small Wins',        sub:'Small milestones that will matter a lot three years from now.' }
+  };
+
+  function secHeader(view){
+    const m = secMeta[view];
+    return `<div class="sec-head"><div class="day-num">${m.icon} ${m.title}</div><p>${m.sub}</p></div>`;
+  }
+  function emptyBlock(msg){
+    return `<div class="empty-state" style="padding:40px 10px;"><div class="big">Nothing here yet</div>${msg} 🌸</div>`;
+  }
+
+  function renderTried(){
+    const list = window.THINGS_TRIED || [];
+    let body = secHeader('tried');
+    if(!list.length){ body += emptyBlock('Try something, then come write about it.'); }
+    else {
+      body += '<div class="tried-grid">' + list.map(t=>`
+        <div class="tried-card">
+          <div class="tc-top"><h4>${esc(t.title)}</h4><span class="pill ${esc(t.outcome||'mixed')}">${esc(t.outcome||'mixed')}</span></div>
+          <div class="tc-date">${esc(t.date||'')}</div>
+          ${t.expected?`<div class="tc-row"><b>Expected</b>${esc(t.expected)}</div>`:''}
+          ${t.actual?`<div class="tc-row"><b>Actual</b>${esc(t.actual)}</div>`:''}
+          ${t.learned?`<div class="tc-row"><b>Learned</b>${esc(t.learned)}</div>`:''}
+        </div>`).join('') + '</div>';
+    }
+    dayContent.innerHTML = body;
+  }
+
+  function renderLearned(){
+    const list = window.THINGS_LEARNED || [];
+    let body = secHeader('learned');
+    if(!list.length){ body += emptyBlock('Finish a course or pick up a skill, then log it here.'); }
+    else {
+      body += '<div class="learn-grid">' + list.map(c=>`
+        <div class="learn-card">
+          <h4>${esc(c.course)}</h4>
+          <span class="badge-status">${c.inProgress ? 'In progress' : ('Completed · ' + esc(c.completedDate||''))}</span>
+          ${c.learned && c.learned.length ? `<ul>${c.learned.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+          ${c.usedFor ? `<div class="used-for"><b>Used for:</b> ${esc(c.usedFor)}</div>` : ''}
+          ${c.proofUrl ? `<a class="proof" href="${esc(c.proofUrl)}" target="_blank" rel="noopener">View certificate →</a>` : ''}
+        </div>`).join('') + '</div>';
+    }
+    dayContent.innerHTML = body;
+  }
+
+  function renderBuilt(){
+    const list = window.THINGS_BUILT || [];
+    let body = secHeader('built');
+    if(!list.length){ body += emptyBlock('Build something, then drop it here with the story behind it.'); }
+    else {
+      body += '<div class="built-grid">' + list.map(p=>`
+        <div class="built-card">
+          <h4>${esc(p.title)}</h4>
+          <div class="bdate">${esc(p.date||'')}</div>
+          ${p.why?`<div class="brow"><b>Why</b>${esc(p.why)}</div>`:''}
+          ${p.how?`<div class="brow"><b>How</b>${esc(p.how)}</div>`:''}
+          ${p.outcome?`<div class="brow"><b>What happened</b>${esc(p.outcome)}</div>`:''}
+          ${p.learned?`<div class="brow"><b>Learned</b>${esc(p.learned)}</div>`:''}
+          ${p.link?`<a class="plink" href="${esc(p.link)}" target="_blank" rel="noopener">View project →</a>`:''}
+        </div>`).join('') + '</div>';
+    }
+    dayContent.innerHTML = body;
+  }
+
+  function renderRandom(){
+    const list = window.RANDOM_STUFF || [];
+    let body = secHeader('random');
+    if(!list.length){ body += emptyBlock('Drop a random thought, screenshot, or photo here anytime.'); }
+    else {
+      body += '<div class="random-grid">' + list.map(r=>{
+        if(r.type === 'photo'){
+          return `<div class="random-note">${r.src?`<img src="${esc(r.src)}" alt="">`:''}${r.caption?esc(r.caption):''}</div>`;
+        }
+        return `<div class="random-note">${esc(r.text)}</div>`;
+      }).join('') + '</div>';
+    }
+    dayContent.innerHTML = body;
+  }
+
+  function renderWins(){
+    const list = (window.SMALL_WINS || []).slice();
+    let body = secHeader('wins');
+    if(!list.length){ body += emptyBlock('First client, first ₹, first video — log the small ones too.'); }
+    else {
+      body += '<div class="wins-line">' + list.map(w=>`
+        <div class="win-item">
+          <div class="wdate">${esc(w.date||'')}</div>
+          <div class="wtext">${esc(w.text)}</div>
+        </div>`).join('') + '</div>';
+    }
+    dayContent.innerHTML = body;
+  }
+
+  const sectionRenderers = { tried:renderTried, learned:renderLearned, built:renderBuilt, random:renderRandom, wins:renderWins };
+
+  // section nav
+  document.getElementById('uy-nav').addEventListener('click', (e)=>{
+    const a = e.target.closest('a[data-view]');
+    if(!a) return;
+    e.preventDefault();
+    const view = a.dataset.view;
+    setActiveNav(view);
+    if(view === 'daily'){
+      document.getElementById('uy-ribbon').textContent = 'Daily Life';
+      const entry = entries.find(x=>x.day===currentDay) || entries[entries.length-1];
+      renderDay(entry);
+      topDate.textContent = entry ? `${entry.dateLabel}${entry.weekday?', '+entry.weekday:''}` : '— — —';
+      return;
+    }
+    rightPanel.innerHTML = '';
+    topDate.textContent = secMeta[view].title;
+    document.getElementById('uy-ribbon').textContent = secMeta[view].title;
+    (sectionRenderers[view] || function(){})();
+  });
+
+  // init
+  renderDay(entries.find(e=>e.day===currentDay));
+  renderStrip();
+})();
+</script>
+</body>
+</html>

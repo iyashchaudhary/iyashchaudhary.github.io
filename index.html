@@ -697,6 +697,11 @@
   .btn-primary{background:linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 75%, var(--accent))); color:#fff; box-shadow:0 8px 20px -10px rgba(194,24,91,0.45);}
   .btn-primary:hover{box-shadow:0 14px 30px -10px rgba(194,24,91,0.55); text-decoration:none;}
   .btn-ghost{background:color-mix(in srgb, var(--card) 70%, transparent); border-color:var(--line); color:var(--text);}
+  /* Unfiltered Yash portal link — slightly playful, sits beside the LinkedIn pill */
+  .uy-link{border-color:color-mix(in srgb, var(--primary) 45%, var(--line)); color:var(--primary); font-weight:700; letter-spacing:.01em;}
+  .uy-link:hover{border-color:var(--primary); text-decoration:none; box-shadow:0 10px 24px -12px rgba(194,24,91,0.4);}
+  .footer-uy{color:var(--primary); font-weight:600; font-size:13.5px; opacity:.85; transition:opacity .2s ease;}
+  .footer-uy:hover{opacity:1; text-decoration:none;}
   .btn-ghost:hover{border-color:var(--primary); color:var(--primary); text-decoration:none; box-shadow:0 10px 24px -12px rgba(194,24,91,0.35);}
   .btn:focus-visible{ outline:2px solid var(--primary); outline-offset:3px; }
 
@@ -1780,6 +1785,10 @@
         <span class="dock-tooltip">Contact</span>
       </a>
       <div class="dock-sep"></div>
+      <a href="unfiltered.html" class="dock-item" data-dock data-section="unfiltered" aria-label="Unfiltered Yash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5A2.5 2.5 0 0 1 7 2h10a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-2.5 2.5H7a2.5 2.5 0 0 1-2.5-2.5v-15"/><path d="M8 8h8M8 12h8M8 16h5"/><circle cx="8.8" cy="10" r=".7" fill="currentColor"/><circle cx="15.2" cy="10" r=".7" fill="currentColor"/></svg>
+        <span class="dock-tooltip">Unfiltered 😼</span>
+      </a>
       <button class="dock-item dock-cmdk" id="dock-cmdk" type="button" aria-label="Open command palette">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <span class="dock-tooltip">Search<span class="cmdk-hint-desktop"> (Ctrl K)</span></span>
@@ -1875,8 +1884,8 @@
         <div class="cta-row hero-entrance-el" id="hero-cta">
           <a href="#journey" class="btn btn-primary" data-en="View Journey" data-hi="सफर देखें">View Journey</a>
           <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="btn btn-ghost" data-en="Connect on LinkedIn" data-hi="लिंक्डइन पर जुड़ें">Connect on LinkedIn</a>
+          <a href="unfiltered.html" class="btn btn-ghost uy-link">Unfiltered Yash 😼</a>
         </div>
-
         <div class="stats-row">
           <div class="stat-card"><span class="num" id="stat-credentials" data-target="0">0</span><span class="label">Credentials Logged</span></div>
           <div class="stat-card"><span class="num" id="stat-projects" data-target="0">0</span><span class="label">Real Projects</span></div>
@@ -1914,7 +1923,7 @@
             <span class="tl-chevron">+</span>
           </button>
           <div class="tl-body">
-            <p>Started a B.A. Economics, after CUET 2025. A few months in, my interest in the course kept dropping — it wasn't matching where I actually wanted to go with finance.</p>
+            <p>Started a B.A. Programme with Economics as my major and English as a minor, after CUET 2025. A few months in, my interest in the course kept dropping — it wasn't matching where I actually wanted to go with finance.</p>
             <p>So I made the call to sit CUET again — a harder decision than it sounds, since most people in the same spot were told to just "adjust" for two more years.</p>
             <div class="tl-gallery">
               <button onclick="openLightbox(0)"><img src="venky-4.webp" alt="Sri Venkateswara College campus" loading="lazy" decoding="async"></button>
@@ -1934,7 +1943,7 @@
             <span class="tl-chevron">+</span>
           </button>
           <div class="tl-body">
-            <p>Alongside the B.A. Economics, I was also pursuing a B.Com (Hons) dual degree through DU SOL — and it was going well, unlike the main course. That gap told me exactly what to fix.</p>
+            <p>Alongside the B.A. Programme, I was also pursuing a B.Com (Hons) dual degree through DU SOL — and it was going well, unlike the main course. That gap told me exactly what to fix.</p>
             <p>I went back into full CUET preparation while still attending regular classes, aiming for a straightforward B.Com (Hons) seat this time — no more mismatch between course and goal.</p>
           </div>
         </div>
@@ -2178,6 +2187,7 @@
   <footer>
     <div class="wrap" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px; align-items:center; width:100%;">
       <span class="mono">© 2026 Yash Chaudhary — a Journey kept, not a résumé performed.</span>
+      <a href="unfiltered.html" class="footer-uy">Unfiltered Yash 😼 <span class="mono" style="font-size:10px;opacity:.7;">— the daily journal</span></a>
     </div>
   </footer>
 
@@ -2991,7 +3001,8 @@
       credential: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.8 7 21l5-2.6 5 2.6-1.5-7.2"/></svg>',
       skill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l9-12H12.5z" stroke-linejoin="round"/></svg>',
       timeline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.2 7.4C10 10 8 13 12 14.5c4 1.5 3 2.5 3.8 4.1"/></svg>',
-      contact: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.3"/><path d="M4.5 7 12 12.5 19.5 7"/></svg>'
+      contact: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.3"/><path d="M4.5 7 12 12.5 19.5 7"/></svg>',
+      journal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5A2.5 2.5 0 0 1 7 2h10a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-2.5 2.5H7a2.5 2.5 0 0 1-2.5-2.5v-15"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>'
     };
 
     // ---- Build the search index live from the DOM (always in sync with content) ----
@@ -3046,6 +3057,11 @@
         }
       });
 
+      // Unfiltered Yash daily journal
+      idx.push({
+        group:'Unfiltered Yash', title:'Unfiltered Yash 😼', sub:'Daily Life — the real side of my journey (Day 01 · 14 Aug 2026)',
+        icon:ICONS.journal, action:{type:'link', href:'unfiltered.html'}
+      });
       // Contact links
       document.querySelectorAll('.contact-row .contact-pill').forEach(a=>{
         idx.push({
