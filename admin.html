@@ -671,6 +671,30 @@
     window._editMode = e; window._isEditingExisting = true;
   }
 
+  // ---- Safe serialization helpers for publishToGitHub ----
+  // Indent a JS value (object/array/primitive) as a formatted string
+  function pretty(v, depth){
+    depth = depth || 0;
+    const pad = '  '.repeat(depth), pad2 = '  '.repeat(depth + 1);
+    if(v === null || v === undefined) return 'null';
+    if(typeof v === 'string') return JSON.stringify(v);
+    if(typeof v === 'number' || typeof v === 'boolean') return JSON.stringify(v);
+    if(Array.isArray(v)) {
+      if(!v.length) return '[]';
+      return '[\n' + v.map(x => pad2 + pretty(x, depth + 1)).join(',\n') + '\n' + pad + ']';
+    }
+    const keys = Object.keys(v);
+    if(!keys.length) return '{}';
+    return '{\n' + keys.map(k => pad2 + k + ': ' + pretty(v[k], depth + 1)).join(',\n') + '\n' + pad + '}';
+  }
+  function serializeArray(varName, arr, prefix){
+    const items = arr.map(item => '  ' + pretty(item, 1).trim());
+    return prefix + '[\n' + items.join(',\n') + '\n];\nwindow.' + varName + ' = ' + varName + ';';
+  }
+  function portSelectToVar(pt){
+    return pt==='journey' ? 'JOURNEY_DATA' : pt==='experience' ? 'EXPERIENCE_DATA' : pt==='skills' ? 'SKILLS_DATA' : `CREDENTIALS_DATA.${document.getElementById('p-c-folio').value}`;
+  }
+
   async function publishToGitHub() {
     const token = localStorage.getItem('uy_gh_token');
     if(!token) return alert("Enter token");
@@ -694,33 +718,54 @@
       const fileData = await res.json();
       const content = decodeURIComponent(escape(atob(fileData.content)));
       let newContent = '';
+      // Preserve the original file's comment header (everything before the first const)
+      const headerEnd = content.indexOf('const ');
+      const originalHeader = headerEnd >= 0 ? content.substring(0, headerEnd).trim() : '/* Auto-updated by admin panel */';
       
+      // --- SAFE EDIT: edit the live JavaScript arrays directly, then re-serialize cleanly ---
       if(dayToUpdate !== null) {
-        newContent = content.replace(new RegExp(`\\{\\s*day:\\s*${dayToUpdate},[\\s\\S]*?\\}(?=\\s*[,\\n\\]])`, 'g'), code.trim());
+        const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToUpdate);
+        if(idx === -1) throw new Error('Day not found in entries');
+        UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], eval('(' + code + ')'));
+        newContent = serializeArray('UNFILTERED_ENTRIES', UNFILTERED_ENTRIES, 'const UNFILTERED_ENTRIES = ');
+      } else if(currentMode === 'section') {
+        let target = sec==='random' ? window.RANDOM_STUFF : sec==='tried' ? window.THIRGS_TRIED : window.THRINGS_LEARNED;
+        const varName = sec==='random' ? 'RANDOM_STUFF' : sec==='tried' ? 'THINGS_TRIED' : 'THINGS_LEARNED';
+        if(window._secEditIdx !== undefined && window._isEditingSection) { target.splice(window._secEditIdx, 1); }
+        target.push(eval('(' + code + ')'));
+        newContent = serializeArray(varName, target, 'const ' + varName + ' = ');
+        window._isEditingSection = false;
       } else if(currentMode === 'portfolio' && (window._isEditingPort || window._isDeletingPort)) {
-        let search = arrayName.includes('.') ? arrayName.split('.')[1] : arrayName;
-        const start = content.indexOf(`${search}: [`) !== -1 ? content.indexOf(`${search}: [`) : content.indexOf(`const ${search} = [`);
-        const end = content.indexOf('];', start) !== -1 ? content.indexOf('];', start) : content.indexOf('],', start);
-        const arrStr = content.substring(start, end + 1);
-        
-        // Extract array items
-        const itemsMatch = arrStr.match(/\{[\s\S]*?\}(?=\s*[,\]])/g) || [];
+        const portVar = portSelectToVar(document.getElementById('port-select').value);
+        let target;
+        if(portVar.includes('.')) { const parts = portVar.split('.'); target = window[parts[0]][parts[1]]; }
+        else target = window[portVar];
         if(window._isDeletingPort) {
-          itemsMatch.splice(window._portDeleteIdx, 1);
+          target.splice(window._portDeleteIdx, 1);
+        } else if(window._isEditingPort) {
+          target.splice(window._portEditIdx, 1, eval('(' + code + ')'));
         } else {
-          itemsMatch[window._portEditIdx] = code.trim();
+          target.push(eval('(' + code + ')'));
         }
-        
-        const newArrStr = (arrayName.includes('.') ? `${search}: [\n` : `const ${search} = [\n`) + itemsMatch.join(',\n') + "\n]";
-        newContent = content.substring(0, start) + newArrStr + content.substring(end + 1);
+        newContent = serializeArray(portVar, target, 'const ' + portVar + ' = ');
+        window._isEditingPort = false;
+      } else if(currentMode === 'portfolio') {
+        // Add new portfolio item (default path)
+        const portVar = portSelectToVar(document.getElementById('port-select').value);
+        let target;
+        if(portVar.includes('.')) { const parts = portVar.split('.'); target = window[parts[0]][parts[1]]; }
+        else target = window[portVar];
+        target.push(eval('(' + code + ')'));
+        newContent = serializeArray(portVar, target, 'const ' + portVar + ' = ');
       } else {
-        let search = arrayName.includes('.') ? arrayName.split('.')[1] : arrayName;
-        const start = content.indexOf(`${search}: [`) !== -1 ? content.indexOf(`${search}: [`) : content.indexOf(`const ${search} = [`);
-        const end = content.indexOf('];', start) !== -1 ? content.indexOf('];', start) : content.indexOf('],', start);
-        const arr = content.substring(start, end);
-        if(!arr.includes('{')) newContent = content.substring(0, end) + "\n" + code + "\n" + content.substring(end);
-        else newContent = content.substring(0, start + arr.lastIndexOf('}') + 1) + "," + "\n" + code + content.substring(start + arr.lastIndexOf('}') + 1);
+        // New daily entry — append into the live array so commas/quotes are never mangled
+        UNFILTERED_ENTRIES.push(eval('(' + code + ')'));
+        newContent = serializeArray('UNFILTERED_ENTRIES', UNFILTERED_ENTRIES, 'const UNFILTERED_ENTRIES = ');
       }
+      // --- Safety check: the new file must parse as valid JavaScript before publishing ---
+      try { new Function(newContent); } catch(e) { throw new Error('Generated file has invalid JavaScript (' + e.message + '). Publish cancelled to protect your site.'); }
+      // --- Strip the comment header only kept from original file? Keep original header intact: ---
+      newContent = originalHeader + '\n' + newContent;
       await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
         method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Update ${filename}`, content: btoa(unescape(encodeURIComponent(newContent))), sha: fileData.sha })
