@@ -35,6 +35,11 @@ const JOURNEY_DATA = [
       "Secured a B.Com (Hons) seat at ARSD — the exact course I'd been trying to reach since the beginning. The parallel B.Com (Hons) from DU SOL was withdrawn once this was confirmed, since two degrees can't run at once within DU.",
       "This is where the real build starts: stacking ACCA around the degree, without letting either suffer."
     ]
+  },
+  {
+    title: "Starting NEW JOURNEY 😃",
+    date: "14th Aug 2026 ",
+    paragraphs: ["Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."]
   }
 ];
 window.JOURNEY_DATA = JOURNEY_DATA;
