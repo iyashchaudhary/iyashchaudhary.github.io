@@ -12,7 +12,7 @@
 const THINGS_TRIED = [
   {
     title: "Editing my own YouTube documentary in CapCut",
-    date: "14 August 2026",
+    date: "August 2026",
     outcome: "mixed",
     expected: "A clean 10-minute daily vlog cut in an hour.",
     actual: "Took 3 hours, footage was shaky, audio synced badly.",
@@ -62,7 +62,7 @@ window.RANDOM_STUFF = RANDOM_STUFF; // expose globally for the page renderer
 
 // ---------- SMALL WINS ----------
 const SMALL_WINS = [
-  { date: "14 August 2026", text: "Started Unfiltered Yash — Day 01 is live." }
+  { date: "11 August 2026", text: "Started Unfiltered Yash — Day 01 is live, and the YouTube documenting begins too." }
 ];
 window.SMALL_WINS = SMALL_WINS; // expose globally for the page renderer
 

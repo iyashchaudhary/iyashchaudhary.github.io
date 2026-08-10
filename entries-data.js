@@ -1,64 +1,32 @@
 /* ============================================================
-   UNFILTERED YASH — DAILY ENTRIES DATA
+   UNFILTERED YASH — DAILY ENTRIES DATA (v2 — corkboard)
    ============================================================
    This file is the entire "database". Each object in the array
    below is one day. To add a new day, copy one entry, change
-   the values, and add a comma between entries.
+   the values, and put a comma after the closing } of the day
+   before it.
 
-   EVERY FIELD EXCEPT day/date IS OPTIONAL — leave a section out
-   entirely (or set it to null) on days where it doesn't apply.
-   A lazy day can be just { day, date, dateLabel, weekday, fiveLines }.
+   NEW SIMPLE MODEL:
+   - day / date / weekday : always required
+   - journal              : the big pinned sticky note — the whole day
+                            in 1-2 free paragraphs (plain text; blank
+                            line between paragraphs)
+   - photo (optional)     : { src: "filename", caption: "..." }
+   - documentary (optional): only youtubeUrl — title, duration and
+                            thumbnail are fetched automatically
+
+   A lazy day can be just:
+     { day: 2, date: "2026-08-12", weekday: "Wednesday", journal: "..." }
    ============================================================ */
 
 const UNFILTERED_ENTRIES = [
   {
     day: 1,
-    date: "2026-08-14",
-    dateLabel: "14 August 2026",
-    weekday: "Friday",
-    title: "The day I started again.",
-
-    // Sticky-note cards. type controls the color + icon.
-    // Valid types: college, workout, study, work, mood, note (blank/custom)
-    cards: [
-      { type: "college", label: "College", text: "First day at ARSD. New place, new faces, mixed feeling of excitement & nervousness." },
-      { type: "workout", label: "Workout", text: "After a long break, finally hit the gym. Felt heavy in the beginning but happy I showed up." },
-      { type: "study",   label: "Study",   text: "Basics of Financial Accounting revision. Long way to go with ACCA, but step 1 is done." },
-      { type: "work",    label: "Work",    text: "Worked on website improvements and planned the YouTube documentary format." },
-      { type: "mood",    label: "Mood",    text: "Nervous + Excited + Hopeful. Let's see where this journey takes me.", emoji: "🙂" }
-    ],
-
-    photo: { src: "", caption: "Beautiful sunset on the first day" },
-
-    fiveLines: [
-      "Woke up early and felt motivated.",
-      "College was overwhelming but good.",
-      "Gym was tough but felt great after.",
-      "Worked on my website a lot.",
-      "Tomorrow: continue the momentum."
-    ],
-
-    reminder: [
-      "Wake up early",
-      "College notes",
-      "Gym (don't skip)",
-      "ACCA 2 hours",
-      "Edit Day 02 video"
-    ],
-
-    stats: { productivity: 6, energy: 7, focus: 6, happiness: 8 },
-
-    documentary: {
-      title: "Starting Again",
-      youtubeUrl: "",
-      duration: "12:47",
-      thumb: ""
-    },
-
-    tags: ["firstday", "college", "gym", "website", "restart", "newbeginning"],
-
-    quote: { text: "The best way to predict your future is to create it.", author: "Abraham Lincoln" }
+    date: "2026-08-11",
+    weekday: "Tuesday",
+    journal: "Day one of the documentary \u2014 and the day the website got its second world. Unfiltered Yash went live: a corkboard journal where every day gets pinned like a real memory, one big note at a time. YouTube documenting also starts today, side by side with this page.\n\nNervous but excited. New place, new routine, mixed feeling of everything at once. The plan is simple now: show up every day, write it down, post it. No filter.",
+    photo: { src: "", caption: "" },
+    documentary: { youtubeUrl: "" }
   }
 ];
 window.UNFILTERED_ENTRIES = UNFILTERED_ENTRIES; // expose globally for the page renderer
-

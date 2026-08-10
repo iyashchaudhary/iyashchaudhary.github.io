@@ -12,12 +12,13 @@
   :root{
     --bg:#150A0F; --panel:#1D1017; --panel2:#241420; --line:rgba(255,255,255,0.09);
     --pink:#E2557B; --pink-soft:#F2A6BE; --text:#F5EEE6; --dim:#B9A3AC;
+    --cream:#F2E8D5; --cream-ink:#3A2A24;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:radial-gradient(ellipse 900px 500px at 85% -5%, rgba(226,85,123,0.14), transparent 60%),var(--bg);
     color:var(--text); font-family:'Inter',sans-serif; padding:0 0 80px;}
   a{color:var(--pink-soft);}
-  .wrap{max-width:760px;margin:0 auto;padding:26px 18px 40px;}
+  .wrap{max-width:860px;margin:0 auto;padding:26px 18px 40px;}
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
   .top .back{font-size:.82rem;color:var(--dim);}
   h1{font-family:'Fraunces',serif;font-weight:700;font-size:1.7rem;margin:0 0 4px;}
@@ -39,26 +40,26 @@
     background:var(--panel2);color:var(--text);font-family:'Inter',sans-serif;font-size:.92rem;resize:vertical;
   }
   textarea{min-height:64px;font-family:'Inter',sans-serif;}
+  textarea.journal{min-height:190px;font-family:'Caveat',cursive;font-size:1.35rem;line-height:1.45;color:var(--cream-ink);background:var(--cream);}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
   .hint{color:var(--dim);font-size:.72rem;margin-top:4px;}
-
-  .card-block{border:1px dashed var(--line);border-radius:12px;padding:12px;margin-bottom:10px;position:relative;}
-  .card-block select{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text);margin-bottom:8px;}
-  .card-block .rm{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:.9rem;}
-  .add-btn{background:none;border:1px dashed var(--pink-soft);color:var(--pink-soft);padding:9px 14px;border-radius:10px;font-size:.82rem;cursor:pointer;width:100%;}
-
-  .line-list .li-row{display:flex;gap:8px;margin-bottom:8px;}
-  .line-list .li-row input{flex:1;}
-  .line-list .li-row button{background:none;border:none;color:var(--dim);cursor:pointer;font-size:1rem;flex:none;}
 
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
   .btn{padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;}
   .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;flex:1;}
   .btn.ghost{color:var(--dim);}
 
+  /* YouTube auto-preview */
+  .yt-preview{display:none;margin-top:14px;border:1px dashed var(--pink-soft);border-radius:12px;padding:12px;background:rgba(226,85,123,.06);}
+  .yt-preview.show{display:block;}
+  .yt-preview .row{display:flex;gap:12px;align-items:center;}
+  .yt-preview img{width:160px;flex:none;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.4);}
+  .yt-preview .meta{font-size:.88rem;color:var(--text);line-height:1.45;}
+  .yt-preview .meta b{display:block;font-family:'Fraunces',serif;font-size:1rem;color:var(--pink-soft);margin-bottom:4px;}
+  .yt-preview .meta span{color:var(--dim);font-size:.78rem;font-family:'IBM Plex Mono',monospace;}
+
   .output{margin-top:22px;}
-  .output textarea{width:100%;min-height:280px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;background:#0f080c;border:1px solid var(--line);border-radius:12px;padding:14px;color:#dfe;line-height:1.5;}
+  .output textarea{width:100%;min-height:260px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;background:#0f080c;border:1px solid var(--line);border-radius:12px;padding:14px;color:#dfe;line-height:1.5;}
   .steps{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--dim);margin-bottom:12px;}
   .steps b{color:var(--text);}
   .saved-note{font-size:.76rem;color:var(--dim);margin-top:4px;}
@@ -81,41 +82,27 @@
       <span class="saved-note" id="draft-note"></span>
     </div>
     <h1>Write Today's <span>Entry</span></h1>
-    <p style="color:var(--dim);font-size:.88rem;margin-top:0;">Fill only what happened. Skip anything that doesn't apply — a lazy day can be five lines and nothing else.</p>
+    <p style="color:var(--dim);font-size:.88rem;margin-top:0;">Pick the date, write the whole day on the big note, and drop a YouTube link if there's a video. Everything else — Day number, video title, thumbnail — happens automatically.</p>
 
     <fieldset>
-      <legend>Basics</legend>
+      <legend>When</legend>
       <div class="row2">
         <div>
           <label class="first">Day number</label>
           <input type="number" id="f-day" placeholder="auto-filled from date">
-          <div class="hint">Auto = (date − 14 Aug 2026) + 1. You can still type your own.</div>
+          <div class="hint">Auto = (date − 11 Aug 2026) + 1. You can still type your own.</div>
         </div>
         <div>
           <label class="first">Date</label>
           <input type="date" id="f-date">
         </div>
       </div>
-      <label>One-line title (optional)</label>
-      <input type="text" id="f-title" placeholder="e.g. The day I finally slept on time.">
     </fieldset>
 
     <fieldset>
-      <legend>Sticky notes</legend>
-      <div id="cards-list"></div>
-      <button type="button" class="add-btn" onclick="addCard()">+ Add a sticky note</button>
-    </fieldset>
-
-    <fieldset>
-      <legend>Today in 5 lines</legend>
-      <div class="line-list" id="five-list"></div>
-      <button type="button" class="add-btn" onclick="addLine('five-list')">+ Add a line</button>
-    </fieldset>
-
-    <fieldset>
-      <legend>Reminder for tomorrow (optional)</legend>
-      <div class="line-list" id="reminder-list"></div>
-      <button type="button" class="add-btn" onclick="addLine('reminder-list')">+ Add a reminder</button>
+      <legend>The big note — write the whole day here</legend>
+      <textarea class="journal" id="f-journal" placeholder="Today I woke up and… (write freely, 1-2 paragraphs. A blank line separates paragraphs.)"></textarea>
+      <div class="hint">This is the one big pinned sticky note on the corkboard. No categories, no boxes — just how the day actually felt.</div>
     </fieldset>
 
     <fieldset>
@@ -128,37 +115,19 @@
     </fieldset>
 
     <fieldset>
-      <legend>Today's stats (optional, 1–10)</legend>
-      <div class="row4">
-        <div><label class="first">📈 Productivity</label><input type="number" min="1" max="10" id="f-productivity"></div>
-        <div><label class="first">⚡ Energy</label><input type="number" min="1" max="10" id="f-energy"></div>
-        <div><label class="first">🎯 Focus</label><input type="number" min="1" max="10" id="f-focus"></div>
-        <div><label class="first">💛 Happiness</label><input type="number" min="1" max="10" id="f-happiness"></div>
-      </div>
-    </fieldset>
-
-    <fieldset>
       <legend>Today's documentary (optional)</legend>
-      <label class="first">Video title</label>
-      <input type="text" id="f-doc-title" placeholder="e.g. Slower Than Yesterday">
-      <label>YouTube URL</label>
-      <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=...">
-      <label>Duration</label>
-      <input type="text" id="f-doc-dur" placeholder="e.g. 9:32">
-    </fieldset>
-
-    <fieldset>
-      <legend>Tags (optional)</legend>
-      <label class="first">Comma-separated</label>
-      <input type="text" id="f-tags" placeholder="college, gym, lowenergy">
-    </fieldset>
-
-    <fieldset>
-      <legend>Quote (optional)</legend>
-      <label class="first">Quote text</label>
-      <input type="text" id="f-quote-text">
-      <label>Author</label>
-      <input type="text" id="f-quote-author">
+      <label class="first">YouTube URL</label>
+      <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
+      <div class="hint">Paste the link — the title and thumbnail are picked up automatically. No need to type them.</div>
+      <div class="yt-preview" id="yt-preview">
+        <div class="row">
+          <img id="yt-thumb" alt="video thumbnail">
+          <div class="meta">
+            <b id="yt-title">—</b>
+            <span id="yt-meta"></span>
+          </div>
+        </div>
+      </div>
     </fieldset>
 
     <div class="actions">
@@ -170,10 +139,11 @@
       <div class="steps">
         <b>How to publish this entry:</b><br>
         1. Copy the code below.<br>
-        2. Open <b>entries-data.js</b> in your site files.<br>
-        3. Paste it as a new object inside the <b>UNFILTERED_ENTRIES</b> array (add a comma before it if it's not the first entry).<br>
-        4. If you added a photo, upload that image file into the same folder.<br>
-        5. Save and re-upload/push your site files. Done — the new day appears automatically.
+        2. Open <b>entries-data.js</b> in your site files (github.com → your repo → entries-data.js → pencil icon).<br>
+        3. Paste it as a new object at the end of the <b>UNFILTERED_ENTRIES</b> array — right above the closing <b>];</b>.<br>
+        4. Put a comma <b>,</b> after the closing <b>}</b> of the entry before it.<br>
+        5. If you added a photo, upload that image file into the same folder.<br>
+        6. Click <b>Commit changes</b>. Done — the new day appears automatically within a minute or two.
       </div>
       <textarea id="output" readonly onclick="this.select()"></textarea>
       <div class="actions">
@@ -199,38 +169,8 @@
   }
   document.getElementById('passcode').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
 
-  const cardTypes = [
-    ['college','🏫 College'], ['workout','🏋️ Workout'], ['study','📖 Study'],
-    ['work','💻 Work'], ['mood','😊 Mood'], ['note','📌 Other']
-  ];
-
-  function addCard(type, label, text){
-    const wrap = document.createElement('div');
-    wrap.className = 'card-block';
-    wrap.innerHTML = `
-      <button type="button" class="rm" onclick="this.parentElement.remove()">✕</button>
-      <select class="c-type">${cardTypes.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join('')}</select>
-      <input type="text" class="c-label" placeholder="Label (e.g. College)" style="margin-bottom:8px;">
-      <textarea class="c-text" placeholder="What happened..."></textarea>
-    `;
-    document.getElementById('cards-list').appendChild(wrap);
-    if(type) wrap.querySelector('.c-type').value = type;
-    if(label) wrap.querySelector('.c-label').value = label;
-    if(text) wrap.querySelector('.c-text').value = text;
-  }
-
-  function addLine(listId, val){
-    const wrap = document.createElement('div');
-    wrap.className = 'li-row';
-    wrap.innerHTML = `<input type="text" value="${val?val.replace(/"/g,'&quot;'):''}" placeholder="..."><button type="button" onclick="this.parentElement.remove()">✕</button>`;
-    document.getElementById(listId).appendChild(wrap);
-  }
-
-  // start with a couple blank rows
-  addCard(); addLine('five-list'); addLine('five-list'); addLine('five-list');
-
-  // ---- Auto day count: Day 01 = 2026-08-14. Pick a date and the day number fills itself. ----
-  const START_DATE = new Date('2026-08-14T00:00:00');
+  // ---- Auto day count: Day 01 = 2026-08-11. Pick a date and the day number fills itself. ----
+  const START_DATE = new Date('2026-08-11T00:00:00');
   const DAY_MS = 86400000;
   function fillDayNumber(){
     const dateVal = document.getElementById('f-date').value;
@@ -249,23 +189,40 @@
     fillDayNumber();
   })();
 
+  // ---- YouTube auto-fetch: title + thumbnail, no API key needed ----
+  function ytId(url){
+    if(!url) return null;
+    var m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+    return m ? m[1] : null;
+  }
+  const fDocUrl = document.getElementById('f-doc-url');
+  const preview = document.getElementById('yt-preview');
+  const pThumb = document.getElementById('yt-thumb');
+  const pTitle = document.getElementById('yt-title');
+  const pMeta = document.getElementById('yt-meta');
+  let fetchedTitle = '';
+  function previewVideo(){
+    const id = ytId(fDocUrl.value.trim());
+    if(!id){ preview.classList.remove('show'); fetchedTitle=''; return; }
+    preview.classList.add('show');
+    // thumbnail: try maxres, fall back via onerror
+    pThumb.src = 'https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg';
+    pThumb.onerror = function(){ pThumb.src = 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; };
+    pMeta.textContent = 'Day video — details fill in automatically';
+    // title via oEmbed (CORS-friendly via noembed proxy)
+    fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+id+'&format=json')
+      .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(d=>{ fetchedTitle = d.title||''; pTitle.textContent = d.title; pMeta.textContent = d.author_name ? d.author_name+' • '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) : ''; })
+      .catch(()=>{
+        // noembed proxy fallback
+        fetch('https://noembed.com/embed?url=https://www.youtube.com/watch?v='+id)
+          .then(r=>r.json()).then(d=>{ fetchedTitle = d.title||''; pTitle.textContent = d.title||'Untitled'; pMeta.textContent = 'Title fetched automatically'; })
+          .catch(()=>{ fetchedTitle=''; pTitle.textContent = 'Title couldn\'t be fetched — it will still show the video'; pMeta.textContent = ''; });
+      });
+  }
+  fDocUrl.addEventListener('input', previewVideo);
+
   function collect(){
-    const cards = [...document.querySelectorAll('#cards-list .card-block')].map(b=>({
-      type: b.querySelector('.c-type').value,
-      label: b.querySelector('.c-label').value.trim(),
-      text: b.querySelector('.c-text').value.trim()
-    })).filter(c=>c.text);
-
-    const five = [...document.querySelectorAll('#five-list input')].map(i=>i.value.trim()).filter(Boolean);
-    const reminder = [...document.querySelectorAll('#reminder-list input')].map(i=>i.value.trim()).filter(Boolean);
-    const tags = document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-
-    const stats = {};
-    ['productivity','energy','focus','happiness'].forEach(k=>{
-      const v = document.getElementById('f-'+k).value;
-      if(v) stats[k] = parseInt(v,10);
-    });
-
     const dateVal = document.getElementById('f-date').value;
     let dateLabel = '', weekday = '';
     if(dateVal){
@@ -273,31 +230,16 @@
       dateLabel = d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
       weekday = d.toLocaleDateString('en-US',{weekday:'long'});
     }
-
+    const docUrl = fDocUrl.value.trim();
     return {
       day: parseInt(document.getElementById('f-day').value,10) || null,
       date: dateVal,
       dateLabel, weekday,
-      title: document.getElementById('f-title').value.trim(),
-      cards,
+      journal: document.getElementById('f-journal').value.trim(),
       photo: { src: document.getElementById('f-photo-src').value.trim(), caption: document.getElementById('f-photo-cap').value.trim() },
-      fiveLines: five,
-      reminder,
-      stats: Object.keys(stats).length ? stats : null,
-      documentary: (document.getElementById('f-doc-title').value || document.getElementById('f-doc-url').value) ? {
-        title: document.getElementById('f-doc-title').value.trim(),
-        youtubeUrl: document.getElementById('f-doc-url').value.trim(),
-        duration: document.getElementById('f-doc-dur').value.trim()
-      } : null,
-      tags,
-      quote: document.getElementById('f-quote-text').value.trim() ? {
-        text: document.getElementById('f-quote-text').value.trim(),
-        author: document.getElementById('f-quote-author').value.trim()
-      } : null
+      documentary: docUrl ? { youtubeUrl: docUrl, title: fetchedTitle } : null
     };
   }
-
-  function js(v){ return JSON.stringify(v, null, 2); }
 
   function generate(){
     const e = collect();
@@ -305,43 +247,28 @@
       alert('Please pick a Date.');
       return;
     }
+    if(!e.journal){
+      alert('Write at least a line or two on the big note — even a lazy day deserves words.');
+      return;
+    }
     if(!e.day){
-      const diff = Math.round((new Date(e.date+'T00:00:00') - new Date('2026-08-14T00:00:00'))/DAY_MS);
+      const diff = Math.round((new Date(e.date+'T00:00:00') - new Date('2026-08-11T00:00:00'))/DAY_MS);
       e.day = diff >= 0 ? diff + 1 : null;
-      if(!e.day){ alert('Date must be on or after 14 August 2026 (Day 01).'); return; }
+      if(!e.day){ alert('Date must be on or after 11 August 2026 (Day 01).'); return; }
       document.getElementById('f-day').value = e.day;
     }
     let out = `  {\n`;
     out += `    day: ${e.day},\n`;
     out += `    date: "${e.date}",\n`;
-    out += `    dateLabel: "${e.dateLabel}",\n`;
     out += `    weekday: "${e.weekday}",\n`;
-    if(e.title) out += `    title: "${e.title.replace(/"/g,'\\"')}",\n`;
-    if(e.cards.length){
-      out += `    cards: [\n`;
-      out += e.cards.map(c=>`      { type: "${c.type}", label: "${(c.label||'').replace(/"/g,'\\"')}", text: "${c.text.replace(/"/g,'\\"')}" }`).join(',\n');
-      out += `\n    ],\n`;
-    }
+    // journal: escape lines, join paragraphs with \n\n
+    const paras = e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    out += `    journal: "${paras.map(p=>p.replace(/"/g,'\\"')).join('\\n\\n')}",\n`;
     if(e.photo.src){
       out += `    photo: { src: "${e.photo.src}", caption: "${e.photo.caption.replace(/"/g,'\\"')}" },\n`;
     }
-    if(e.fiveLines.length){
-      out += `    fiveLines: [\n      ${e.fiveLines.map(l=>`"${l.replace(/"/g,'\\"')}"`).join(',\n      ')}\n    ],\n`;
-    }
-    if(e.reminder.length){
-      out += `    reminder: [\n      ${e.reminder.map(l=>`"${l.replace(/"/g,'\\"')}"`).join(',\n      ')}\n    ],\n`;
-    }
-    if(e.stats){
-      out += `    stats: { ${Object.entries(e.stats).map(([k,v])=>`${k}: ${v}`).join(', ')} },\n`;
-    }
     if(e.documentary){
-      out += `    documentary: { title: "${(e.documentary.title||'').replace(/"/g,'\\"')}", youtubeUrl: "${e.documentary.youtubeUrl}", duration: "${e.documentary.duration}" },\n`;
-    }
-    if(e.tags.length){
-      out += `    tags: [${e.tags.map(t=>`"${t}"`).join(', ')}],\n`;
-    }
-    if(e.quote){
-      out += `    quote: { text: "${e.quote.text.replace(/"/g,'\\"')}", author: "${(e.quote.author||'').replace(/"/g,'\\"')}" },\n`;
+      out += `    documentary: { youtubeUrl: "${e.documentary.youtubeUrl}" },\n`;
     }
     out = out.replace(/,\n$/, '\n');
     out += `  }`;
@@ -356,47 +283,34 @@
     const t = document.getElementById('output');
     t.select();
     document.execCommand('copy');
-    alert('Copied! Now paste it into entries-data.js');
+    alert('Copied! Now paste it into entries-data.js (right above the closing ];, with a comma after the previous entry).');
   }
 
   // autosave draft to localStorage so nothing is lost mid-writing
   function saveDraft(){
     try{
-      localStorage.setItem('uy_draft', JSON.stringify(collect()));
+      localStorage.setItem('uy_draft2', JSON.stringify(collect()));
       document.getElementById('draft-note').textContent = 'Draft saved locally';
     }catch(e){}
   }
   function loadDraft(){
     try{
-      const raw = localStorage.getItem('uy_draft');
+      const raw = localStorage.getItem('uy_draft2');
       if(!raw) return;
       const d = JSON.parse(raw);
       if(d.day) document.getElementById('f-day').value = d.day;
       if(d.date) document.getElementById('f-date').value = d.date;
-      if(d.title) document.getElementById('f-title').value = d.title;
-      document.getElementById('cards-list').innerHTML = '';
-      (d.cards||[]).forEach(c=>addCard(c.type,c.label,c.text));
-      if(!d.cards || !d.cards.length) addCard();
-      document.getElementById('five-list').innerHTML = '';
-      (d.fiveLines && d.fiveLines.length ? d.fiveLines : ['','','']).forEach(l=>addLine('five-list', l));
-      document.getElementById('reminder-list').innerHTML = '';
-      (d.reminder||[]).forEach(l=>addLine('reminder-list', l));
+      if(d.journal) document.getElementById('f-journal').value = d.journal;
       if(d.photo){ document.getElementById('f-photo-src').value = d.photo.src||''; document.getElementById('f-photo-cap').value = d.photo.caption||''; }
-      if(d.stats){ Object.entries(d.stats).forEach(([k,v])=>{ const el=document.getElementById('f-'+k); if(el) el.value=v; }); }
-      if(d.documentary){
-        document.getElementById('f-doc-title').value = d.documentary.title||'';
-        document.getElementById('f-doc-url').value = d.documentary.youtubeUrl||'';
-        document.getElementById('f-doc-dur').value = d.documentary.duration||'';
-      }
-      if(d.tags) document.getElementById('f-tags').value = d.tags.join(', ');
-      if(d.quote){ document.getElementById('f-quote-text').value = d.quote.text||''; document.getElementById('f-quote-author').value = d.quote.author||''; }
+      if(d.documentary && d.documentary.youtubeUrl){ document.getElementById('f-doc-url').value = d.documentary.youtubeUrl; previewVideo(); }
+      if(d.date) fillDayNumber();
       document.getElementById('draft-note').textContent = 'Draft restored';
     }catch(e){}
   }
 
   function clearDraft(){
-    if(!confirm('Clear everything you have written on this page?')) return;
-    localStorage.removeItem('uy_draft');
+    if(!confirm("Clear everything you have written on this page?")) return;
+    localStorage.removeItem('uy_draft2');
     location.reload();
   }
 
