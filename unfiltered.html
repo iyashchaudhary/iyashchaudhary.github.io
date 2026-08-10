@@ -266,6 +266,32 @@
   .ad-actions button:hover{border-color:var(--uy-pink);color:var(--uy-pink-soft);}
   .ad-vlink{font-size:.76rem;color:var(--uy-pink-soft);}
 
+  /* Edit entry button */
+  .btn-edit-entry {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--uy-line);
+    color: var(--uy-text-dim);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+  .btn-edit-entry:hover {
+    background: var(--uy-pink);
+    color: #fff;
+    border-color: var(--uy-pink);
+    transform: scale(1.1);
+  }
+
   @media (max-width:980px){
     .uy-shell{grid-template-columns:1fr; padding:16px;}
     .uy-side{flex-direction:row; flex-wrap:wrap; order:1;}
@@ -376,7 +402,8 @@
     topDate.textContent = `${monthOf(entry.date)}${entry.weekday ? ', '+entry.weekday : ''}`;
 
     let body = `
-      <div class="day-head">
+      <div class="day-head" style="position:relative;">
+        <button class="btn-edit-entry" title="Edit this entry" onclick="editEntryPrompt(${entry.day})">✏️</button>
         <div class="day-num">DAY ${String(entry.day).padStart(2,'0')}</div>
         <span class="day-date-pill">${monthOf(entry.date).toUpperCase()}${entry.weekday ? ' · '+entry.weekday.toUpperCase() : ''}</span>
       </div>`;
@@ -494,7 +521,7 @@
         groups[y][m].forEach(e=>{
           const snip = e.journal ? e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean)[0].slice(0,90) : '';
           const hasVideo = !!ytId(e.documentary && e.documentary.youtubeUrl);
-          body += '<div class="arch-day"><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasVideo?'<span class="ad-video">🎥</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="ad-actions"><button data-go="'+e.day+'">Open day →</button>'+(hasVideo?'<a class="ad-vlink" href="https://www.youtube.com/watch?v='+ytId(e.documentary.youtubeUrl)+'" target="_blank" rel="noopener">Watch documentary →</a>':'')+'</div></div>';
+          body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasVideo?'<span class="ad-video">🎥</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="ad-actions"><button data-go="'+e.day+'">Open day →</button>'+(hasVideo?'<a class="ad-vlink" href="https://www.youtube.com/watch?v='+ytId(e.documentary.youtubeUrl)+'" target="_blank" rel="noopener">Watch documentary →</a>':'')+'</div></div>';
         });
         body += '</div>';
       });
@@ -520,6 +547,15 @@
     q.focus();
   }
   document.getElementById('btn-all').addEventListener('click', ()=> renderArchive(''));
+
+  window.editEntryPrompt = function(day) {
+    const pass = prompt("Enter passcode to edit:");
+    if(pass === "yash2026") {
+      window.location.href = `admin.html?mode=edit&day=${day}`;
+    } else if(pass !== null) {
+      alert("Wrong passcode!");
+    }
+  };
 
   const secMeta = {
     'learned-tried': { icon:'🧪', title:'Things I Learned &amp; Tried'.replace('&amp;','&'), sub:'Courses, skills, experiments and new stuff — what I actually learned, not just certificates.' },
