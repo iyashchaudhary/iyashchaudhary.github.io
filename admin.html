@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Write Entry — Unfiltered Yash</title>
+<title>Admin Panel — Yash Chaudhary</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,15 +27,19 @@
   .lock.show, .form-card.show{display:block;}
 
   .lock{max-width:360px;margin:80px auto;text-align:center;}
-  .lock input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:1rem;margin:14px 0;}
-  .lock button{width:100%;padding:13px;border-radius:12px;border:none;background:var(--pink);color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;}
-  .lock p{color:var(--dim);font-size:.85rem;}
+  .lock input{width:100%; padding:13px 16px; border-radius:12px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font-size:1rem; margin:14px 0;}
+  .lock button{width:100%; padding:13px; border-radius:12px; border:none; background:var(--pink); color:#fff; font-weight:700; font-size:.95rem; cursor:pointer;}
+  .lock p{color:var(--dim); font-size:.85rem;}
 
+  .gh-config{margin-bottom:20px; background:rgba(226,85,123,0.05); border:1px dashed var(--line); border-radius:12px; padding:12px 16px;}
+  .gh-config h3{font-family:'Fraunces',serif; font-size:.9rem; margin:0 0 8px; color:var(--pink-soft);}
+  .gh-config input{width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font-size:.8rem;}
+  
   fieldset{border:1px solid var(--line);border-radius:16px;padding:18px 18px 20px;margin-bottom:16px;}
   legend{font-family:'Fraunces',serif;font-weight:600;color:var(--pink-soft);padding:0 8px;font-size:.95rem;}
   label{display:block;font-size:.8rem;color:var(--dim);margin:12px 0 6px;font-weight:600;}
   label.first{margin-top:0;}
-  input[type=text], input[type=date], input[type=number], input[type=url], textarea{
+  input[type=text], input[type=date], input[type=number], input[type=url], textarea, select{
     width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
     background:var(--panel2);color:var(--text);font-family:'Inter',sans-serif;font-size:.92rem;resize:vertical;
   }
@@ -50,9 +54,10 @@
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
   .btn{padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;}
   .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;flex:1;}
+  .btn.publish{background:#2da44e; border-color:#2da44e; color:#fff; flex:1;}
+  .btn.publish:disabled{opacity:0.5; cursor:not-allowed;}
   .btn.ghost{color:var(--dim);}
 
-  /* YouTube auto-preview */
   .yt-preview{display:none;margin-top:14px;border:1px dashed var(--pink-soft);border-radius:12px;padding:12px;background:rgba(226,85,123,.06);}
   .yt-preview.show{display:block;}
   .yt-preview .row{display:flex;gap:12px;align-items:center;}
@@ -66,11 +71,6 @@
   .steps{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--dim);margin-bottom:12px;}
   .steps b{color:var(--text);}
   .saved-note{font-size:.76rem;color:var(--dim);margin-top:4px;}
-  .gh-config{margin-bottom:20px; background:rgba(226,85,123,0.05); border:1px dashed var(--line); border-radius:12px; padding:12px 16px;}
-  .gh-config h3{font-family:'Fraunces',serif; font-size:.9rem; margin:0 0 8px; color:var(--pink-soft);}
-  .gh-config input{width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font-size:.8rem;}
-  .btn.publish{background:#2da44e; border-color:#2da44e; color:#fff;}
-  .btn.publish:disabled{opacity:0.5; cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -86,7 +86,7 @@
 
   <div class="form-card" id="form-card">
     <div class="top">
-      <a class="back" href="unfiltered.html">← back to Unfiltered Yash</a>
+      <a class="back" href="index.html">← back to portfolio</a>
       <span class="saved-note" id="draft-note"></span>
     </div>
     <h1 id="mode-title">Write Today's <span>Entry</span></h1>
@@ -101,75 +101,50 @@
       <button class="tab active" data-mode="entry">✏️ Daily Entry</button>
       <button class="tab" data-mode="edit">🖊️ Edit Past Entry</button>
       <button class="tab" data-mode="section">📌 Post to Section</button>
+      <button class="tab" data-mode="portfolio">💼 Portfolio Manager</button>
     </div>
-    <p style="color:var(--dim);font-size:.88rem;margin-top:0;">Pick the date, write the whole day on the big note, and drop a YouTube link if there's a video. Everything else — Day number, video title, thumbnail — happens automatically.</p>
 
-    <fieldset>
-      <legend>When</legend>
-      <div class="row2">
-        <div>
-          <label class="first">Day number</label>
-          <input type="number" id="f-day" placeholder="auto-filled from date">
-          <div class="hint">Auto = (date − 11 Aug 2026) + 1. You can still type your own.</div>
-        </div>
-        <div>
-          <label class="first">Date</label>
-          <input type="date" id="f-date">
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>The big note — write the whole day here</legend>
-      <textarea class="journal" id="f-journal" placeholder="Today I woke up and… (write freely, 1-2 paragraphs. A blank line separates paragraphs.)"></textarea>
-      <div class="hint">This is the one big pinned sticky note on the corkboard. No categories, no boxes — just how the day actually felt.</div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Photo (optional)</legend>
-      <label class="first">Image URL or filename</label>
-      <input type="text" id="f-photo-src" placeholder="e.g. photos/day02.jpg">
-      <div class="hint">Upload the photo to the same folder as this page, then put its filename here.</div>
-      <label>Caption</label>
-      <input type="text" id="f-photo-cap" placeholder="e.g. Sunset from the terrace">
-    </fieldset>
-
-    <fieldset>
-      <legend>Today's documentary (optional)</legend>
-      <label class="first">YouTube URL</label>
-      <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
-      <div class="hint">Paste the link — the title and thumbnail are picked up automatically. No need to type them.</div>
-      <div class="yt-preview" id="yt-preview">
-        <div class="row">
-          <img id="yt-thumb" alt="video thumbnail">
-          <div class="meta">
-            <b id="yt-title">—</b>
-            <span id="yt-meta"></span>
+    <!-- ========== DAILY ENTRY ========== -->
+    <div id="entry-fields">
+      <fieldset>
+        <legend>When</legend>
+        <div class="row2">
+          <div>
+            <label class="first">Day number</label>
+            <input type="number" id="f-day" placeholder="auto-filled from date">
+            <div class="hint">Auto = (date − 11 Aug 2026) + 1.</div>
+          </div>
+          <div>
+            <label class="first">Date</label>
+            <input type="date" id="f-date">
           </div>
         </div>
-      </div>
-    </fieldset>
+      </fieldset>
 
-      <div class="actions">
-      <button class="btn primary" id="btn-generate" onclick="generate()">Generate entry code</button>
-      <button class="btn publish" id="btn-publish" onclick="publishToGitHub()" style="display:none;">🚀 Publish to GitHub</button>
-      <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
-    </div>
+      <fieldset>
+        <legend>The big note — write the whole day here</legend>
+        <textarea class="journal" id="f-journal" placeholder="Today I woke up and…"></textarea>
+      </fieldset>
 
-    <div class="output" id="output-wrap" style="display:none;">
-      <div class="steps" id="publish-steps">
-        <b>How to publish this entry:</b><br>
-        1. Copy the code below.<br>
-        2. Open <b>entries-data.js</b> in your site files (github.com → your repo → entries-data.js → pencil icon).<br>
-        3. Paste it as a new object at the end of the <b>UNFILTERED_ENTRIES</b> array — right above the closing <b>];</b>.<br>
-        4. Put a comma <b>,</b> after the closing <b>}</b> of the entry before it.<br>
-        5. If you added a photo, upload that image file into the same folder.<br>
-        6. Click <b>Commit changes</b>. Done — the new day appears automatically within a minute or two.
-      </div>
-      <textarea id="output" readonly onclick="this.select()"></textarea>
-      <div class="actions">
-        <button class="btn primary" onclick="copyOutput()">📋 Copy code</button>
-      </div>
+      <fieldset>
+        <legend>Photo (optional)</legend>
+        <label class="first">Image URL or filename</label>
+        <input type="text" id="f-photo-src" placeholder="e.g. photos/day02.jpg">
+        <label>Caption</label>
+        <input type="text" id="f-photo-cap" placeholder="e.g. Sunset from the terrace">
+      </fieldset>
+
+      <fieldset>
+        <legend>Today's documentary (optional)</legend>
+        <label class="first">YouTube URL</label>
+        <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=...">
+        <div class="yt-preview" id="yt-preview">
+          <div class="row">
+            <img id="yt-thumb" alt="video thumbnail">
+            <div class="meta"><b id="yt-title">—</b><span id="yt-meta"></span></div>
+          </div>
+        </div>
+      </fieldset>
     </div>
 
     <!-- ========== EDIT PAST ENTRY ========== -->
@@ -178,21 +153,16 @@
         <legend>Edit a past daily entry</legend>
         <label class="first">Pick the day you want to edit</label>
         <select id="edit-select"></select>
-        <div class="hint">Load it, change whatever you want, then Generate again. Paste the new code in the SAME place of the OLD entry (replace the whole old block).</div>
         <div class="actions" style="margin-top:12px;">
           <button class="btn" onclick="loadEntryForEdit()">Load this entry</button>
         </div>
       </fieldset>
-      <div class="steps" style="margin-top:8px;">
-        <b>Editing rule:</b> after generating, open entries-data.js, find the SAME old day block (search its date), <b>delete that whole block and paste the new one in its place</b>. Keep the comma after it. Same Commit changes step as always.
-      </div>
     </div>
 
     <!-- ========== POST TO SECTION ========== -->
     <div class="section-wrap" id="sec-wrap" style="display:none;">
       <fieldset>
         <legend>Post to a section</legend>
-        <label class="first">Which section?</label>
         <select id="sec-select" onchange="onSecTypeChange()">
           <option value="random">🖼️ Random Stuff</option>
           <option value="tried">🧪 Things I Tried</option>
@@ -202,24 +172,17 @@
         <div id="sec-random-fields">
           <label class="first">Your post</label>
           <textarea id="s-random-text" placeholder="Bro the ARSD canteen queue is genuinely a full workout 😭"></textarea>
-          <div class="hint">A thought, meme caption, screenshot, half-idea — anything.</div>
         </div>
 
         <div id="sec-tried-fields" style="display:none;">
           <label class="first">What did you try? (title)</label>
           <input type="text" id="s-tried-title" placeholder="e.g. Editing my first YouTube documentary in CapCut">
           <div class="row2">
-            <div>
-              <label class="first">Expected</label>
-              <input type="text" id="s-tried-expected" placeholder="What you thought would happen">
-            </div>
-            <div>
-              <label class="first">What actually happened</label>
-              <input type="text" id="s-tried-actual" placeholder="The reality">
-            </div>
+            <div><label class="first">Expected</label><input type="text" id="s-tried-expected"></div>
+            <div><label class="first">Actual</label><input type="text" id="s-tried-actual"></div>
           </div>
           <label>What you learned</label>
-          <textarea id="s-tried-learned" placeholder="The takeaway…"></textarea>
+          <textarea id="s-tried-learned"></textarea>
           <div class="row2">
             <div>
               <label class="first">Result</label>
@@ -229,10 +192,7 @@
                 <option value="mixed">🔀 Mixed</option>
               </select>
             </div>
-            <div>
-              <label class="first">Date</label>
-              <input type="text" id="s-tried-date" placeholder="e.g. 12 August 2026">
-            </div>
+            <div><label class="first">Date</label><input type="text" id="s-tried-date" placeholder="e.g. 12 August 2026"></div>
           </div>
         </div>
 
@@ -247,22 +207,93 @@
                 <option value="done">✅ Completed</option>
               </select>
             </div>
-            <div>
-              <label class="first">Completed date (if done)</label>
-              <input type="text" id="s-learned-done" placeholder="e.g. August 2026">
-            </div>
+            <div><label class="first">Completed date (if done)</label><input type="text" id="s-learned-done"></div>
           </div>
-          <label>What you learned (separate points with • or new lines)</label>
-          <textarea id="s-learned-items" placeholder="Double-entry system • Journal vs ledger • Trial balance"></textarea>
+          <label>What you learned (separate with • or new lines)</label>
+          <textarea id="s-learned-items"></textarea>
           <label>How are you using it</label>
-          <input type="text" id="s-learned-used" placeholder="e.g. ACCA foundation + freelance invoices">
+          <input type="text" id="s-learned-used">
         </div>
       </fieldset>
+    </div>
 
-      <div class="actions">
-        <button class="btn primary" onclick="generateSection()">Generate post code</button>
-        <button class="btn publish" id="btn-publish-sec" onclick="publishToGitHub()" style="display:none;">🚀 Publish to GitHub</button>
-      </div>
+    <!-- ========== PORTFOLIO MANAGER ========== -->
+    <div class="section-wrap" id="port-wrap" style="display:none;">
+      <fieldset>
+        <legend>Portfolio Management</legend>
+        <label class="first">Which part of your portfolio?</label>
+        <select id="port-select" onchange="onPortTypeChange()">
+          <option value="journey">🛤️ Journey Milestone</option>
+          <option value="experience">💼 Experience Node</option>
+          <option value="credentials">📜 Credentials / Folio</option>
+          <option value="skills">⚡ Skills</option>
+        </select>
+
+        <div id="port-journey-fields">
+          <label class="first">Milestone Title</label>
+          <input type="text" id="p-j-title" placeholder="e.g. B.Com (Hons) — ARSD College">
+          <label>Date Range</label>
+          <input type="text" id="p-j-date" placeholder="e.g. Aug 2026 – 2029">
+          <label>Milestone Story (1-2 paragraphs)</label>
+          <textarea id="p-j-text" placeholder="Tell the story..."></textarea>
+        </div>
+
+        <div id="port-experience-fields" style="display:none;">
+          <label class="first">Role Name</label>
+          <input type="text" id="p-e-role" placeholder="e.g. Design & Content Team Member">
+          <label>Organization / College</label>
+          <input type="text" id="p-e-org" placeholder="e.g. TEDxSVC · Sri Venkateswara College">
+          <label>Duration</label>
+          <input type="text" id="p-e-date" placeholder="e.g. Sep 2025 – Feb 2026 · 6 mos">
+          <label>Brief Description</label>
+          <textarea id="p-e-desc"></textarea>
+        </div>
+
+        <div id="port-credentials-fields" style="display:none;">
+          <label class="first">Which Folio?</label>
+          <select id="p-c-folio">
+            <option value="finance">Finance & Valuation</option>
+            <option value="tech">AI Automation & Tech</option>
+            <option value="strategy">Strategy & Consulting</option>
+            <option value="marketing">Marketing & Real Client Work</option>
+          </select>
+          <label>Credential Title</label>
+          <input type="text" id="p-c-title">
+          <label>Status</label>
+          <input type="text" id="p-c-status" placeholder="e.g. Completed">
+          <label>Issuer & Date</label>
+          <input type="text" id="p-c-issuer">
+          <label>Description</label>
+          <textarea id="p-c-desc"></textarea>
+          <label>Certificate Image Filename</label>
+          <input type="text" id="p-c-img" placeholder="e.g. cert.webp">
+          <label>Verification Link</label>
+          <input type="url" id="p-c-verify">
+          <label>Skills Learned (comma separated)</label>
+          <input type="text" id="p-c-skills">
+        </div>
+
+        <div id="port-skills-fields" style="display:none;">
+          <label class="first">Skill Name</label>
+          <input type="text" id="p-s-title">
+          <label>Level / Experience</label>
+          <input type="text" id="p-s-level">
+          <label>Brief Description</label>
+          <textarea id="p-s-desc"></textarea>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="btn-generate" onclick="handleGenerate()">Generate Code</button>
+      <button class="btn publish" id="btn-publish" onclick="publishToGitHub()" style="display:none;">🚀 Publish to GitHub</button>
+      <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
+    </div>
+
+    <div class="output" id="output-wrap" style="display:none;">
+      <div class="steps" id="publish-steps"><b>How to publish:</b> Copy this code or click Publish to GitHub.</div>
+      <textarea id="output" readonly onclick="this.select()"></textarea>
+      <div class="actions"><button class="btn primary" onclick="copyOutput()">📋 Copy code</button></div>
     </div>
   </div>
 
@@ -270,449 +301,213 @@
 
 <script src="entries-data.js"></script>
 <script src="sections-data.js"></script>
+<script src="portfolio-data.js"></script>
 <script>
-  const PASSCODE = "yash2026"; // change this to whatever you want
+  const PASSCODE = "yash2026";
   const GITHUB_REPO = "iyashchaudhary/iyashchaudhary.github.io";
+  let currentMode = 'entry';
 
   function tryUnlock(){
-    const val = document.getElementById('passcode').value.trim();
-    if(val === PASSCODE){
+    if(document.getElementById('passcode').value.trim() === PASSCODE){
       document.getElementById('lock').classList.remove('show');
       document.getElementById('form-card').classList.add('show');
-      
-      // Load GitHub token if exists
       const savedToken = localStorage.getItem('uy_gh_token');
-      if(savedToken) {
-        document.getElementById('gh-token').value = savedToken;
-        updatePublishButtons();
-      }
-
+      if(savedToken) { document.getElementById('gh-token').value = savedToken; updatePublishButtons(); }
       loadDraft();
-      
-      // Handle URL parameters for editing
       const params = new URLSearchParams(location.search);
-      const mode = params.get('mode');
-      const day = params.get('day');
-      if(mode === 'edit' && day) {
-        loadEntryFromData(parseInt(day));
-      }
-
-      if(window._prefillSection){
-        const tab = document.querySelector('.tab[data-mode="section"]');
-        tab.click();
-        const sel = document.getElementById('sec-select');
-        for(const o of sel.options){ if(o.value===window._prefillSection){ sel.value = o.value; break; } }
+      if(params.get('mode') === 'edit' && params.get('day')) loadEntryFromData(parseInt(params.get('day')));
+      if(window._prefillSection) {
+        switchMode('section');
+        document.getElementById('sec-select').value = window._prefillSection === 'learned-tried' ? 'learned' : window._prefillSection;
         onSecTypeChange();
       }
-    } else {
-      document.getElementById('lock-error').style.display = 'block';
-    }
+    } else { document.getElementById('lock-error').style.display = 'block'; }
   }
   document.getElementById('passcode').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
-  // deep link: unfiltered.html → "Post to Section" tab with the right section preselected
-  (function(){
-    try{
-      const p = new URLSearchParams(location.search);
-      const sec = p.get('section');
-      if(sec){ window._prefillSection = sec==='learned-tried' ? 'learned' : sec; }
-    }catch(e){}
-  })();
 
-  // ---- Auto day count: Day 01 = 2026-08-11. Pick a date and the day number fills itself. ----
+  function switchMode(mode){
+    currentMode = mode;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.mode===mode));
+    document.getElementById('entry-fields').style.display = (mode==='entry') ? '' : 'none';
+    document.getElementById('edit-wrap').style.display = (mode==='edit') ? '' : 'none';
+    document.getElementById('sec-wrap').style.display = (mode==='section') ? '' : 'none';
+    document.getElementById('port-wrap').style.display = (mode==='portfolio') ? '' : 'none';
+    document.getElementById('output-wrap').style.display = 'none';
+    document.getElementById('mode-title').innerHTML = mode==='entry' ? 'Write Today\u2019s <span>Entry</span>' : mode==='edit' ? 'Edit a <span>Past Entry</span>' : mode==='section' ? 'Post to a <span>Section</span>' : 'Manage <span>Portfolio</span>';
+    if(mode==='edit') populateEditSelect();
+  }
+  document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click', ()=>switchMode(btn.dataset.mode)));
+
+  function saveGhToken() { localStorage.setItem('uy_gh_token', document.getElementById('gh-token').value.trim()); updatePublishButtons(); }
+  function updatePublishButtons() { const display = localStorage.getItem('uy_gh_token') ? 'inline-block' : 'none'; document.getElementById('btn-publish').style.display = display; }
+
+  // --- Daily Entry Logic ---
   const START_DATE = new Date('2026-08-11T00:00:00');
   const DAY_MS = 86400000;
   function fillDayNumber(){
     const dateVal = document.getElementById('f-date').value;
     if(!dateVal) return;
-    const picked = new Date(dateVal+'T00:00:00');
-    const diff = Math.round((picked - START_DATE)/DAY_MS);
+    const diff = Math.round((new Date(dateVal+'T00:00:00') - START_DATE)/DAY_MS);
     if(diff >= 0) document.getElementById('f-day').value = diff + 1;
   }
-  document.getElementById('f-date').addEventListener('input', fillDayNumber);
   document.getElementById('f-date').addEventListener('change', fillDayNumber);
-  // default the date field to today when the form opens
-  (function(){
-    const now = new Date();
-    const iso = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-    if(!document.getElementById('f-date').value) document.getElementById('f-date').value = iso;
-    fillDayNumber();
-  })();
+  (function(){ if(!document.getElementById('f-date').value) document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; fillDayNumber(); })();
 
-  // ---- YouTube auto-fetch: title + thumbnail, no API key needed ----
-  function ytId(url){
-    if(!url) return null;
-    var m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
-    return m ? m[1] : null;
-  }
-  const fDocUrl = document.getElementById('f-doc-url');
-  const preview = document.getElementById('yt-preview');
-  const pThumb = document.getElementById('yt-thumb');
-  const pTitle = document.getElementById('yt-title');
-  const pMeta = document.getElementById('yt-meta');
   let fetchedTitle = '';
   function previewVideo(){
-    const id = ytId(fDocUrl.value.trim());
-    if(!id){ preview.classList.remove('show'); fetchedTitle=''; return; }
-    preview.classList.add('show');
-    // thumbnail: try maxres, fall back via onerror
-    pThumb.src = 'https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg';
-    pThumb.onerror = function(){ pThumb.src = 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; };
-    pMeta.textContent = 'Day video — details fill in automatically';
-    // title via oEmbed (CORS-friendly via noembed proxy)
-    fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+id+'&format=json')
-      .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(d=>{ fetchedTitle = d.title||''; pTitle.textContent = d.title; pMeta.textContent = d.author_name ? d.author_name+' • '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) : ''; })
-      .catch(()=>{
-        // noembed proxy fallback
-        fetch('https://noembed.com/embed?url=https://www.youtube.com/watch?v='+id)
-          .then(r=>r.json()).then(d=>{ fetchedTitle = d.title||''; pTitle.textContent = d.title||'Untitled'; pMeta.textContent = 'Title fetched automatically'; })
-          .catch(()=>{ fetchedTitle=''; pTitle.textContent = 'Title couldn\'t be fetched — it will still show the video'; pMeta.textContent = ''; });
-      });
+    const url = document.getElementById('f-doc-url').value.trim();
+    const id = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1];
+    if(!id){ document.getElementById('yt-preview').classList.remove('show'); fetchedTitle=''; return; }
+    document.getElementById('yt-preview').classList.add('show');
+    document.getElementById('yt-thumb').src = 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
+    fetch('https://noembed.com/embed?url='+url).then(r=>r.json()).then(d=>{ fetchedTitle = d.title||''; document.getElementById('yt-title').textContent = fetchedTitle; document.getElementById('yt-meta').textContent = 'Fetched automatically'; });
   }
-  fDocUrl.addEventListener('input', previewVideo);
+  document.getElementById('f-doc-url').addEventListener('input', previewVideo);
 
-  function collect(){
-    const dateVal = document.getElementById('f-date').value;
-    let dateLabel = '', weekday = '';
-    if(dateVal){
-      const d = new Date(dateVal+'T00:00:00');
-      dateLabel = d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-      weekday = d.toLocaleDateString('en-US',{weekday:'long'});
-    }
-    const docUrl = fDocUrl.value.trim();
-    return {
-      day: parseInt(document.getElementById('f-day').value,10) || null,
-      date: dateVal,
-      dateLabel, weekday,
-      journal: document.getElementById('f-journal').value.trim(),
-      photo: { src: document.getElementById('f-photo-src').value.trim(), caption: document.getElementById('f-photo-cap').value.trim() },
-      documentary: docUrl ? { youtubeUrl: docUrl, title: fetchedTitle } : null
-    };
+  function esc(s){ return (s||'').toString().replace(/"/g,'\\"'); }
+
+  function handleGenerate(){
+    if(currentMode==='entry') generateEntry();
+    else if(currentMode==='section') generateSection();
+    else if(currentMode==='portfolio') generatePortfolio();
   }
 
-  function generate(){
-    const e = collect();
-    if(!e.date){
-      alert('Please pick a Date.');
-      return;
-    }
-    if(!e.journal){
-      alert('Write at least a line or two on the big note — even a lazy day deserves words.');
-      return;
-    }
-    if(!e.day){
-      const diff = Math.round((new Date(e.date+'T00:00:00') - new Date('2026-08-11T00:00:00'))/DAY_MS);
-      e.day = diff >= 0 ? diff + 1 : null;
-      if(!e.day){ alert('Date must be on or after 11 August 2026 (Day 01).'); return; }
-      document.getElementById('f-day').value = e.day;
-    }
-    let out = `  {\n`;
-    out += `    day: ${e.day},\n`;
-    out += `    date: "${e.date}",\n`;
-    out += `    weekday: "${e.weekday}",\n`;
-    // journal: escape lines, join paragraphs with \n\n
-    const paras = e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    out += `    journal: "${paras.map(p=>p.replace(/"/g,'\\"')).join('\\n\\n')}",\n`;
-    if(e.photo.src){
-      out += `    photo: { src: "${e.photo.src}", caption: "${e.photo.caption.replace(/"/g,'\\"')}" },\n`;
-    }
-    if(e.documentary){
-      out += `    documentary: { youtubeUrl: "${e.documentary.youtubeUrl}" },\n`;
-    }
-    out = out.replace(/,\n$/, '\n');
-    out += `  }`;
-
+  function generateEntry(){
+    const day = parseInt(document.getElementById('f-day').value,10);
+    const date = document.getElementById('f-date').value;
+    const journal = document.getElementById('f-journal').value.trim();
+    if(!date || !journal) return alert('Date and Journal needed');
+    const paras = journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const photoSrc = document.getElementById('f-photo-src').value.trim();
+    const docUrl = document.getElementById('f-doc-url').value.trim();
+    let out = `  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
+    if(photoSrc) out += `    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
+    if(docUrl) out += `    documentary: { youtubeUrl: "${docUrl}", title: "${esc(fetchedTitle)}" },\n`;
+    out = out.replace(/,\n$/, '\n') + `  }`;
     document.getElementById('output').value = out;
     document.getElementById('output-wrap').style.display = 'block';
-    document.getElementById('output-wrap').scrollIntoView({behavior:'smooth'});
     saveDraft();
-    rememberPublished(e);
-  }
-  function rememberPublished(e){
-    try{
-      const raw = localStorage.getItem('uy_published2');
-      let arr = raw ? JSON.parse(raw) : [];
-      // update existing same-day entry, else append
-      const idx = arr.findIndex(x=>x.day===e.day && x.date===e.date);
-      const rec = { day:e.day, date:e.date, dateLabel:e.dateLabel, journal:e.journal, photo:e.photo, documentary:e.documentary ? { youtubeUrl:e.documentary.youtubeUrl } : null };
-      if(idx>=0) arr[idx] = rec; else arr.push(rec);
-      localStorage.setItem('uy_published2', JSON.stringify(arr));
-    }catch(err){}
   }
 
-
-  // autosave draft to localStorage so nothing is lost mid-writing
-  function saveDraft(){
-    try{
-      localStorage.setItem('uy_draft2', JSON.stringify(collect()));
-      document.getElementById('draft-note').textContent = 'Draft saved locally';
-    }catch(e){}
-  }
-  function loadDraft(){
-    try{
-      const raw = localStorage.getItem('uy_draft2');
-      if(!raw) return;
-      const d = JSON.parse(raw);
-      if(d.day) document.getElementById('f-day').value = d.day;
-      if(d.date) document.getElementById('f-date').value = d.date;
-      if(d.journal) document.getElementById('f-journal').value = d.journal;
-      if(d.photo){ document.getElementById('f-photo-src').value = d.photo.src||''; document.getElementById('f-photo-cap').value = d.photo.caption||''; }
-      if(d.documentary && d.documentary.youtubeUrl){ document.getElementById('f-doc-url').value = d.documentary.youtubeUrl; previewVideo(); }
-      if(d.date) fillDayNumber();
-      document.getElementById('draft-note').textContent = 'Draft restored';
-    }catch(e){}
-  }
-
-  function clearDraft(){
-    if(!confirm("Clear everything you have written on this page?")) return;
-    localStorage.removeItem('uy_draft2');
-    location.reload();
-  }
-
-  // ---------- MODE TABS: daily entry / edit past / post to section ----------
-  let currentMode = 'entry';
-  document.querySelectorAll('.tab').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      switchMode(btn.dataset.mode);
-    });
-  });
-  function switchMode(mode){
-    currentMode = mode;
-    const isEntry = (mode==='entry');
-    // show/hide daily form parts
-    document.querySelectorAll('#form-card > fieldset').forEach(fs=>{ fs.style.display = isEntry ? '' : 'none'; });
-    document.getElementById('btn-generate').style.display = isEntry ? '' : 'none';
-    document.getElementById('draft-note').style.display = isEntry ? '' : 'none';
-    document.getElementById('edit-wrap').style.display = (mode==='edit') ? '' : 'none';
-    document.getElementById('sec-wrap').style.display = (mode==='section') ? '' : 'none';
-    document.getElementById('output-wrap').style.display = 'none';
-    document.getElementById('mode-title').innerHTML =
-      mode==='entry' ? 'Write Today\u2019s <span>Entry</span>' :
-      mode==='edit'  ? 'Edit a <span>Past Entry</span>' :
-                       'Post to a <span>Section</span>';
-    if(mode==='edit') populateEditSelect();
-  }
-  function populateEditSelect(){
-    const sel = document.getElementById('edit-select');
-    sel.innerHTML = '';
-    try{
-      // Use window.UNFILTERED_ENTRIES for a more complete list
-      const published = window.UNFILTERED_ENTRIES || [];
-      if(published.length===0){ sel.innerHTML = '<option>No entries found in entries-data.js</option>'; return; }
-      published.slice().reverse().forEach((e)=>{
-        const o = document.createElement('option');
-        o.value = e.day;
-        const d = new Date(e.date);
-        const label = d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-        o.textContent = 'Day '+String(e.day||'?').padStart(2,'0')+' — '+label+' — '+((e.journal||'').slice(0,40)+(e.journal.length>40?'…':''));
-        sel.appendChild(o);
-      });
-    }catch(err){ sel.innerHTML='<option>Error reading entries</option>'; }
-  }
-  function loadEntryForEdit(){
-    const sel = document.getElementById('edit-select');
-    if(!sel.options.length || sel.options[0].disabled) return;
-    loadEntryFromData(parseInt(sel.value));
-  }
-  function loadEntryFromData(dayNum){
-    const entry = (window.UNFILTERED_ENTRIES || []).find(e => e.day === dayNum);
-    if(!entry){ alert('Entry not found'); return; }
-    // switch to entry mode and fill the form
-    const daily = document.querySelector('.tab[data-mode="entry"]');
-    daily.click();
-    if(entry.day) document.getElementById('f-day').value = entry.day;
-    if(entry.date) document.getElementById('f-date').value = entry.date;
-    if(entry.journal) document.getElementById('f-journal').value = entry.journal;
-    if(entry.photo){ document.getElementById('f-photo-src').value = entry.photo.src||''; document.getElementById('f-photo-cap').value = entry.photo.caption||''; }
-    if(entry.documentary && entry.documentary.youtubeUrl){ document.getElementById('f-doc-url').value = entry.documentary.youtubeUrl; previewVideo(); }
-    window._editMode = entry;
-    window._isEditingExisting = true;
-    alert('Entry loaded! Edit anything, then press "Publish to GitHub" to save changes directly.');
-  }
-
-  function copyOutput(){
-    const t = document.getElementById('output');
-    t.select();
-    document.execCommand('copy');
-    const msg = window._editMode
-      ? 'Copied! Open entries-data.js, find the OLD block for this same day, DELETE it completely and paste this new block in its place. Then Commit changes.'
-      : 'Copied! Paste it into entries-data.js right above the closing ];, with a comma after the previous entry. Then Commit changes.';
-    alert(msg);
-  }
-
-  // ---------- SECTION POST GENERATOR ----------
   function onSecTypeChange(){
     const t = document.getElementById('sec-select').value;
     document.getElementById('sec-random-fields').style.display = t==='random' ? '' : 'none';
     document.getElementById('sec-tried-fields').style.display  = t==='tried'   ? '' : 'none';
     document.getElementById('sec-learned-fields').style.display= t==='learned' ? '' : 'none';
   }
-  function esc(s){ return (s||'').replace(/"/g,'\\"'); }
   function generateSection(){
     const t = document.getElementById('sec-select').value;
-    let out = '', file = '', array = '', note = '';
+    let out = '';
     if(t==='random'){
-      const text = document.getElementById('s-random-text').value.trim();
-      if(!text){ alert('Write something first.'); return; }
-      out = `  { type: "text", text: "${esc(text)}" }`;
-      file='sections-data.js'; array='RANDOM_STUFF'; note='';
+      out = `  { type: "text", text: "${esc(document.getElementById('s-random-text').value.trim())}" }`;
     } else if(t==='tried'){
-      const title = document.getElementById('s-tried-title').value.trim();
-      if(!title){ alert('At least a title is needed.'); return; }
-      out = `  {\n    title: "${esc(title)}",\n`;
-      const td = document.getElementById('s-tried-date').value.trim();
-      if(td) out += `    date: "${esc(td)}",\n`;
-      out += `    outcome: "${document.getElementById('s-tried-outcome').value}",\n`;
-      const exp = document.getElementById('s-tried-expected').value.trim();
-      if(exp) out += `    expected: "${esc(exp)}",\n`;
-      const act = document.getElementById('s-tried-actual').value.trim();
-      if(act) out += `    actual: "${esc(act)}",\n`;
-      const lrn = document.getElementById('s-tried-learned').value.trim();
-      if(lrn) out += `    learned: "${esc(lrn)}",\n`;
-      out += `  }`;
-      file='sections-data.js'; array='THINGS_TRIED';
+      out = `  {\n    title: "${esc(document.getElementById('s-tried-title').value)}",\n    date: "${esc(document.getElementById('s-tried-date').value)}",\n    outcome: "${document.getElementById('s-tried-outcome').value}",\n    expected: "${esc(document.getElementById('s-tried-expected').value)}",\n    actual: "${esc(document.getElementById('s-tried-actual').value)}",\n    learned: "${esc(document.getElementById('s-tried-learned').value)}"\n  }`;
     } else {
-      const course = document.getElementById('s-learned-course').value.trim();
-      if(!course){ alert('At least the course/skill name is needed.'); return; }
       const status = document.getElementById('s-learned-status').value;
-      out = `  {\n    course: "${esc(course)}",\n`;
-      out += `    completedDate: ${status==='done' ? '"'+esc(document.getElementById('s-learned-done').value.trim())+'"' : 'null'},\n`;
-      out += `    inProgress: ${status==='in'},\n`;
-      const items = document.getElementById('s-learned-items').value.trim().replace(/\n+/g,' ').trim();
-      if(items) out += `    learned: "${esc(items)}",\n`;
-      const used = document.getElementById('s-learned-used').value.trim();
-      if(used) out += `    usedFor: "${esc(used)}",\n`;
-      out += `    proofUrl: ""\n  }`;
-      file='sections-data.js'; array='THINGS_LEARNED';
+      out = `  {\n    course: "${esc(document.getElementById('s-learned-course').value)}",\n    completedDate: ${status==='done' ? '"'+esc(document.getElementById('s-learned-done').value)+'"' : 'null'},\n    inProgress: ${status==='in'},\n    learned: "${esc(document.getElementById('s-learned-items').value)}",\n    usedFor: "${esc(document.getElementById('s-learned-used').value)}",\n    proofUrl: ""\n  }`;
     }
     document.getElementById('output').value = out;
-    document.getElementById('publish-steps').innerHTML =
-      '<b>How to publish this post:</b><br>1. Copy the code below.<br>2. Open <b>'+file+'</b> in your repo (pencil icon).<br>3. Paste it inside the <b>'+array+'</b> array — right above its closing <b>];</b>, with a comma <b>,</b> after the item above it.<br>4. Click <b>Commit changes</b>. It shows up on the site within a minute or two.';
     document.getElementById('output-wrap').style.display = 'block';
-    document.getElementById('output-wrap').scrollIntoView({behavior:'smooth'});
-    window._editMode = null;
   }
 
-  function saveGhToken() {
-    const token = document.getElementById('gh-token').value.trim();
-    localStorage.setItem('uy_gh_token', token);
-    updatePublishButtons();
+  function onPortTypeChange() {
+    const t = document.getElementById('port-select').value;
+    document.getElementById('port-journey-fields').style.display = t==='journey' ? '' : 'none';
+    document.getElementById('port-experience-fields').style.display = t==='experience' ? '' : 'none';
+    document.getElementById('port-credentials-fields').style.display = t==='credentials' ? '' : 'none';
+    document.getElementById('port-skills-fields').style.display = t==='skills' ? '' : 'none';
+  }
+  function generatePortfolio() {
+    const t = document.getElementById('port-select').value;
+    let out = '';
+    if(t==='journey') {
+      const paras = document.getElementById('p-j-text').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+      out = `  {\n    title: "${esc(document.getElementById('p-j-title').value)}",\n    date: "${esc(document.getElementById('p-j-date').value)}",\n    paragraphs: [${paras.map(p=>`"${esc(p)}"`).join(', ')}]\n  }`;
+    } else if(t==='experience') {
+      out = `  {\n    role: "${esc(document.getElementById('p-e-role').value)}",\n    org: "${esc(document.getElementById('p-e-org').value)}",\n    date: "${esc(document.getElementById('p-e-date').value)}",\n    desc: "${esc(document.getElementById('p-e-desc').value)}"\n  }`;
+    } else if(t==='credentials') {
+      const skills = document.getElementById('p-c-skills').value.split(',').map(s=>s.trim()).filter(Boolean);
+      out = `  {\n    title: "${esc(document.getElementById('p-c-title').value)}",\n    status: "${esc(document.getElementById('p-c-status').value)}",\n    issuer: "${esc(document.getElementById('p-c-issuer').value)}",\n    desc: "${esc(document.getElementById('p-c-desc').value)}",\n`;
+      if(document.getElementById('p-c-img').value) out += `    certImg: "${document.getElementById('p-c-img').value}",\n    certAlt: "${esc(document.getElementById('p-c-title').value)} certificate",\n`;
+      if(document.getElementById('p-c-verify').value) out += `    verifyUrl: "${document.getElementById('p-c-verify').value}",\n`;
+      if(skills.length) out += `    skills: [${skills.map(s=>`"${esc(s)}"`).join(', ')}]\n`;
+      out += `  }`;
+    } else if(t==='skills') {
+      out = `  {\n    title: "${esc(document.getElementById('p-s-title').value)}",\n    level: "${esc(document.getElementById('p-s-level').value)}",\n    desc: "${esc(document.getElementById('p-s-desc').value)}"\n  }`;
+    }
+    document.getElementById('output').value = out;
+    document.getElementById('output-wrap').style.display = 'block';
   }
 
-  function updatePublishButtons() {
-    const token = localStorage.getItem('uy_gh_token');
-    const display = token ? 'inline-block' : 'none';
-    document.getElementById('btn-publish').style.display = display;
-    document.getElementById('btn-publish-sec').style.display = display;
+  function populateEditSelect(){
+    const sel = document.getElementById('edit-select');
+    sel.innerHTML = '';
+    (window.UNFILTERED_ENTRIES || []).slice().reverse().forEach(e=>{
+      const o = document.createElement('option');
+      o.value = e.day;
+      o.textContent = `Day ${String(e.day).padStart(2,'0')} — ${e.date} — ${e.journal.slice(0,40)}...`;
+      sel.appendChild(o);
+    });
+  }
+  function loadEntryForEdit(){ loadEntryFromData(parseInt(document.getElementById('edit-select').value)); }
+  function loadEntryFromData(dayNum){
+    const e = (window.UNFILTERED_ENTRIES || []).find(x=>x.day===dayNum);
+    if(!e) return alert('Not found');
+    switchMode('entry');
+    document.getElementById('f-day').value = e.day;
+    document.getElementById('f-date').value = e.date;
+    document.getElementById('f-journal').value = e.journal;
+    document.getElementById('f-photo-src').value = e.photo?.src || '';
+    document.getElementById('f-photo-cap').value = e.photo?.caption || '';
+    document.getElementById('f-doc-url').value = e.documentary?.youtubeUrl || '';
+    previewVideo();
+    window._editMode = e; window._isEditingExisting = true;
   }
 
   async function publishToGitHub() {
     const token = localStorage.getItem('uy_gh_token');
-    if(!token) {
-      alert("Please enter your GitHub Token first.");
-      return;
-    }
-
-    const btn = currentMode === 'entry' ? document.getElementById('btn-publish') : document.getElementById('btn-publish-sec');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "⏳ Publishing...";
-
+    if(!token) return alert("Enter token");
+    const btn = document.getElementById('btn-publish');
+    btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
-      let filename = 'entries-data.js';
-      let arrayName = 'UNFILTERED_ENTRIES';
-      let newEntryCode = '';
-      let dayToUpdate = null;
-
-      if(currentMode === 'entry') {
-        generate(); // ensure code is generated
-        newEntryCode = document.getElementById('output').value;
-        if(window._isEditingExisting && window._editMode) {
-          dayToUpdate = window._editMode.day;
-        }
-      } else {
-        generateSection();
-        newEntryCode = document.getElementById('output').value;
-        const sec = document.getElementById('sec-select').value;
+      handleGenerate();
+      const code = document.getElementById('output').value;
+      let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null;
+      if(currentMode==='section') {
         filename = 'sections-data.js';
-        arrayName = sec === 'random' ? 'RANDOM_STUFF' : (sec === 'tried' ? 'THINGS_TRIED' : 'THINGS_LEARNED');
-      }
+        const sec = document.getElementById('sec-select').value;
+        arrayName = sec==='random' ? 'RANDOM_STUFF' : sec==='tried' ? 'THINGS_TRIED' : 'THINGS_LEARNED';
+      } else if(currentMode==='portfolio') {
+        filename = 'portfolio-data.js';
+        const pt = document.getElementById('port-select').value;
+        arrayName = pt==='journey' ? 'JOURNEY_DATA' : pt==='experience' ? 'EXPERIENCE_DATA' : pt==='skills' ? 'SKILLS_DATA' : `CREDENTIALS_DATA.${document.getElementById('p-c-folio').value}`;
+      } else if(window._isEditingExisting) dayToUpdate = window._editMode.day;
 
-      // 1. Get file content and SHA
-      const getUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`;
-      const res = await fetch(getUrl, {
-        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      
-      if(!res.ok) throw new Error("Could not fetch file from GitHub. Check your token and repo access.");
+      const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, { headers: { 'Authorization': `token ${token}` } });
       const fileData = await res.json();
       const content = decodeURIComponent(escape(atob(fileData.content)));
-      const sha = fileData.sha;
-
-      // 2. Update content
       let newContent = '';
       if(dayToUpdate !== null) {
-        // EDIT MODE: Replace the specific entry block
-        // This regex looks for the entry block starting with day: N
-        const regex = new RegExp(`\\{\\s*day:\\s*${dayToUpdate},[\\s\\S]*?\\}(?=\\s*[,\\n\\]])`, 'g');
-        newContent = content.replace(regex, newEntryCode.trim());
+        newContent = content.replace(new RegExp(`\\{\\s*day:\\s*${dayToUpdate},[\\s\\S]*?\\}(?=\\s*[,\\n\\]])`, 'g'), code.trim());
       } else {
-        // ADD MODE: Insert before the closing ]; of the array
-        const arrayStartIdx = content.indexOf(`const ${arrayName} = [`);
-        if(arrayStartIdx === -1) throw new Error(`Could not find array ${arrayName} in ${filename}`);
-        
-        const arrayEndIdx = content.indexOf('];', arrayStartIdx);
-        const arrayContent = content.substring(arrayStartIdx, arrayEndIdx);
-        
-        // Check if array is empty
-        const isEmpty = !arrayContent.includes('{');
-        if(isEmpty) {
-          newContent = content.substring(0, arrayEndIdx) + "\n" + newEntryCode + "\n" + content.substring(arrayEndIdx);
-        } else {
-          // Find the last } and add a comma
-          const lastBraceIdx = arrayContent.lastIndexOf('}');
-          const absoluteLastBraceIdx = arrayStartIdx + lastBraceIdx;
-          newContent = content.substring(0, absoluteLastBraceIdx + 1) + "," + "\n" + newEntryCode + content.substring(absoluteLastBraceIdx + 1);
-        }
+        let search = arrayName.includes('.') ? arrayName.split('.')[1] : arrayName;
+        const start = content.indexOf(`${search}: [`) !== -1 ? content.indexOf(`${search}: [`) : content.indexOf(`const ${search} = [`);
+        const end = content.indexOf('];', start) !== -1 ? content.indexOf('];', start) : content.indexOf('],', start);
+        const arr = content.substring(start, end);
+        if(!arr.includes('{')) newContent = content.substring(0, end) + "\n" + code + "\n" + content.substring(end);
+        else newContent = content.substring(0, start + arr.lastIndexOf('}') + 1) + "," + "\n" + code + content.substring(start + arr.lastIndexOf('}') + 1);
       }
-
-      // 3. Commit back to GitHub
-      const putUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`;
-      const putRes = await fetch(putUrl, {
-        method: 'PUT',
-        headers: { 
-          'Authorization': `token ${token}`, 
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: `Update ${filename}: ${currentMode} day ${document.getElementById('f-day').value || 'new'}`,
-          content: btoa(unescape(encodeURIComponent(newContent))),
-          sha: sha
-        })
+      await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
+        method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Update ${filename}`, content: btoa(unescape(encodeURIComponent(newContent))), sha: fileData.sha })
       });
-
-      if(!putRes.ok) {
-        const err = await putRes.json();
-        throw new Error(err.message || "Failed to commit changes.");
-      }
-
-      alert("🚀 Published successfully! Your site will update in a minute.");
-      if(!window._isEditingExisting) clearDraft();
-      else location.reload();
-
-    } catch (err) {
-      console.error(err);
-      alert("❌ Error: " + err.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = originalText;
-    }
+      alert("🚀 Published!"); location.reload();
+    } catch (err) { alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
 
-  document.getElementById('form-card').addEventListener('input', ()=>{ clearTimeout(window._sd); window._sd=setTimeout(saveDraft, 600); });
+  function saveDraft(){ localStorage.setItem('uy_draft2', JSON.stringify({ day: document.getElementById('f-day').value, date: document.getElementById('f-date').value, journal: document.getElementById('f-journal').value, photo: { src: document.getElementById('f-photo-src').value, caption: document.getElementById('f-photo-cap').value }, documentary: { youtubeUrl: document.getElementById('f-doc-url').value } })); document.getElementById('draft-note').textContent = 'Draft saved'; }
+  function loadDraft(){ try { const d = JSON.parse(localStorage.getItem('uy_draft2')); if(d){ document.getElementById('f-day').value = d.day; document.getElementById('f-date').value = d.date; document.getElementById('f-journal').value = d.journal; document.getElementById('f-photo-src').value = d.photo.src; document.getElementById('f-photo-cap').value = d.photo.caption; document.getElementById('f-doc-url').value = d.documentary.youtubeUrl; previewVideo(); } } catch(e){} }
+  function clearDraft(){ if(confirm("Clear?")){ localStorage.removeItem('uy_draft2'); location.reload(); } }
 </script>
 </body>
 </html>
