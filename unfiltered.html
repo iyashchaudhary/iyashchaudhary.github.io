@@ -195,8 +195,9 @@
   .doc-placeholder .m{color:var(--uy-text-dim); font-size:.78rem; margin-top:5px;}
 
   /* ---------- BOTTOM STRIP ---------- */
-  .uy-strip{grid-column:2;margin-top:18px; background:var(--uy-panel-solid); border:1px solid var(--uy-line); border-radius:18px; padding:12px 16px; display:flex; align-items:center; gap:10px;}
-  .uy-strip .month{font-size:.72rem; color:var(--uy-text-dim); text-transform:uppercase; letter-spacing:.06em; flex:none; margin-right:6px;}
+  .uy-strip{grid-column:2;margin-top:18px; background:var(--uy-panel-solid); border:1px solid var(--uy-line); border-radius:18px; padding:12px 16px; display:flex; align-items:center; gap:15px;}
+  .uy-strip .month{font-size:.72rem; color:var(--uy-text-dim); text-transform:uppercase; letter-spacing:.06em; flex:none;}
+  .uy-strip-inner{display:flex; align-items:center; gap:8px; flex:1; min-width:0;}
   .strip-days{display:flex; gap:8px; overflow-x:auto; flex:1; scrollbar-width:none;}
   .strip-days::-webkit-scrollbar{display:none;}
   .strip-arrow{background:none;border:none;color:var(--uy-text-dim);cursor:pointer;font-size:1rem;flex:none;padding:4px;}
@@ -293,7 +294,7 @@
   }
 
   @media (max-width:980px){
-    .uy-shell{grid-template-columns:1fr; padding:16px 16px 120px;}
+    .uy-shell{grid-template-columns:1fr; padding:16px 16px 140px;}
     .uy-side{flex-direction:row; flex-wrap:wrap; order:1;}
     .uy-brand{width:100%;}
     .uy-nav{flex-direction:row; flex-wrap:wrap; width:100%;}
@@ -301,7 +302,21 @@
     .uy-side-quote{display:none;}
     .uy-topbar{order:2;}
     .uy-day-panel{order:3;}
-    .uy-strip{order:4;}
+    
+    /* Redesign bottom strip for mobile */
+    .uy-strip{
+      position:fixed; bottom:12px; left:12px; right:12px; 
+      z-index:100; margin-top:0;
+      flex-direction:column; gap:8px;
+      background:rgba(29,16,23,0.95);
+      backdrop-filter:blur(20px);
+      box-shadow:0 10px 40px rgba(0,0,0,0.6);
+      padding:10px; border-radius:20px;
+    }
+    .uy-strip .month{margin-right:0; font-size:.75rem; font-weight:700; color:var(--uy-pink-soft); width:100%; text-align:center;}
+    .uy-strip-inner{display:flex; align-items:center; width:100%; gap:5px;}
+    .strip-days{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+    .btn-all{width:100%; text-align:center; padding:7px; font-size:.75rem;}
   }
 </style>
 </head>
@@ -360,9 +375,11 @@
   <!-- BOTTOM CALENDAR STRIP -->
   <div class="uy-strip" id="uy-strip">
     <span class="month" id="uy-month-label">— —</span>
-    <button class="strip-arrow" id="strip-prev">‹</button>
-    <div class="strip-days" id="strip-days"></div>
-    <button class="strip-arrow" id="strip-next">›</button>
+    <div class="uy-strip-inner">
+      <button class="strip-arrow" id="strip-prev">‹</button>
+      <div class="strip-days" id="strip-days"></div>
+      <button class="strip-arrow" id="strip-next">›</button>
+    </div>
     <button class="btn-all" id="btn-all">All Entries ⊞</button>
   </div>
 

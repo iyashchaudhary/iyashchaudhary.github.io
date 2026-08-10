@@ -437,6 +437,7 @@
   .navlinks a.active::after, .navlinks a:hover::after{width:100%;}
   @media (max-width:680px){ .navlinks a{font-size:12px;} }
   .topnav.scrolled{ border-bottom-color:var(--line); box-shadow:0 8px 24px -12px rgba(0,0,0,0.18); backdrop-filter:blur(18px) saturate(180%); }
+  .admin-trigger:hover{opacity:1 !important; color:var(--primary) !important;}
 
   /* ============================================================
      PHASE 7 · SYSTEM 1 — FLOATING DOCK NAVIGATION
@@ -1750,6 +1751,9 @@
         <option value="evening">Evening</option>
         <option value="dark">Night</option>
       </select>
+      <button class="admin-trigger" onclick="return checkAdmin(event)" aria-label="Admin" style="background:none; border:none; color:var(--text-dim); cursor:pointer; padding:5px; opacity:0.3; transition:opacity 0.2s;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </button>
     </div>
   </nav>
 
@@ -1994,10 +1998,9 @@
   </main>
 
   <footer>
-    <div class="wrap" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px; align-items:center; width:100%;">
+    <div class="wrap" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px; align-items:center; width:100%; padding-bottom: 80px;">
       <span class="mono">© 2026 Yash Chaudhary — a Journey kept, not a résumé performed.</span>
       <div style="display:flex; align-items:center; gap:20px;">
-        <a href="admin.html" class="footer-uy" style="opacity:0.4; font-size:11px;" onclick="return checkAdmin(event)">Admin</a>
         <a href="unfiltered.html" class="footer-uy">Unfiltered Yash 😼 <span class="mono" style="font-size:10px;opacity:.7;">— the daily journal</span></a>
       </div>
     </div>
@@ -2263,7 +2266,7 @@
   /* ---- Lenis smooth scroll (skipped if reduced motion is preferred, falls back to native scroll if it fails to load) ---- */
   let lenis = null;
   if(window.__lenisReady && !prefersReducedGlobal){
-    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis = new Lenis({ duration: 1.2, lerp: 0.1, smoothWheel: true });
     (function raf(time){ lenis.raf(time); requestAnimationFrame(raf); })();
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', (e)=>{
