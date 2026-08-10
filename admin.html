@@ -251,7 +251,7 @@
 
         <div id="port-credentials-fields" style="display:none;">
           <label class="first">Which Folio?</label>
-          <select id="p-c-folio">
+          <select id="p-c-folio" onchange="populatePortList()">
             <option value="finance">Finance & Valuation</option>
             <option value="tech">AI Automation & Tech</option>
             <option value="strategy">Strategy & Consulting</option>
@@ -281,6 +281,11 @@
           <label>Brief Description</label>
           <textarea id="p-s-desc"></textarea>
         </div>
+      </fieldset>
+
+      <fieldset id="port-list-wrap" style="display:none;">
+        <legend>Existing Items</legend>
+        <div id="port-list" style="max-height:300px; overflow-y:auto; font-size:.85rem;"></div>
       </fieldset>
     </div>
 
@@ -416,6 +421,82 @@
     document.getElementById('port-experience-fields').style.display = t==='experience' ? '' : 'none';
     document.getElementById('port-credentials-fields').style.display = t==='credentials' ? '' : 'none';
     document.getElementById('port-skills-fields').style.display = t==='skills' ? '' : 'none';
+    populatePortList();
+  }
+
+  function populatePortList() {
+    const t = document.getElementById('port-select').value;
+    const list = document.getElementById('port-list');
+    const wrap = document.getElementById('port-list-wrap');
+    list.innerHTML = '';
+    
+    let data = [];
+    if(t==='journey') data = window.JOURNEY_DATA || [];
+    else if(t==='experience') data = window.EXPERIENCE_DATA || [];
+    else if(t==='skills') data = window.SKILLS_DATA || [];
+    else if(t==='credentials') {
+      const folio = document.getElementById('p-c-folio').value;
+      data = (window.CREDENTIALS_DATA && window.CREDENTIALS_DATA[folio]) || [];
+    }
+
+    if(!data.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+
+    data.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--line);';
+      const title = item.title || item.role || item.course || 'Item ' + idx;
+      div.innerHTML = `
+        <span>${title}</span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn" style="padding:4px 8px; font-size:.7rem;" onclick="loadPortItem(${idx})">Edit</button>
+          <button class="btn" style="padding:4px 8px; font-size:.7rem; background:#8b0000; border-color:#8b0000;" onclick="deletePortItem(${idx})">Delete</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function loadPortItem(idx) {
+    const t = document.getElementById('port-select').value;
+    let item;
+    if(t==='journey') {
+      item = window.JOURNEY_DATA[idx];
+      document.getElementById('p-j-title').value = item.title;
+      document.getElementById('p-j-date').value = item.date;
+      document.getElementById('p-j-text').value = item.paragraphs.join('\n');
+    } else if(t==='experience') {
+      item = window.EXPERIENCE_DATA[idx];
+      document.getElementById('p-e-role').value = item.role;
+      document.getElementById('p-e-org').value = item.org;
+      document.getElementById('p-e-date').value = item.date;
+      document.getElementById('p-e-desc').value = item.desc;
+    } else if(t==='skills') {
+      item = window.SKILLS_DATA[idx];
+      document.getElementById('p-s-title').value = item.title;
+      document.getElementById('p-s-level').value = item.level;
+      document.getElementById('p-s-desc').value = item.desc;
+    } else if(t==='credentials') {
+      const folio = document.getElementById('p-c-folio').value;
+      item = window.CREDENTIALS_DATA[folio][idx];
+      document.getElementById('p-c-title').value = item.title;
+      document.getElementById('p-c-status').value = item.status;
+      document.getElementById('p-c-issuer').value = item.issuer;
+      document.getElementById('p-c-desc').value = item.desc;
+      document.getElementById('p-c-img').value = item.certImg || '';
+      document.getElementById('p-c-verify').value = item.verifyUrl || '';
+      document.getElementById('p-c-skills').value = (item.skills || []).join(', ');
+    }
+    window._portEditIdx = idx;
+    window._isEditingPort = true;
+    document.getElementById('btn-generate').textContent = "Update & Generate";
+  }
+
+  function deletePortItem(idx) {
+    if(!confirm("Delete this item? This will update the file on GitHub immediately.")) return;
+    window._portDeleteIdx = idx;
+    window._isDeletingPort = true;
+    publishToGitHub();
   }
   function generatePortfolio() {
     const t = document.getElementById('port-select').value;
@@ -470,7 +551,7 @@
     const btn = document.getElementById('btn-publish');
     btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
-      handleGenerate();
+      if(!window._isDeletingPort) handleGenerate();
       const code = document.getElementById('output').value;
       let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null;
       if(currentMode==='section') {
@@ -487,8 +568,25 @@
       const fileData = await res.json();
       const content = decodeURIComponent(escape(atob(fileData.content)));
       let newContent = '';
+      
       if(dayToUpdate !== null) {
         newContent = content.replace(new RegExp(`\\{\\s*day:\\s*${dayToUpdate},[\\s\\S]*?\\}(?=\\s*[,\\n\\]])`, 'g'), code.trim());
+      } else if(currentMode === 'portfolio' && (window._isEditingPort || window._isDeletingPort)) {
+        let search = arrayName.includes('.') ? arrayName.split('.')[1] : arrayName;
+        const start = content.indexOf(`${search}: [`) !== -1 ? content.indexOf(`${search}: [`) : content.indexOf(`const ${search} = [`);
+        const end = content.indexOf('];', start) !== -1 ? content.indexOf('];', start) : content.indexOf('],', start);
+        const arrStr = content.substring(start, end + 1);
+        
+        // Extract array items
+        const itemsMatch = arrStr.match(/\{[\s\S]*?\}(?=\s*[,\]])/g) || [];
+        if(window._isDeletingPort) {
+          itemsMatch.splice(window._portDeleteIdx, 1);
+        } else {
+          itemsMatch[window._portEditIdx] = code.trim();
+        }
+        
+        const newArrStr = (arrayName.includes('.') ? `${search}: [\n` : `const ${search} = [\n`) + itemsMatch.join(',\n') + "\n]";
+        newContent = content.substring(0, start) + newArrStr + content.substring(end + 1);
       } else {
         let search = arrayName.includes('.') ? arrayName.split('.')[1] : arrayName;
         const start = content.indexOf(`${search}: [`) !== -1 ? content.indexOf(`${search}: [`) : content.indexOf(`const ${search} = [`);
@@ -501,7 +599,9 @@
         method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Update ${filename}`, content: btoa(unescape(encodeURIComponent(newContent))), sha: fileData.sha })
       });
-      alert("🚀 Published!"); location.reload();
+      alert("🚀 Published!"); 
+      window._isEditingPort = false; window._isDeletingPort = false; window._isEditingExisting = false;
+      location.reload();
     } catch (err) { alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
 
