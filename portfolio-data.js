@@ -3,6 +3,7 @@
    ============================================================ */
 
 // ---------- JOURNEY ----------
+// ---------- JOURNEY ----------
 const JOURNEY_DATA = [
   {
     title: "B.A. Economics — Sri Venkateswara College, DU",
@@ -12,12 +13,30 @@ const JOURNEY_DATA = [
       "So I made the call to sit CUET again — a harder decision than it sounds, since most people in the same spot were told to just \"adjust\" for two more years."
     ],
     images: [
-      { src: "venky-4.webp", alt: "Sri Venkateswara College campus" },
-      { src: "venky-5.webp", alt: "Live at a concert" },
-      { src: "venky-6.webp", alt: "College fest night event" },
-      { src: "venky-2.webp", alt: "With friends at Sri Venkateswara College" },
-      { src: "venky-3.webp", alt: "On a college trip" },
-      { src: "venky-1.webp", alt: "A quieter moment during that year" }
+      {
+        src: "venky-4.webp",
+        alt: "Sri Venkateswara College campus"
+      },
+      {
+        src: "venky-5.webp",
+        alt: "Live at a concert"
+      },
+      {
+        src: "venky-6.webp",
+        alt: "College fest night event"
+      },
+      {
+        src: "venky-2.webp",
+        alt: "With friends at Sri Venkateswara College"
+      },
+      {
+        src: "venky-3.webp",
+        alt: "On a college trip"
+      },
+      {
+        src: "venky-1.webp",
+        alt: "A quieter moment during that year"
+      }
     ]
   },
   {
@@ -39,12 +58,9 @@ const JOURNEY_DATA = [
   {
     title: "A NEW JOURNEY BEGINS ",
     date: "11th August 2026",
-    paragraphs: ["Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."]
-  },
-  {
-    title: "Starting NEW JOURNEY 😃",
-    date: "14th Aug 2026 ",
-    paragraphs: ["Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."]
+    paragraphs: [
+      "Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."
+    ]
   }
 ];
 window.JOURNEY_DATA = JOURNEY_DATA;
@@ -82,10 +98,26 @@ window.EXPERIENCE_DATA = EXPERIENCE_DATA;
 const FOCUS_DATA = {
   window: "2026 – 2027",
   items: [
-    { label: "CGPA", value: "Target High", desc: "Full focus on a strong first-year academic record." },
-    { label: "ACCA", value: "Applied Knowledge", desc: "All 13 papers, no exemptions, starting from the ground up." },
-    { label: "Client Work", value: "Ongoing", desc: "Video editing and design work continuing alongside the degree." },
-    { label: "AI Automation", value: "Building", desc: "Learning Hands-on n8n and AI-agent skill-building, one project at a time." }
+    {
+      label: "CGPA",
+      value: "Target High",
+      desc: "Full focus on a strong first-year academic record."
+    },
+    {
+      label: "ACCA",
+      value: "Applied Knowledge",
+      desc: "All 13 papers, no exemptions, starting from the ground up."
+    },
+    {
+      label: "Client Work",
+      value: "Ongoing",
+      desc: "Video editing and design work continuing alongside the degree."
+    },
+    {
+      label: "AI Automation",
+      value: "Building",
+      desc: "Learning Hands-on n8n and AI-agent skill-building, one project at a time."
+    }
   ]
 };
 window.FOCUS_DATA = FOCUS_DATA;
@@ -110,7 +142,14 @@ const CREDENTIALS_DATA = {
       desc: "Completed a simulation modeled on an Operations Analyst role — analyzed financial data to identify trade settlement and asset transfer issues for ultra-high-net-worth clients, and worked across Trading, Compliance, and IT to resolve operational trade fails while applying risk management and regulatory compliance (KYC/AML) practices.",
       certImg: "credential-goldman-sachs.webp",
       certAlt: "Goldman Sachs Operations Job Simulation certificate — Yash Chaudhary",
-      skills: ["Data Analysis", "Problem Solving", "Risk Management", "Transaction Management", "Process Improvement", "Cross-Functional Teams"],
+      skills: [
+        "Data Analysis",
+        "Problem Solving",
+        "Risk Management",
+        "Transaction Management",
+        "Process Improvement",
+        "Cross-Functional Teams"
+      ],
       verifyUrl: "https://www.theforage.com/completion-certificates/MBA4MnZTNFEoJZGnk/wNge9cjzNTXD2acrv_MBA4MnZTNFEoJZGnk_6a775096beeabacfe3675dcc_1786215893595_completion_certificate.pdf"
     }
   ],
@@ -141,9 +180,25 @@ window.CREDENTIALS_DATA = CREDENTIALS_DATA;
 
 // ---------- SKILLS ----------
 const SKILLS_DATA = [
-  { title: "Finance", level: "ACCA Foundation", desc: "Core accounting and financial reporting fundamentals, building toward the full ACCA qualification." },
-  { title: "Excel", level: "Advanced", desc: "Advanced formulas, financial modeling structures, and data analysis for both coursework and client projects." },
-  { title: "AI & Automation", level: "Building", desc: "Learning Hands-on with n8n, AI agents, and workflow automation for real business use cases." },
-  { title: "Video Editing", level: "1.5 Years Experience", desc: "CapCut PC, and AI-assisted tools — cinematic storytelling and short-form content." }
+  {
+    title: "Finance",
+    level: "ACCA Foundation",
+    desc: "Core accounting and financial reporting fundamentals, building toward the full ACCA qualification."
+  },
+  {
+    title: "Excel",
+    level: "Advanced",
+    desc: "Advanced formulas, financial modeling structures, and data analysis for both coursework and client projects."
+  },
+  {
+    title: "AI & Automation",
+    level: "Building",
+    desc: "Learning Hands-on with n8n, AI agents, and workflow automation for real business use cases."
+  },
+  {
+    title: "Video Editing",
+    level: "1.5 Years Experience",
+    desc: "CapCut PC, and AI-assisted tools — cinematic storytelling and short-form content."
+  }
 ];
 window.SKILLS_DATA = SKILLS_DATA;
