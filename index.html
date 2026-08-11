@@ -1656,7 +1656,7 @@
   .portfolio-inline-image{display:block;width:100%;margin-top:14px;padding:0;border:0;background:none;cursor:pointer;}
   .portfolio-inline-image img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.1);}
   /* ---------- STATIC PORTFOLIO BACKGROUND POLISH ---------- */
-  .tree-bg{background-image:linear-gradient(180deg,rgba(24,4,17,.08),rgba(7,2,10,.28)),url("assets/portfolio-editorial-burgundy.webp");background-size:cover,cover;background-position:center;background-blend-mode:multiply,normal;}
+  .tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.16),rgba(8,1,9,.42)),url("assets/portfolio-center-editorial.webp");background-size:cover;background-position:center top;background-blend-mode:multiply,normal;}
   .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(255,214,226,.2),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;}
   .tree-bg-glow{opacity:.32;animation-duration:13s;background:radial-gradient(circle,rgba(255,132,177,.3),transparent 68%);}
   .tree-bg-glow-2{opacity:.26;animation-duration:17s;background:radial-gradient(circle,rgba(230,88,144,.26),transparent 68%);}
@@ -1668,8 +1668,8 @@
   .particle-layer,#cursor-glow{display:none !important;}
   @media (max-width:720px){
     /* The visual layer is #tree-bg, not body: target it directly so mobile gets the center-safe composition. */
-    #tree-bg{background-image:radial-gradient(ellipse 125% 48% at 50% 22%,rgba(224,91,143,.34),transparent 66%),radial-gradient(ellipse 120% 44% at 50% 58%,rgba(157,48,100,.3),transparent 72%),linear-gradient(180deg,rgba(25,5,16,.08),rgba(13,3,9,.16)),url('assets/portfolio-editorial-burgundy.webp') !important;background-position:center top !important;background-size:auto,auto,auto,cover !important;background-attachment:scroll !important;}
-    #tree-bg::before{opacity:.42;background:radial-gradient(ellipse at 50% 28%,rgba(255,174,202,.2),transparent 52%),radial-gradient(ellipse at 50% 68%,rgba(237,91,144,.14),transparent 54%),repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px) !important;}
+    #tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.12),rgba(8,1,9,.38)),url('assets/portfolio-center-editorial.webp') !important;background-position:center top !important;background-size:cover !important;background-attachment:scroll !important;}
+    #tree-bg::before{opacity:.16;background:repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px) !important;}
     .hero-glass,.glass-card,.section.bento-card,.topnav,.dock{backdrop-filter:blur(10px) saturate(125%) !important;-webkit-backdrop-filter:blur(10px) saturate(125%) !important;}
   }
   @media (min-width:721px){
