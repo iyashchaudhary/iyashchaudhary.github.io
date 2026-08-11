@@ -46,15 +46,17 @@
   body{
     margin:0;
     background:
-      radial-gradient(ellipse 900px 500px at 85% -5%, rgba(226,85,123,0.16), transparent 60%),
-      radial-gradient(ellipse 700px 500px at -5% 100%, rgba(226,85,123,0.10), transparent 60%),
+      linear-gradient(180deg,rgba(18,4,12,.12),rgba(13,3,9,.2)),
+      url('assets/unfiltered-burgundy-blossom-bg.webp') center top / cover fixed,
       var(--uy-bg);
     color:var(--uy-text);
     font-family:'Inter',sans-serif;
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
+    position:relative;
   }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 18%,rgba(255,155,186,.08),transparent 38%),repeating-linear-gradient(115deg,rgba(255,255,255,.014) 0 1px,transparent 1px 6px);mix-blend-mode:screen;opacity:.7;}
   a{color:inherit;text-decoration:none;}
   .uy-skip-link{position:fixed;left:14px;top:12px;z-index:20;transform:translateY(-180%);padding:10px 14px;border-radius:12px;background:var(--uy-pink);color:#1a0d12;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .18s ease;}
   .uy-skip-link:focus{transform:translateY(0);outline:3px solid var(--uy-text);outline-offset:3px;}
@@ -63,7 +65,7 @@
   ::selection{background:var(--uy-pink);color:#1a0d12;}
 
   /* decorative cherry blossoms — more of them, like the reference */
-  .uy-blossoms{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.55;}
+  .uy-blossoms{display:none;}
   .uy-blossoms svg{position:absolute;}
   .uy-blossoms .b1{top:-70px;right:-50px;width:380px;height:380px;opacity:.6;}
   .uy-blossoms .b2{bottom:-90px;left:-70px;width:340px;height:340px;opacity:.4;}
@@ -119,7 +121,8 @@
   /* ---------- CENTER: CORKBOARD ---------- */
   .uy-day-panel{grid-column:2;
     background:
-      repeating-linear-gradient(45deg, rgba(70,38,50,0.35) 0, rgba(70,38,50,0.35) 2px, rgba(80,44,56,0.28) 2px, rgba(80,44,56,0.28) 8px),
+      linear-gradient(145deg,rgba(84,35,52,.78),rgba(34,12,24,.9)),
+      repeating-linear-gradient(45deg, rgba(70,38,50,0.28) 0, rgba(70,38,50,0.28) 2px, rgba(80,44,56,0.2) 2px, rgba(80,44,56,0.2) 8px),
       linear-gradient(160deg, #3A2029 0%, #2A141D 55%, #22101A 100%);
     border:1px solid var(--uy-line); border-radius:26px;
     padding:clamp(20px,3vw,40px); position:relative; overflow:hidden;
