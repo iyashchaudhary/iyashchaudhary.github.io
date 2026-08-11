@@ -82,6 +82,8 @@
   .steps b{color:var(--text);}
   .saved-note{font-size:.76rem;color:var(--dim);margin-top:4px;}
   .search-wrap{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-bottom:10px;}
+  #port-image-fieldset{background:rgba(226,85,123,.035);}
+  .portfolio-image-note{font-size:.72rem;color:var(--dim);margin-top:6px;}
   .search-wrap .btn{flex:none;}
 </style>
 </head>
@@ -312,6 +314,20 @@
         </div>
       </fieldset>
 
+      <fieldset id="port-image-fieldset">
+        <legend>Photo / Certificate Image (optional)</legend>
+        <div class="upload-area">
+          <button class="btn" type="button" onclick="document.getElementById('p-image-file').click()">📁 Upload Image</button>
+          <input type="file" id="p-image-file" accept="image/*" onchange="onPortfolioImagePicked(this)">
+          <div class="upload-status" id="p-image-status"></div>
+        </div>
+        <div class="up-preview" id="p-image-preview"><img id="p-image-preview-img" alt="portfolio image preview"><div class="meta" id="p-image-preview-meta"></div></div>
+        <label class="first">Image URL or filename <span style="color:#7ee787;">(filled automatically)</span></label>
+        <input type="text" id="p-image-src" placeholder="e.g. portfolio/journey-01.webp">
+        <label>Image alt text</label>
+        <input type="text" id="p-image-alt" placeholder="Describe the image or certificate">
+      </fieldset>
+
       <fieldset id="port-list-wrap" style="display:none;">
         <legend>Existing Items</legend>
         <div id="port-list" style="max-height:300px; overflow-y:auto; font-size:.85rem;"></div>
@@ -333,9 +349,9 @@
 
 </div>
 
-<script src="entries-data.js"></script>
-<script src="sections-data.js"></script>
-<script src="portfolio-data.js"></script>
+<script>document.write('<script src="entries-data.js?v='+Date.now()+'\"><\/script>');</script>
+<script>document.write('<script src="sections-data.js?v='+Date.now()+'\"><\/script>');</script>
+<script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>
   const PASSCODE = "yash2026";
   const GITHUB_REPO = "iyashchaudhary/iyashchaudhary.github.io";
@@ -394,7 +410,12 @@
     if(!id){ document.getElementById('yt-preview').classList.remove('show'); fetchedTitle=''; return; }
     document.getElementById('yt-preview').classList.add('show');
     document.getElementById('yt-thumb').src = 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
-    fetch('https://noembed.com/embed?url='+url).then(r=>r.json()).then(d=>{ fetchedTitle = d.title||''; document.getElementById('yt-title').textContent = fetchedTitle; document.getElementById('yt-meta').textContent = 'Fetched automatically'; });
+    fetchedTitle = '';
+    document.getElementById('yt-title').textContent = 'Loading YouTube title…';
+    document.getElementById('yt-meta').textContent = 'Thumbnail ready';
+    const fallback = 'Today’s documentary';
+    const controller = new AbortController(); const timer = setTimeout(()=>controller.abort(), 4500);
+    fetch('https://noembed.com/embed?url='+encodeURIComponent(url), {signal: controller.signal}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{ fetchedTitle = d.title || fallback; document.getElementById('yt-title').textContent = fetchedTitle; document.getElementById('yt-meta').textContent = 'Fetched automatically'; }).catch(()=>{ fetchedTitle = fallback; document.getElementById('yt-title').textContent = fallback; document.getElementById('yt-meta').textContent = 'Thumbnail ready · title fallback'; }).finally(()=>clearTimeout(timer));
   }
   document.getElementById('f-doc-url').addEventListener('input', previewVideo);
 
@@ -481,6 +502,37 @@
     return res.json();
   }
 
+  let uploadedPortfolioFilename = null;
+  function setPortfolioImageFields(src, alt){
+    document.getElementById('p-image-src').value = src || '';
+    document.getElementById('p-image-alt').value = alt || '';
+    const prev = document.getElementById('p-image-preview');
+    if(src){ document.getElementById('p-image-preview-img').src = src; document.getElementById('p-image-preview-meta').textContent = src; prev.classList.add('show'); }
+    else prev.classList.remove('show');
+  }
+  async function onPortfolioImagePicked(input){
+    const file = input.files && input.files[0]; if(!file) return;
+    const status = document.getElementById('p-image-status'); status.className='upload-status'; status.textContent='Preparing image…';
+    try {
+      const dataUrl = await compressImage(file);
+      document.getElementById('p-image-preview-img').src = dataUrl;
+      document.getElementById('p-image-preview').classList.add('show');
+      const type = document.getElementById('port-select').value;
+      const folio = document.getElementById('p-c-folio')?.value || '';
+      const stamp = Date.now();
+      const ext = file.type === 'image/png' ? 'png' : 'webp';
+      const filename = `portfolio/${type}-${folio ? folio+'-' : ''}${stamp}.${ext}`;
+      document.getElementById('p-image-preview-meta').textContent = filename;
+      document.getElementById('p-image-alt').value ||= file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+      const token = localStorage.getItem('uy_gh_token');
+      if(token){ status.textContent='Uploading to GitHub…'; await uploadImageToGitHub(token, filename, dataUrl); status.className='upload-status ok'; status.textContent='✅ Uploaded to GitHub'; }
+      else status.textContent='Image ready. Add GitHub token before publishing.';
+      uploadedPortfolioFilename = filename; document.getElementById('p-image-src').value = filename;
+    } catch(e){ status.className='upload-status err'; status.textContent='❌ Upload failed: '+e.message; }
+    finally { input.value=''; }
+  }
+  function portfolioImageSrc(){ return document.getElementById('p-image-src').value.trim() || uploadedPortfolioFilename || ''; }
+
   function handleGenerate(){
     if(currentMode==='entry') generateEntry();
     else if(currentMode==='section') generateSection();
@@ -498,7 +550,7 @@
     const docUrl = document.getElementById('f-doc-url').value.trim();
     let out = `  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
     if(photoSrc) out += `    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
-    if(docUrl) out += `    documentary: { youtubeUrl: "${docUrl}", title: "${esc(fetchedTitle)}" },\n`;
+    if(docUrl) { const id = docUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1] || ''; out += `    documentary: { youtubeUrl: "${esc(docUrl)}", title: "${esc(fetchedTitle || "Today’s documentary")}", thumbnail: "${id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : ''}" },\n`; }
     out = out.replace(/,\n$/, '\n') + `  }`;
     document.getElementById('output').value = out;
     document.getElementById('output-wrap').style.display = 'block';
@@ -532,6 +584,7 @@
     document.getElementById('port-experience-fields').style.display = t==='experience' ? '' : 'none';
     document.getElementById('port-credentials-fields').style.display = t==='credentials' ? '' : 'none';
     document.getElementById('port-skills-fields').style.display = t==='skills' ? '' : 'none';
+    if(!window._isEditingPort && typeof setPortfolioImageFields === 'function') setPortfolioImageFields('', '');
     populatePortList();
   }
 
@@ -576,17 +629,20 @@
       document.getElementById('p-j-title').value = item.title;
       document.getElementById('p-j-date').value = item.date;
       document.getElementById('p-j-text').value = item.paragraphs.join('\n');
+      setPortfolioImageFields(item.images?.[0]?.src || '', item.images?.[0]?.alt || '');
     } else if(t==='experience') {
       item = window.EXPERIENCE_DATA[idx];
       document.getElementById('p-e-role').value = item.role;
       document.getElementById('p-e-org').value = item.org;
       document.getElementById('p-e-date').value = item.date;
       document.getElementById('p-e-desc').value = item.desc;
+      setPortfolioImageFields(item.image || '', item.imageAlt || '');
     } else if(t==='skills') {
       item = window.SKILLS_DATA[idx];
       document.getElementById('p-s-title').value = item.title;
       document.getElementById('p-s-level').value = item.level;
       document.getElementById('p-s-desc').value = item.desc;
+      setPortfolioImageFields(item.image || '', item.imageAlt || '');
     } else if(t==='credentials') {
       const folio = document.getElementById('p-c-folio').value;
       item = window.CREDENTIALS_DATA[folio][idx];
@@ -597,6 +653,7 @@
       document.getElementById('p-c-img').value = item.certImg || '';
       document.getElementById('p-c-verify').value = item.verifyUrl || '';
       document.getElementById('p-c-skills').value = (item.skills || []).join(', ');
+      setPortfolioImageFields(item.certImg || '', item.certAlt || '');
     }
     window._portEditIdx = idx;
     window._isEditingPort = true;
@@ -614,18 +671,22 @@
     let out = '';
     if(t==='journey') {
       const paras = document.getElementById('p-j-text').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-      out = `  {\n    title: "${esc(document.getElementById('p-j-title').value)}",\n    date: "${esc(document.getElementById('p-j-date').value)}",\n    paragraphs: [${paras.map(p=>`"${esc(p)}"`).join(', ')}]\n  }`;
+      const img = portfolioImageSrc(), alt = esc(document.getElementById('p-image-alt').value);
+      out = `  {\n    title: "${esc(document.getElementById('p-j-title').value)}",\n    date: "${esc(document.getElementById('p-j-date').value)}",\n    paragraphs: [${paras.map(p=>`"${esc(p)}"`).join(', ')}]${img ? `,\n    images: [{ src: "${esc(img)}", alt: "${alt}" }]` : ''}\n  }`;
     } else if(t==='experience') {
-      out = `  {\n    role: "${esc(document.getElementById('p-e-role').value)}",\n    org: "${esc(document.getElementById('p-e-org').value)}",\n    date: "${esc(document.getElementById('p-e-date').value)}",\n    desc: "${esc(document.getElementById('p-e-desc').value)}"\n  }`;
+      const img = portfolioImageSrc();
+      out = `  {\n    role: "${esc(document.getElementById('p-e-role').value)}",\n    org: "${esc(document.getElementById('p-e-org').value)}",\n    date: "${esc(document.getElementById('p-e-date').value)}",\n    desc: "${esc(document.getElementById('p-e-desc').value)}"${img ? `,\n    image: "${esc(img)}", imageAlt: "${esc(document.getElementById('p-image-alt').value)}"` : ''}\n  }`;
     } else if(t==='credentials') {
       const skills = document.getElementById('p-c-skills').value.split(',').map(s=>s.trim()).filter(Boolean);
       out = `  {\n    title: "${esc(document.getElementById('p-c-title').value)}",\n    status: "${esc(document.getElementById('p-c-status').value)}",\n    issuer: "${esc(document.getElementById('p-c-issuer').value)}",\n    desc: "${esc(document.getElementById('p-c-desc').value)}",\n`;
-      if(document.getElementById('p-c-img').value) out += `    certImg: "${document.getElementById('p-c-img').value}",\n    certAlt: "${esc(document.getElementById('p-c-title').value)} certificate",\n`;
+      const certImage = portfolioImageSrc() || document.getElementById('p-c-img').value;
+      if(certImage) out += `    certImg: "${esc(certImage)}",\n    certAlt: "${esc(document.getElementById('p-image-alt').value || document.getElementById('p-c-title').value + ' certificate')}",\n`;
       if(document.getElementById('p-c-verify').value) out += `    verifyUrl: "${document.getElementById('p-c-verify').value}",\n`;
       if(skills.length) out += `    skills: [${skills.map(s=>`"${esc(s)}"`).join(', ')}]\n`;
       out += `  }`;
     } else if(t==='skills') {
-      out = `  {\n    title: "${esc(document.getElementById('p-s-title').value)}",\n    level: "${esc(document.getElementById('p-s-level').value)}",\n    desc: "${esc(document.getElementById('p-s-desc').value)}"\n  }`;
+      const img = portfolioImageSrc();
+      out = `  {\n    title: "${esc(document.getElementById('p-s-title').value)}",\n    level: "${esc(document.getElementById('p-s-level').value)}",\n    desc: "${esc(document.getElementById('p-s-desc').value)}"${img ? `,\n    image: "${esc(img)}", imageAlt: "${esc(document.getElementById('p-image-alt').value)}"` : ''}\n  }`;
     }
     document.getElementById('output').value = out;
     document.getElementById('output-wrap').style.display = 'block';
@@ -773,13 +834,14 @@
       try { new Function(newContent); } catch(e) { throw new Error('Generated file has invalid JavaScript (' + e.message + '). Publish cancelled to protect your site.'); }
       // --- Strip the comment header only kept from original file? Keep original header intact: ---
       newContent = originalHeader + '\n' + newContent;
-      await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
+      const publishRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
         method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Update ${filename}`, content: btoa(unescape(encodeURIComponent(newContent))), sha: fileData.sha })
       });
-      alert("🚀 Published!"); 
+      if(!publishRes.ok){ const detail = await publishRes.json().catch(()=>({})); throw new Error(detail.message || `GitHub publish failed (${publishRes.status})`); }
+      alert("🚀 Published successfully. The site will refresh with the latest data shortly.");
       window._isEditingPort = false; window._isDeletingPort = false; window._isEditingExisting = false;
-      location.reload();
+      location.href = location.pathname + '?v=' + Date.now();
     } catch (err) { alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
 

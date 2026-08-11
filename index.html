@@ -1673,6 +1673,8 @@
   @media (prefers-contrast: more){
     .topnav, .dock, .cmdk-panel, .ai-panel{ border-width:1.5px; border-color:var(--text-dim); }
   }
+  .portfolio-inline-image{display:block;width:100%;margin-top:14px;padding:0;border:0;background:none;cursor:pointer;}
+  .portfolio-inline-image img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.1);}
 </style>
 </head>
 <body>
@@ -2054,7 +2056,7 @@
     </div>
   </div>
 
-<script src="portfolio-data.js"></script>
+<script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
 <script>
   window.__lenisReady = (typeof Lenis !== 'undefined');
@@ -2107,6 +2109,7 @@
           <div class="exp-college">${esc(exp.org)}</div>
           <div class="exp-date mono">${esc(exp.date)}</div>
           <p class="exp-desc">${esc(exp.desc)}</p>
+          ${exp.image ? `<button class="portfolio-inline-image" type="button" onclick="openImageLightbox('${exp.image}', '${esc(exp.imageAlt || exp.role)}')"><img src="${exp.image}" alt="${esc(exp.imageAlt || exp.role)}" loading="lazy"></button>` : ''}
         </div>`).join('');
     }
 
@@ -2182,6 +2185,7 @@
           <h3>${esc(s.title)}</h3>
           <span class="skill-level">${esc(s.level)}</span>
           <p>${esc(s.desc)}</p>
+          ${s.image ? `<button class="portfolio-inline-image" type="button" onclick="openImageLightbox('${s.image}', '${esc(s.imageAlt || s.title)}')"><img src="${s.image}" alt="${esc(s.imageAlt || s.title)}" loading="lazy"></button>` : ''}
         </div>`).join('');
     }
   })();
