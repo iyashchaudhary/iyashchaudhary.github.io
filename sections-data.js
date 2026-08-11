@@ -9,6 +9,7 @@
 
 // ---------- THINGS I TRIED ----------
 // outcome: "worked" | "failed" | "mixed"
+// ---------- THINGS I TRIED ----------
 const THINGS_TRIED = [
   {
     title: "Editing my own YouTube documentary in CapCut",
@@ -19,8 +20,7 @@ const THINGS_TRIED = [
     learned: "Need a proper mic and to plan shots before filming, not during."
   }
 ];
-window.THINGS_TRIED = THINGS_TRIED; // expose globally for the page renderer
-
+window.THINGS_TRIED = THINGS_TRIED;
 
 // ---------- THINGS I LEARNED ----------
 const THINGS_LEARNED = [
@@ -28,13 +28,16 @@ const THINGS_LEARNED = [
     course: "Financial Accounting — Basics",
     completedDate: null,
     inProgress: true,
-    learned: ["Double-entry system", "Journal vs ledger", "Basic trial balance"],
+    learned: [
+      "Double-entry system",
+      "Journal vs ledger",
+      "Basic trial balance"
+    ],
     usedFor: "ACCA foundation + understanding my own freelance invoices",
     proofUrl: ""
   }
 ];
-window.THINGS_LEARNED = THINGS_LEARNED; // expose globally for the page renderer
-
+window.THINGS_LEARNED = THINGS_LEARNED;
 
 // ---------- THINGS I BUILT ----------
 const THINGS_BUILT = [
@@ -48,21 +51,30 @@ const THINGS_BUILT = [
     link: ""
   }
 ];
-window.THINGS_BUILT = THINGS_BUILT; // expose globally for the page renderer
-
+window.THINGS_BUILT = THINGS_BUILT;
 
 // ---------- RANDOM STUFF ----------
-// type: "text" | "photo"
 const RANDOM_STUFF = [
-  { type: "text", text: "Bro the ARSD canteen queue is genuinely a full workout on its own 😭" },
-  { type: "text", text: "Idea: what if Day 100 gets its own mini highlight reel instead of a normal entry?" }
+  {
+    type: "text",
+    text: "Bro the ARSD canteen queue is genuinely a full workout on its own 😭"
+  },
+  {
+    type: "text",
+    text: "Idea: what if Day 100 gets its own mini highlight reel instead of a normal entry?"
+  },
+  {
+    type: "text",
+    text: "Bruh college canteen are too 🫠"
+  }
 ];
-window.RANDOM_STUFF = RANDOM_STUFF; // expose globally for the page renderer
-
+window.RANDOM_STUFF = RANDOM_STUFF;
 
 // ---------- SMALL WINS ----------
 const SMALL_WINS = [
-  { date: "11 August 2026", text: "Started Unfiltered Yash — Day 01 is live, and the YouTube documenting begins too." }
+  {
+    date: "11 August 2026",
+    text: "Started Unfiltered Yash — Day 01 is live, and the YouTube documenting begins too."
+  }
 ];
-window.SMALL_WINS = SMALL_WINS; // expose globally for the page renderer
-
+window.SMALL_WINS = SMALL_WINS;
