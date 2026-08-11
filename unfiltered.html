@@ -425,14 +425,13 @@
   html,body{overflow-x:hidden;}
   body{
     background:
-      radial-gradient(ellipse 760px 520px at 78% -12%,rgba(255,154,184,.18),transparent 62%),
-      radial-gradient(ellipse 680px 560px at 6% 72%,rgba(116,34,77,.24),transparent 68%),
-      repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 5px),
-      linear-gradient(135deg,#12070d 0%,#24101b 48%,#160a13 100%);
+      linear-gradient(180deg,rgba(18,4,12,.08),rgba(13,3,9,.16)),
+      url('assets/unfiltered-burgundy-blossom-bg.webp') center top / cover fixed,
+      var(--uy-bg);
     position:relative;
   }
   body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.34;background:radial-gradient(circle at 18% 20%,rgba(255,232,206,.12) 0 1px,transparent 1.5px),radial-gradient(circle at 76% 62%,rgba(255,255,255,.08) 0 1px,transparent 1.5px);background-size:17px 19px,23px 27px;mix-blend-mode:soft-light;}
-  .uy-blossoms{opacity:.68;filter:saturate(115%) drop-shadow(0 16px 24px rgba(0,0,0,.25));}
+  .uy-blossoms{display:none;}
   .uy-blossoms .b1{animation:uy-drift 18s ease-in-out infinite alternate;}
   .uy-blossoms .b2{animation:uy-drift 22s ease-in-out infinite alternate-reverse;}
   @keyframes uy-drift{from{transform:translate3d(0,0,0) rotate(-2deg)}to{transform:translate3d(8px,-10px,0) rotate(2deg)}}
