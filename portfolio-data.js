@@ -4,6 +4,7 @@
 
 // ---------- JOURNEY ----------
 // ---------- JOURNEY ----------
+// ---------- JOURNEY ----------
 const JOURNEY_DATA = [
   {
     title: "B.A. Economics — Sri Venkateswara College, DU",
@@ -57,7 +58,14 @@ const JOURNEY_DATA = [
   },
   {
     title: "A NEW JOURNEY BEGINS ",
-    date: "11th August 2026",
+    date: "14th August 2026",
+    paragraphs: [
+      "Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."
+    ]
+  },
+  {
+    title: "Starting NEW JOURNEY 😃",
+    date: "14th Aug 2026 ",
     paragraphs: [
       "Today was the first day of a new chapter. A new college, a new environment, new people, and honestly, a completely different phase of life. It feels strange to think about how much has changed and how much is still waiting to happen. I don't know exactly where this journey will take me, but this is where I'm starting again — with a fresh college life, new goals, and a lot of things I want to build over the next six months. Maybe one day I'll look back at this first day and realize just how much changed from here."
     ]
