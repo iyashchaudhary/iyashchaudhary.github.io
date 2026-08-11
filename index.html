@@ -2266,10 +2266,11 @@
   });
 
   const prefersReducedGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouchGlobal = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
-  /* ---- Lenis smooth scroll (skipped if reduced motion is preferred, falls back to native scroll if it fails to load) ---- */
+  /* ---- Lenis smooth scroll for desktop only; touch devices use native scrolling for lighter, more responsive input ---- */
   let lenis = null;
-  if(window.__lenisReady && !prefersReducedGlobal){
+  if(window.__lenisReady && !prefersReducedGlobal && !isTouchGlobal){
     lenis = new Lenis({ duration: 1.2, lerp: 0.1, smoothWheel: true });
     (function raf(time){ lenis.raf(time); requestAnimationFrame(raf); })();
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
