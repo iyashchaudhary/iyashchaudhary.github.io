@@ -687,9 +687,8 @@
     if(!keys.length) return '{}';
     return '{\n' + keys.map(k => pad2 + k + ': ' + pretty(v[k], depth + 1)).join(',\n') + '\n' + pad + '}';
   }
-  function serializeArray(varName, arr, prefix){
-    const items = arr.map(item => '  ' + pretty(item, 1).trim());
-    return prefix + '[\n' + items.join(',\n') + '\n];\nwindow.' + varName + ' = ' + varName + ';';
+  function serializeVar(varName, val, prefix){
+    return prefix + pretty(val, 0) + ';\nwindow.' + varName + ' = ' + varName + ';';
   }
   function portSelectToVar(pt){
     return pt==='journey' ? 'JOURNEY_DATA' : pt==='experience' ? 'EXPERIENCE_DATA' : pt==='skills' ? 'SKILLS_DATA' : `CREDENTIALS_DATA.${document.getElementById('p-c-folio').value}`;
@@ -727,15 +726,13 @@
         const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToUpdate);
         if(idx === -1) throw new Error('Day not found in entries');
         UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], eval('(' + code + ')'));
-        newContent = serializeArray('UNFILTERED_ENTRIES', UNFILTERED_ENTRIES, 'const UNFILTERED_ENTRIES = ');
       } else if(currentMode === 'section') {
-        let target = sec==='random' ? window.RANDOM_STUFF : sec==='tried' ? window.THIRGS_TRIED : window.THRINGS_LEARNED;
-        const varName = sec==='random' ? 'RANDOM_STUFF' : sec==='tried' ? 'THINGS_TRIED' : 'THINGS_LEARNED';
+        const sec = document.getElementById('sec-select').value;
+        let target = sec==='random' ? window.RANDOM_STUFF : sec==='tried' ? window.THINGS_TRIED : sec==='learned' ? window.THINGS_LEARNED : sec==='built' ? window.THINGS_BUILT : window.SMALL_WINS;
         if(window._secEditIdx !== undefined && window._isEditingSection) { target.splice(window._secEditIdx, 1); }
         target.push(eval('(' + code + ')'));
-        newContent = serializeArray(varName, target, 'const ' + varName + ' = ');
         window._isEditingSection = false;
-      } else if(currentMode === 'portfolio' && (window._isEditingPort || window._isDeletingPort)) {
+      } else if(currentMode === 'portfolio') {
         const portVar = portSelectToVar(document.getElementById('port-select').value);
         let target;
         if(portVar.includes('.')) { const parts = portVar.split('.'); target = window[parts[0]][parts[1]]; }
@@ -747,20 +744,30 @@
         } else {
           target.push(eval('(' + code + ')'));
         }
-        newContent = serializeArray(portVar, target, 'const ' + portVar + ' = ');
         window._isEditingPort = false;
-      } else if(currentMode === 'portfolio') {
-        // Add new portfolio item (default path)
-        const portVar = portSelectToVar(document.getElementById('port-select').value);
-        let target;
-        if(portVar.includes('.')) { const parts = portVar.split('.'); target = window[parts[0]][parts[1]]; }
-        else target = window[portVar];
-        target.push(eval('(' + code + ')'));
-        newContent = serializeArray(portVar, target, 'const ' + portVar + ' = ');
       } else {
-        // New daily entry — append into the live array so commas/quotes are never mangled
+        // New daily entry
         UNFILTERED_ENTRIES.push(eval('(' + code + ')'));
-        newContent = serializeArray('UNFILTERED_ENTRIES', UNFILTERED_ENTRIES, 'const UNFILTERED_ENTRIES = ');
+      }
+
+      // --- FULL RE-SERIALIZATION: Ensure the whole file is reconstructed with all variables ---
+      if (filename === 'entries-data.js') {
+        newContent = serializeVar('UNFILTERED_ENTRIES', UNFILTERED_ENTRIES, 'const UNFILTERED_ENTRIES = ');
+      } else if (filename === 'sections-data.js') {
+        newContent = 
+          serializeVar('THINGS_TRIED', THINGS_TRIED, '// ---------- THINGS I TRIED ----------\nconst THINGS_TRIED = ') + '\n\n' +
+          serializeVar('THINGS_LEARNED', THINGS_LEARNED, '// ---------- THINGS I LEARNED ----------\nconst THINGS_LEARNED = ') + '\n\n' +
+          serializeVar('THINGS_BUILT', THINGS_BUILT, '// ---------- THINGS I BUILT ----------\nconst THINGS_BUILT = ') + '\n\n' +
+          serializeVar('RANDOM_STUFF', RANDOM_STUFF, '// ---------- RANDOM STUFF ----------\nconst RANDOM_STUFF = ') + '\n\n' +
+          serializeVar('SMALL_WINS', SMALL_WINS, '// ---------- SMALL WINS ----------\nconst SMALL_WINS = ');
+      } else if (filename === 'portfolio-data.js') {
+        newContent = 
+          serializeVar('JOURNEY_DATA', JOURNEY_DATA, '// ---------- JOURNEY ----------\nconst JOURNEY_DATA = ') + '\n\n' +
+          serializeVar('EXPERIENCE_DATA', EXPERIENCE_DATA, '// ---------- EXPERIENCE ----------\nconst EXPERIENCE_DATA = ') + '\n\n' +
+          serializeVar('FOCUS_DATA', FOCUS_DATA, '// ---------- CURRENT FOCUS ----------\nconst FOCUS_DATA = ') + '\n\n' +
+          serializeVar('PURSUING_DATA', PURSUING_DATA, '// ---------- PURSUING ----------\nconst PURSUING_DATA = ') + '\n\n' +
+          serializeVar('CREDENTIALS_DATA', CREDENTIALS_DATA, '// ---------- CREDENTIALS ----------\nconst CREDENTIALS_DATA = ') + '\n\n' +
+          serializeVar('SKILLS_DATA', SKILLS_DATA, '// ---------- SKILLS ----------\nconst SKILLS_DATA = ');
       }
       // --- Safety check: the new file must parse as valid JavaScript before publishing ---
       try { new Function(newContent); } catch(e) { throw new Error('Generated file has invalid JavaScript (' + e.message + '). Publish cancelled to protect your site.'); }
