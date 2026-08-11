@@ -11,7 +11,7 @@ const JOURNEY_DATA = [
     title: "B.A. Economics — Sri Venkateswara College, DU",
     date: "Aug 2025 – Aug 2026",
     paragraphs: [
-      "Started a B.A. Programme with Economics as my major and English as a minor, after CUET 2025. A few months in, my interest in the course kept dropping — it wasn't matching where I actually wanted to go with finance.",
+      "Started a B.A. Economics programme after CUET 2025. A few months in, my interest in the course kept dropping — it wasn't matching where I actually wanted to go with finance.",
       "So I made the call to sit CUET again — a harder decision than it sounds, since most people in the same spot were told to just \"adjust\" for two more years."
     ],
     images: [
@@ -45,7 +45,7 @@ const JOURNEY_DATA = [
     title: "Retook CUET — By Choice",
     date: "Jan 2026",
     paragraphs: [
-      "Alongside the B.A. Programme, I was also pursuing a B.Com (Hons) dual degree through DU SOL — and it was going well, unlike the main course. That gap told me exactly what to fix.",
+      "Alongside the B.A. Economics programme, I was also pursuing a B.Com (Hons) dual degree through DU SOL — and it was going well, unlike the main course. That gap told me exactly what to fix.",
       "I went back into full CUET preparation while still attending regular classes, aiming for a straightforward B.Com (Hons) seat this time — no more mismatch between course and goal."
     ]
   },
