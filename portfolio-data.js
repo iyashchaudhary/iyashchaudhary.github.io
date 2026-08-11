@@ -35,8 +35,7 @@ const JOURNEY_DATA = [
       "Secured a B.Com (Hons) seat at ARSD — the exact course I'd been trying to reach since the beginning. The parallel B.Com (Hons) from DU SOL was withdrawn once this was confirmed, since two degrees can't run at once within DU.",
       "This is where the real build starts: stacking ACCA around the degree, without letting either suffer."
     ]
-  }
-,
+  },
   {
     title: "A NEW JOURNEY BEGINS ",
     date: "11th August 2026",
