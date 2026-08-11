@@ -1678,6 +1678,11 @@
   /* Keep functional motion only; remove ambient loops that add work without adding meaning. */
   .tree-bg-glow,.firefly,.scroll-indicator .chevron,#study-buddy{animation:none !important;}
   #study-buddy{transition:none !important;}
+  /* Subtle CSS-only depth: no scroll listener, no requestAnimationFrame loop. */
+  @keyframes portfolio-bg-drift{0%{background-position:50% 0%;}50%{background-position:51.2% 0.8%;}100%{background-position:49.4% 1.4%;}}
+  #tree-bg{animation:portfolio-bg-drift 34s ease-in-out infinite alternate;will-change:background-position;}
+  @media (max-width:720px){#tree-bg{animation-duration:42s;will-change:auto;}}
+  @media (prefers-reduced-motion:reduce){#tree-bg{animation:none !important;will-change:auto !important;}}
 </style>
 </head>
 <body>
