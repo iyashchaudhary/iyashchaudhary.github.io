@@ -1663,6 +1663,16 @@
   @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
   html{overflow:visible;overscroll-behavior-y:auto;}
   body{overflow-x:clip;overflow-y:visible;touch-action:pan-y;overscroll-behavior-y:auto;}
+  /* Final performance layer: retain the premium atmosphere, remove only nonessential animation and expensive blur work. */
+  .mesh-blob-1,.mesh-blob-2,.mesh-blob-3,.mesh-blob-4,.mesh-particles span{animation:none !important;}
+  .particle-layer,#cursor-glow{display:none !important;}
+  @media (max-width:720px){
+    html body{background-image:radial-gradient(ellipse 120% 42% at 50% 22%,rgba(190,65,104,.24),transparent 68%),radial-gradient(ellipse 110% 38% at 50% 62%,rgba(112,27,66,.22),transparent 72%),linear-gradient(180deg,rgba(25,5,16,.12),rgba(13,3,9,.18)),url('assets/portfolio-editorial-burgundy.webp') !important;background-position:center top !important;background-size:auto,auto,auto,cover !important;background-attachment:scroll !important;}
+    .hero-glass,.glass-card,.section.bento-card,.topnav,.dock{backdrop-filter:blur(10px) saturate(125%) !important;-webkit-backdrop-filter:blur(10px) saturate(125%) !important;}
+  }
+  @media (min-width:721px){
+    .hero-glass,.glass-card,.section.bento-card{backdrop-filter:blur(14px) saturate(145%) !important;-webkit-backdrop-filter:blur(14px) saturate(145%) !important;}
+  }
 </style>
 </head>
 <body>
@@ -2530,11 +2540,11 @@
     }
     perLayerFrags.forEach((f, idx)=> particleLayers[idx].appendChild(f));
   }
-  if('requestIdleCallback' in window) requestIdleCallback(buildParticles, {timeout:1500});
-  else setTimeout(buildParticles, 200);
+  /* Decorative particles are intentionally disabled: the static atmosphere is lighter and smoother on touch devices. */
+  particleLayers.forEach(layer => { layer.replaceChildren(); layer.style.display = 'none'; });
 
 
-  if(meshBg && !prefersReduced && !isTouch){
+  if(false && meshBg && !prefersReduced && !isTouch){
     let targetX = 0, targetY = 0, curX = 0, curY = 0;
     window.addEventListener('mousemove', (e)=>{
       targetX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -2556,7 +2566,7 @@
 
   /* Cursor Energy — soft glow follows the pointer; nearby particles react. Desktop only. */
   const cursorGlow = document.getElementById('cursor-glow');
-  if(cursorGlow && !prefersReduced && !isTouch){
+  if(false && cursorGlow && !prefersReduced && !isTouch){
     let cgTX = 0, cgTY = 0, cgX = 0, cgY = 0, cgStarted = false, proximityRaf = null;
     window.addEventListener('mousemove', (e)=>{
       cgTX = e.clientX; cgTY = e.clientY;
