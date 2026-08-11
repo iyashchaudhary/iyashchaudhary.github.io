@@ -51,6 +51,9 @@
   .tabs{display:flex;gap:8px;margin:18px 0 22px;flex-wrap:wrap;}
   .tab{padding:10px 18px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--dim);font-size:.85rem;font-weight:600;cursor:pointer;}
   .tab.active{background:var(--pink);border-color:var(--pink);color:#fff;}
+  .preview-card{margin:14px 0;padding:14px;border:1px solid rgba(226,85,123,.35);border-radius:14px;background:rgba(18,10,15,.72);box-shadow:0 12px 26px rgba(0,0,0,.22);}
+  .preview-card strong{color:#f2a6be;display:block;margin-bottom:8px;}
+  .preview-card pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#f5eee6;font:500 .86rem/1.55 'IBM Plex Mono',monospace;max-height:260px;overflow:auto;}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
   .btn{padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;}
   .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;flex:1;}
@@ -325,7 +328,8 @@
       <fieldset id="port-image-fieldset">
         <legend>Photo / Certificate Image (optional)</legend>
         <div class="upload-area">
-          <button class="btn" type="button" onclick="document.getElementById('p-image-file').click()">📁 Upload Image</button>
+          <button class="btn" type="button" onclick="document.getElementById('p-image-file').click()">📁 Upload / Replace Image</button>
+          <button class="btn ghost" type="button" onclick="removePortfolioImage()">🗑️ Remove Image</button>
           <input type="file" id="p-image-file" accept="image/*" onchange="onPortfolioImagePicked(this)">
           <div class="upload-status" id="p-image-status"></div>
         </div>
@@ -334,6 +338,7 @@
         <input type="text" id="p-image-src" placeholder="e.g. portfolio/journey-01.webp">
         <label>Image alt text</label>
         <input type="text" id="p-image-alt" placeholder="Describe the image or certificate">
+        <div class="hint">Use a short, meaningful description. It helps visitors using screen readers and makes certificates easier to identify.</div>
       </fieldset>
 
       <fieldset id="port-list-wrap" style="display:none;">
@@ -347,6 +352,7 @@
     <div class="actions">
       <button class="btn primary" id="btn-generate" onclick="handleGenerate()">Generate Code</button>
       <button class="btn secondary" onclick="runContentCheck()">✓ Check content</button>
+      <button class="btn secondary" onclick="previewGeneratedContent()">👁️ Preview</button>
       <button class="btn publish" id="btn-publish" onclick="publishToGitHub()" style="display:none;">🚀 Publish to GitHub</button>
       <button class="btn secondary" onclick="saveDraft(); setCmsStatus('Draft saved locally. Your live site was not changed.','ok');">Save draft</button>
       <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
@@ -354,6 +360,7 @@
 
     <div class="output" id="output-wrap" style="display:none;">
       <div class="steps" id="publish-steps"><b>How to publish:</b> Copy this code or click Publish to GitHub.</div>
+      <div class="preview-card" id="content-preview" style="display:none;" aria-live="polite"><strong>Safe preview — nothing is live yet</strong><pre id="content-preview-text"></pre></div>
       <textarea id="output" readonly onclick="this.select()"></textarea>
       <div class="actions"><button class="btn primary" onclick="copyOutput()">📋 Copy code</button></div>
     </div>
@@ -546,6 +553,33 @@
     finally { input.value=''; }
   }
   function portfolioImageSrc(){ return document.getElementById('p-image-src').value.trim() || uploadedPortfolioFilename || ''; }
+  function removePortfolioImage(){
+    uploadedPortfolioFilename = null;
+    document.getElementById('p-image-src').value = '';
+    document.getElementById('p-image-alt').value = '';
+    document.getElementById('p-image-file').value = '';
+    document.getElementById('p-image-preview').classList.remove('show');
+    document.getElementById('p-image-preview-img').removeAttribute('src');
+    document.getElementById('p-image-preview-meta').textContent = '';
+    const status = document.getElementById('p-image-status');
+    status.className = 'upload-status';
+    status.textContent = 'Image removed from this draft. Existing repository files were not deleted.';
+    setCmsStatus('Image removed from the current draft only. Generate and publish to update the portfolio record.', 'info');
+  }
+  function previewGeneratedContent(){
+    if(!runContentCheck()) return;
+    if(!document.getElementById('output').value.trim()){
+      if(currentMode==='entry') generateEntry();
+      else if(currentMode==='section') generateSection();
+      else if(currentMode==='portfolio') generatePortfolio();
+    }
+    const code = document.getElementById('output').value.trim();
+    if(!code) return;
+    document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('content-preview-text').textContent = code;
+    document.getElementById('content-preview').style.display = 'block';
+    setCmsStatus('Preview ready. This is local only; the live website has not changed.', 'ok');
+  }
 
   function handleGenerate(){
     if(!runContentCheck()) return;
@@ -569,6 +603,7 @@
     out = out.replace(/,\n$/, '\n') + `  }`;
     document.getElementById('output').value = out;
     document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('content-preview').style.display = 'none';
     saveDraft();
   }
 
