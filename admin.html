@@ -179,6 +179,21 @@
           </div>
         </div>
       </fieldset>
+
+      <fieldset>
+        <legend>Scrapbook media (optional)</legend>
+        <label class="first">Multiple photos / collage</label>
+        <input type="file" id="f-media-images" accept="image/*" multiple onchange="onJournalMediaPicked(this, 'entry-images')">
+        <div class="hint">Select 2–6 photos. Existing single-photo entries remain fully compatible.</div>
+        <div class="upload-status" id="f-media-status"></div>
+        <div class="media-pick-list" id="f-media-list"></div>
+        <label>Direct video link (YouTube or MP4/WebM URL)</label>
+        <input type="url" id="f-video-url" placeholder="https://...">
+        <label>Or upload a short video</label>
+        <input type="file" id="f-video-file" accept="video/*" onchange="onJournalVideoPicked(this, 'entry-video')">
+        <input type="hidden" id="f-video-src">
+        <div class="upload-status" id="f-video-status"></div>
+      </fieldset>
     </div>
 
     <!-- ========== EDIT PAST ENTRY ========== -->
@@ -256,6 +271,20 @@
           <label>How are you using it</label>
           <input type="text" id="s-learned-used">
         </div>
+        <fieldset style="margin-top:14px;">
+          <legend>Scrapbook media (optional)</legend>
+          <label class="first">Photos for this section card</label>
+          <input type="file" id="s-media-images" accept="image/*" multiple onchange="onJournalMediaPicked(this, 'section-images')">
+          <div class="hint">These become a pinned collage on the public page.</div>
+          <div class="upload-status" id="s-media-status"></div>
+          <div class="media-pick-list" id="s-media-list"></div>
+          <label>Video link (YouTube or MP4/WebM URL)</label>
+          <input type="url" id="s-video-url" placeholder="https://...">
+          <label>Or upload a short video</label>
+          <input type="file" id="s-video-file" accept="video/*" onchange="onJournalVideoPicked(this, 'section-video')">
+          <input type="hidden" id="s-video-src">
+          <div class="upload-status" id="s-video-status"></div>
+        </fieldset>
       </fieldset>
     </div>
 
@@ -368,6 +397,9 @@
 
 </div>
 
+<style>
+.media-pick-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px}.media-pick{border:1px solid var(--line);border-radius:10px;padding:7px;font-size:.72rem}.media-pick img{width:100%;height:82px;object-fit:cover;border-radius:7px;display:block;margin-bottom:5px}.upload-status{min-height:1.2em}.upload-status.ok{color:#7ee787}.upload-status.err{color:#ff8b8b}
+</style>
 <script>document.write('<script src="entries-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>document.write('<script src="sections-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
@@ -588,23 +620,31 @@
     else if(currentMode==='portfolio') generatePortfolio();
   }
 
+  const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': '', 'section-video': '' };
+  function fileToDataUrl(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
+  function mediaStatus(kind, text, cls=''){ const id = kind.startsWith('entry') ? (kind==='entry-images'?'f-media-status':'f-video-status') : (kind==='section-images'?'s-media-status':'s-video-status'); const el=document.getElementById(id); if(el){el.className='upload-status '+cls;el.textContent=text;} }
+  function mediaList(kind){ return document.getElementById(kind==='entry-images'?'f-media-list':'s-media-list'); }
+  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map(x=>`<div class="media-pick">${x.src.startsWith('data:image')?`<img src="${x.src}" alt="">`:''}<span>${x.name||x.src}</span></div>`).join(''); }
+  async function onJournalMediaPicked(input, kind){
+    const files=[...(input.files||[])].slice(0,6); if(!files.length)return;
+    uploadedJournalMedia[kind]=[]; mediaStatus(kind,'Preparing selected media…');
+    try{ for(const file of files){ const data=await compressImage(file); const ext=file.type==='image/png'?'png':'webp'; const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; uploadedJournalMedia[kind].push({src:filename,name:file.name, data}); } renderPickedMedia(kind); const token=localStorage.getItem('uy_gh_token'); if(token){ for(const x of uploadedJournalMedia[kind]) await uploadImageToGitHub(token,x.src,x.data); mediaStatus(kind,'✅ Photos uploaded to GitHub','ok'); } else mediaStatus(kind,'Photos ready. Add the GitHub token before publishing.'); }
+    catch(e){ mediaStatus(kind,'❌ '+e.message,'err'); } finally { input.value=''; }
+  }
+  async function onJournalVideoPicked(input, kind){ const file=input.files&&input.files[0]; if(!file)return; if(file.size>25*1024*1024){mediaStatus(kind,'Video is over 25 MB; use a hosted link instead.','err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}.${ext}`; const token=localStorage.getItem('uy_gh_token'); if(token){await uploadImageToGitHub(token,filename,data);mediaStatus(kind,'✅ Video uploaded to GitHub','ok');} else mediaStatus(kind,'Video ready. Add the GitHub token before publishing.'); uploadedJournalMedia[kind]=filename; document.getElementById(kind==='entry-video'?'f-video-src':'s-video-src').value=filename; }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
+  function mediaObjectArray(kind){ return (uploadedJournalMedia[kind]||[]).filter(x=>x&&x.src).map(x=>({src:x.src})); }
+  function journalMediaFields(prefix){ const imageKind=prefix==='entry'?'entry-images':'section-images'; const videoKind=prefix==='entry'?'entry-video':'section-video'; const photos=mediaObjectArray(imageKind); const link=document.getElementById(prefix==='entry'?'f-video-url':'s-video-url')?.value.trim()||''; const uploaded=uploadedJournalMedia[videoKind]||''; const video=link||uploaded; return {photos, video}; }
+
   function generateEntry(){
-    const day = parseInt(document.getElementById('f-day').value,10);
-    const date = document.getElementById('f-date').value;
-    const journal = document.getElementById('f-journal').value.trim();
-    if(!date || !journal) return alert('Date and Journal needed');
-    const paras = journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    let photoSrc = document.getElementById('f-photo-src').value.trim();
-    if(!photoSrc && uploadedPhotoFilename) photoSrc = uploadedPhotoFilename;
-    const docUrl = document.getElementById('f-doc-url').value.trim();
-    let out = `  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
-    if(photoSrc) out += `    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
-    if(docUrl) { const id = docUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1] || ''; out += `    documentary: { youtubeUrl: "${esc(docUrl)}", title: "${esc(fetchedTitle || "Today’s documentary")}", thumbnail: "${id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : ''}" },\n`; }
-    out = out.replace(/,\n$/, '\n') + `  }`;
-    document.getElementById('output').value = out;
-    document.getElementById('output-wrap').style.display = 'block';
-    document.getElementById('content-preview').style.display = 'none';
-    saveDraft();
+    const day=parseInt(document.getElementById('f-day').value,10), date=document.getElementById('f-date').value, journal=document.getElementById('f-journal').value.trim();
+    if(!date||!journal)return alert('Date and Journal needed');
+    const paras=journal.split(/\n+/).map(s=>s.trim()).filter(Boolean), media=journalMediaFields('entry'); let photoSrc=document.getElementById('f-photo-src').value.trim()||uploadedPhotoFilename;
+    let out=`  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
+    if(photoSrc)out+=`    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
+    if(media.photos.length)out+=`    photos: ${JSON.stringify(media.photos)},\n`;
+    if(media.video)out+=`    videos: [{ src: "${esc(media.video)}" }],\n`;
+    const docUrl=document.getElementById('f-doc-url').value.trim(); if(docUrl){const id=docUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1]||'';out+=`    documentary: { youtubeUrl: "${esc(docUrl)}", title: "${esc(fetchedTitle||"Today’s documentary")}", thumbnail: "${id?`https://i.ytimg.com/vi/${id}/hqdefault.jpg`:''}" },\n`;}
+    out=out.replace(/,\\n$/,'\\n')+`  }`;document.getElementById('output').value=out;document.getElementById('output-wrap').style.display='block';document.getElementById('content-preview').style.display='none';saveDraft();
   }
 
   function onSecTypeChange(){
@@ -614,18 +654,11 @@
     document.getElementById('sec-learned-fields').style.display= t==='learned' ? '' : 'none';
   }
   function generateSection(){
-    const t = document.getElementById('sec-select').value;
-    let out = '';
-    if(t==='random'){
-      out = `  { type: "text", text: "${esc(document.getElementById('s-random-text').value.trim())}" }`;
-    } else if(t==='tried'){
-      out = `  {\n    title: "${esc(document.getElementById('s-tried-title').value)}",\n    date: "${esc(document.getElementById('s-tried-date').value)}",\n    outcome: "${document.getElementById('s-tried-outcome').value}",\n    expected: "${esc(document.getElementById('s-tried-expected').value)}",\n    actual: "${esc(document.getElementById('s-tried-actual').value)}",\n    learned: "${esc(document.getElementById('s-tried-learned').value)}"\n  }`;
-    } else {
-      const status = document.getElementById('s-learned-status').value;
-      out = `  {\n    course: "${esc(document.getElementById('s-learned-course').value)}",\n    completedDate: ${status==='done' ? '"'+esc(document.getElementById('s-learned-done').value)+'"' : 'null'},\n    inProgress: ${status==='in'},\n    learned: "${esc(document.getElementById('s-learned-items').value)}",\n    usedFor: "${esc(document.getElementById('s-learned-used').value)}",\n    proofUrl: ""\n  }`;
-    }
-    document.getElementById('output').value = out;
-    document.getElementById('output-wrap').style.display = 'block';
+    const t=document.getElementById('sec-select').value, media=journalMediaFields('section'); let out='';
+    if(t==='random')out=`  { type: "text", text: "${esc(document.getElementById('s-random-text').value.trim())}", date: "${new Date().toISOString().slice(0,10)}"`;
+    else if(t==='tried')out=`  {\n    title: "${esc(document.getElementById('s-tried-title').value)}",\n    date: "${esc(document.getElementById('s-tried-date').value)}",\n    outcome: "${document.getElementById('s-tried-outcome').value}",\n    expected: "${esc(document.getElementById('s-tried-expected').value)}",\n    actual: "${esc(document.getElementById('s-tried-actual').value)}",\n    learned: "${esc(document.getElementById('s-tried-learned').value)}"`;
+    else {const status=document.getElementById('s-learned-status').value;out=`  {\n    course: "${esc(document.getElementById('s-learned-course').value)}",\n    completedDate: ${status==='done'?`"${esc(document.getElementById('s-learned-done').value)}"`:'null'},\n    inProgress: ${status==='in'},\n    learned: "${esc(document.getElementById('s-learned-items').value)}",\n    usedFor: "${esc(document.getElementById('s-learned-used').value)}",\n    proofUrl: ""`;}
+    if(media.photos.length)out+=`,\n    photos: ${JSON.stringify(media.photos)}`; if(media.video)out+=`,\n    videos: [{ src: "${esc(media.video)}" }]`; out+=' }'; document.getElementById('output').value=out; document.getElementById('output-wrap').style.display='block';
   }
 
   function onPortTypeChange() {

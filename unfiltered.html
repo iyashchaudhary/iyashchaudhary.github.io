@@ -187,6 +187,8 @@
     color:#3a2c33; font-size:1.05rem; text-align:center;
   }
 
+  .markdown-content strong{font-weight:800;color:#7c2747}.markdown-content ul{margin:10px 0 0 1.2em;padding:0}.markdown-content li{margin:4px 0}.media-board{position:relative;z-index:2;margin:30px auto 0;padding:22px;border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));border:1px solid rgba(255,255,255,.18);box-shadow:0 22px 45px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.15);backdrop-filter:blur(14px)}.media-board h3{font-family:'Fraunces',serif;margin:0 0 14px;color:var(--uy-pink-soft)}.media-collage{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:start}.media-card{position:relative;background:#f0e9df;padding:8px 8px 30px;color:#3a2c33;box-shadow:0 14px 24px rgba(0,0,0,.3);transform:rotate(var(--rot,-1deg));border-radius:3px}.media-card:nth-child(2n){--rot:1.4deg}.media-card:nth-child(3n){--rot:-.4deg}.media-card:before{content:"";position:absolute;top:-8px;left:50%;width:16px;height:16px;border-radius:50%;transform:translateX(-50%);background:radial-gradient(circle at 35% 30%,#ff837c,#bf263f 58%,#6d1729);box-shadow:0 5px 8px rgba(0,0,0,.38);z-index:2}.media-card img,.media-card video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;background:#20121a}.media-card figcaption{font-family:'Caveat',cursive;font-size:1.05rem;text-align:center;margin-top:6px}.glass-media{margin-top:14px;padding:12px;border-radius:16px;background:rgba(15,8,13,.28);border:1px solid rgba(255,255,255,.12)}.section-date{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;color:var(--uy-pink-soft);margin:4px 0 12px}.lt-card,.random-note{background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.055));color:var(--uy-text);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(16px);box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.1)}.lt-card h4{color:var(--uy-cream)}.tc-date{color:var(--uy-pink-soft)}.random-note{font-family:'Inter',sans-serif;font-size:.98rem}.random-note .markdown-content{line-height:1.6}
+
   /* documentary */
   .note-doc{
     position:relative; z-index:2; max-width:640px; margin:28px auto 0;
@@ -496,7 +498,10 @@
   const stripDays = document.getElementById('strip-days');
   const monthLabel = document.getElementById('uy-month-label');
 
-  function esc(s){ return (s||'').toString(); }
+  function esc(s){return (s??'').toString().replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function md(s){let x=esc(s);x=x.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');const lines=x.split(/\n+/);let out='',inList=false;lines.forEach(line=>{if(/^\s*[-*]\s+/.test(line)){if(!inList){out+='<ul>';inList=true}out+='<li>'+line.replace(/^\s*[-*]\s+/,'')+'</li>';}else{if(inList){out+='</ul>';inList=false}if(line.trim())out+='<p>'+line+'</p>';}});if(inList)out+='</ul>';return '<div class="markdown-content">'+out+'</div>';}
+  function mediaBoard(item){const photos=[...(item.photos||[])];if(item.photo&&item.photo.src&&!photos.some(x=>x.src===item.photo.src))photos.unshift(item.photo);const videos=[...(item.videos||[])];if(!photos.length&&!videos.length)return '';return '<div class="media-board"><h3>Scrapbook wall</h3><div class="media-collage">'+photos.map((p,i)=>'<figure class="media-card" style="--rot:'+((i%3)-1)*.9+'deg"><img src="'+esc(p.src)+'" alt="'+esc(p.caption||'Journal photo')+'" loading="lazy"><figcaption>'+esc(p.caption||'A moment from the day')+'</figcaption></figure>').join('')+videos.map(v=>'<figure class="media-card"><video controls preload="metadata" src="'+esc(v.src)+'"></video><figcaption>'+esc(v.caption||'A journal video')+'</figcaption></figure>').join('')+'</div></div>';}
+
 
   function ytId(url){
     if(!url) return null;
@@ -526,25 +531,15 @@
 
     // the big pinned note
     if(entry.journal){
-      const paras = entry.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean);
       body += `
         <div class="big-note">
           <div class="pin"></div>
           <div class="note-date">${monthOf(entry.date)}${entry.weekday ? ', '+entry.weekday : ''}</div>
-          <div class="note-text">${paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div>
+          <div class="note-text">${md(entry.journal)}</div>
         </div>`;
     }
 
-    // photo under the note
-    if(entry.photo && entry.photo.src){
-      body += `
-        <div class="note-photo">
-          <div class="polaroid">
-            <img src="${esc(entry.photo.src)}" alt="${esc(entry.photo.caption)}">
-            <div class="cap">${esc(entry.photo.caption)}</div>
-          </div>
-        </div>`;
-    }
+    body += mediaBoard(entry);
 
     // documentary
     if(entry.documentary && entry.documentary.youtubeUrl){
@@ -713,20 +708,22 @@
           return `
             <div class="lt-card">
               <div class="tc-top"><h4>${esc(t.title)}</h4><span class="pill ${esc(t.outcome||'mixed')}">${esc(t.outcome||'mixed')}</span></div>
-              <div class="tc-date">${esc(t.date||'')}</div>
-              ${t.expected?`<div class="tc-row"><b>Expected</b>${esc(t.expected)}</div>`:''}
-              ${t.actual?`<div class="tc-row"><b>Actual</b>${esc(t.actual)}</div>`:''}
-              ${t.learned?`<div class="tc-row"><b>Learned</b>${esc(t.learned)}</div>`:''}
+              <div class="section-date">Published · ${esc(t.date||'')}</div>
+              ${t.expected?`<div class="tc-row"><b>Expected</b>${md(t.expected)}</div>`:''}
+              ${t.actual?`<div class="tc-row"><b>Actual</b>${md(t.actual)}</div>`:''}
+              ${t.learned?`<div class="tc-row"><b>Learned</b>${md(t.learned)}</div>`:''}
+              ${mediaBoard(t)}
             </div>`;
         }
         const c = item.data;
         return `
           <div class="lt-card">
             <div class="tc-top"><h4>${esc(c.course)}</h4><span class="pill course">${c.inProgress ? 'In progress' : 'Completed'}</span></div>
-            <div class="tc-date">${esc(c.completedDate||'')}</div>
-              ${c.learned && (c.learned.length ? `<div class="tc-row"><b>Learned</b>${esc(c.learned.join ? c.learned.join(' · ') : c.learned)}</div>` : '')}
+            <div class="section-date">Published · ${esc(c.completedDate||'In progress')}</div>
+              ${c.learned && (c.learned.length ? `<div class="tc-row"><b>Learned</b>${md(c.learned.join ? c.learned.join(' · ') : c.learned)}</div>` : '')}
             ${c.usedFor ? `<div class="tc-row"><b>Used for</b>${esc(c.usedFor)}</div>` : ''}
             ${c.proofUrl ? `<div class="tc-row"><a style="color:var(--uy-pink);font-size:.85rem;" href="${esc(c.proofUrl)}" target="_blank" rel="noopener">View certificate →</a></div>` : ''}
+            ${mediaBoard(c)}
           </div>`;
       }).join('') + '</div>';
     }
@@ -740,9 +737,9 @@
     else {
       body += '<div class="random-grid">' + list.map(r=>{
         if(r.type === 'photo'){
-          return `<div class="random-note">${r.src?`<img src="${esc(r.src)}" alt="">`:''}${r.caption?esc(r.caption):''}</div>`;
+          return `<div class="random-note"><div class="section-date">Published · ${esc(r.date||'Date not recorded')}</div>${r.src?`<img src="${esc(r.src)}" alt="">`:''}${r.caption?md(r.caption):''}${r.text?md(r.text):''}${mediaBoard(r)}</div>`;
         }
-        return `<div class="random-note">${esc(r.text)}</div>`;
+        return `<div class="random-note"><div class="section-date">Published · ${esc(r.date||'Date not recorded')}</div>${md(r.text||'')}${mediaBoard(r)}</div>`;
       }).join('') + '</div>';
     }
     dayContent.innerHTML = body;
