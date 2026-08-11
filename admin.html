@@ -345,6 +345,7 @@
     <div class="cms-history" id="publish-history"></div>
     <div class="actions">
       <button class="btn primary" id="btn-generate" onclick="handleGenerate()">Generate Code</button>
+      <button class="btn secondary" onclick="runContentCheck()">✓ Check content</button>
       <button class="btn publish" id="btn-publish" onclick="publishToGitHub()" style="display:none;">🚀 Publish to GitHub</button>
       <button class="btn secondary" onclick="saveDraft(); setCmsStatus('Draft saved locally. Your live site was not changed.','ok');">Save draft</button>
       <button class="btn ghost" onclick="clearDraft()">Clear draft</button>
@@ -545,6 +546,7 @@
   function portfolioImageSrc(){ return document.getElementById('p-image-src').value.trim() || uploadedPortfolioFilename || ''; }
 
   function handleGenerate(){
+    if(!runContentCheck()) return;
     if(currentMode==='entry') generateEntry();
     else if(currentMode==='section') generateSection();
     else if(currentMode==='portfolio') generatePortfolio();
@@ -764,6 +766,28 @@
   }
   function portSelectToVar(pt){
     return pt==='journey' ? 'JOURNEY_DATA' : pt==='experience' ? 'EXPERIENCE_DATA' : pt==='skills' ? 'SKILLS_DATA' : `CREDENTIALS_DATA.${document.getElementById('p-c-folio').value}`;
+  }
+
+  function runContentCheck(){
+    const issues = [];
+    if(currentMode==='entry'){
+      if(!document.getElementById('f-date').value) issues.push('Date is missing.');
+      if(!document.getElementById('f-journal').value.trim()) issues.push('Journal text is missing.');
+      const yt = document.getElementById('f-doc-url').value.trim();
+      if(yt && !yt.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{6,}/)) issues.push('YouTube URL format looks invalid.');
+      if(document.getElementById('f-photo-src').value.trim() && !document.getElementById('f-photo-cap').value.trim()) issues.push('Photo caption/alt text is missing.');
+    } else if(currentMode==='section'){
+      const type = document.getElementById('sec-select').value;
+      const required = type==='random' ? ['s-random-text'] : type==='tried' ? ['s-tried-title','s-tried-learned'] : ['s-learned-course','s-learned-items'];
+      required.forEach(id=>{ if(!document.getElementById(id)?.value.trim()) issues.push(`${id.replace(/^s-/,'').replaceAll('-',' ')} is missing.`); });
+    } else if(currentMode==='portfolio'){
+      const type = document.getElementById('port-select').value;
+      const titleId = type==='journey' ? 'p-j-title' : type==='experience' ? 'p-e-role' : type==='skills' ? 'p-s-title' : 'p-c-title';
+      if(document.getElementById(titleId) && !document.getElementById(titleId).value.trim()) issues.push('Primary title is missing.');
+      if(document.getElementById('p-image-src')?.value.trim() && !document.getElementById('p-image-alt')?.value.trim()) issues.push('Uploaded image alt text is missing.');
+    }
+    if(issues.length){ setCmsStatus(issues.join(' '), 'error'); return false; }
+    setCmsStatus('No blocking content issues found. You can preview or generate safely.', 'ok'); return true;
   }
 
   function setCmsStatus(message, type='info'){
