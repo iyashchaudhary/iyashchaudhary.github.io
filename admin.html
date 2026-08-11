@@ -115,7 +115,8 @@
     <div class="gh-config" id="gh-config">
       <h3>🚀 GitHub Auto-Publish</h3>
       <input type="password" id="gh-token" placeholder="Enter GitHub Personal Access Token (PAT)" onchange="saveGhToken()">
-      <div class="hint" style="margin-top:6px;">Your token is saved <b>only in your browser</b>. It allows this page to commit changes directly to your GitHub repository.</div>
+      <div class="actions" style="margin-top:8px;"><button class="btn secondary" type="button" onclick="forgetGhToken()">Forget token on this device</button></div>
+      <div class="hint" style="margin-top:6px;">Your token is saved <b>only in your browser</b>. It allows this page to commit changes directly to your GitHub repository. Forgetting it stops future publishing from this device; it does not delete existing website data.</div>
     </div>
 
     <div class="tabs" id="mode-tabs">
@@ -400,7 +401,8 @@
   }
   document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click', ()=>switchMode(btn.dataset.mode)));
 
-  function saveGhToken() { localStorage.setItem('uy_gh_token', document.getElementById('gh-token').value.trim()); updatePublishButtons(); }
+  function saveGhToken() { localStorage.setItem('uy_gh_token', document.getElementById('gh-token').value.trim()); updatePublishButtons(); setCmsStatus('Token saved only on this browser. Consider forgetting it when finished.', 'info'); }
+  function forgetGhToken() { localStorage.removeItem('uy_gh_token'); document.getElementById('gh-token').value=''; updatePublishButtons(); setCmsStatus('Token removed from this browser. Existing GitHub data was not changed.', 'ok'); }
   function updatePublishButtons() { const display = localStorage.getItem('uy_gh_token') ? 'inline-block' : 'none'; document.getElementById('btn-publish').style.display = display; }
 
   // --- Daily Entry Logic ---
