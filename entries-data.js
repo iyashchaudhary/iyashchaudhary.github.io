@@ -16,29 +16,10 @@ const UNFILTERED_ENTRIES = [
       src: "photos/day01.png",
       caption: ""
     },
-    photos: [
-      {
-        src: "media/journal-1786548324104-kobkh.png",
-        caption: ""
-      },
-      {
-        src: "media/journal-1786548325146-rxqnc.webp",
-        caption: ""
-      },
-      {
-        src: "media/journal-1786548326189-rvtdx.png",
-        caption: ""
-      },
-      {
-        src: "media/journal-1786548327523-w3wso.webp",
-        caption: ""
-      },
-      {
-        src: "media/journal-1786548328658-9ktqw.png",
-        caption: ""
-      }
-    ],
-    discipline: 32
+    photos: [],
+    discipline: 32,
+    videos: [],
+    mediaCaption: ""
   }
 ];
 window.UNFILTERED_ENTRIES = UNFILTERED_ENTRIES;
