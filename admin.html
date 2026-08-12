@@ -947,6 +947,13 @@
     return { path: backupPath, url: data.content?.html_url || `https://github.com/${GITHUB_REPO}/blob/main/${backupPath}` };
   }
 
+  function parseGeneratedValue(raw){
+    const text=String(raw||'').trim();
+    if(!text) throw new Error('Nothing to publish. Click Generate Code first.');
+    try { return JSON.parse(text); } catch(_) {}
+    try { return Function('"use strict"; return ('+text+');')(); }
+    catch(e) { throw new Error('Generated entry code is invalid: '+e.message+'. Please click Generate Code again, then publish.'); }
+  }
   async function publishToGitHub() {
     const token = getGithubToken();
     if(!token) return alert("Enter token");
@@ -987,13 +994,13 @@
       } else if(dayToUpdate !== null) {
         const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToUpdate);
         if(idx === -1) throw new Error('Day not found in entries');
-        const edited = window._editPayload || eval('(' + code + ')');
+        const edited = window._editPayload || parseGeneratedValue(code);
         UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], edited, { photos: edited.photos || [], videos: edited.videos || [] });
       } else if(currentMode === 'section') {
         const sec = document.getElementById('sec-select').value;
         let target = sec==='random' ? window.RANDOM_STUFF : sec==='tried' ? window.THINGS_TRIED : sec==='learned' ? window.THINGS_LEARNED : sec==='built' ? window.THINGS_BUILT : window.SMALL_WINS;
         if(window._secEditIdx !== undefined && window._isEditingSection) { target.splice(window._secEditIdx, 1); }
-        target.push(eval('(' + code + ')'));
+        target.push(parseGeneratedValue(code));
         window._isEditingSection = false;
       } else if(currentMode === 'portfolio') {
         const portVar = portSelectToVar(document.getElementById('port-select').value);
@@ -1003,14 +1010,14 @@
         if(window._isDeletingPort) {
           target.splice(window._portDeleteIdx, 1);
         } else if(window._isEditingPort) {
-          target.splice(window._portEditIdx, 1, eval('(' + code + ')'));
+          target.splice(window._portEditIdx, 1, parseGeneratedValue(code));
         } else {
-          target.push(eval('(' + code + ')'));
+          target.push(parseGeneratedValue(code));
         }
         window._isEditingPort = false;
       } else {
         // New daily entry
-        UNFILTERED_ENTRIES.push(eval('(' + code + ')'));
+        UNFILTERED_ENTRIES.push(parseGeneratedValue(code));
       }
 
       // --- FULL RE-SERIALIZATION: Ensure the whole file is reconstructed with all variables ---
