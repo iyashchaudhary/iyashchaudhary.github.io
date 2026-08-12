@@ -904,7 +904,6 @@
       if(!document.getElementById('f-journal').value.trim()) issues.push('Journal text is missing.');
       const discipline = Number(document.getElementById('f-discipline').value);
       if(!Number.isFinite(discipline) || discipline < 0 || discipline > 100) issues.push('Daily discipline must be between 0 and 100.');
-      if(document.getElementById('f-photo-src').value.trim() && !document.getElementById('f-photo-cap').value.trim()) issues.push('Photo caption/alt text is missing.');
     } else if(currentMode==='section'){
       const type = document.getElementById('sec-select').value;
       const required = type==='random' ? ['s-random-text'] : type==='tried' ? ['s-tried-title','s-tried-learned'] : ['s-learned-course','s-learned-items'];
@@ -949,7 +948,7 @@
 
   function parseGeneratedValue(raw){
     const text=String(raw||'').trim();
-    if(!text) throw new Error('Nothing to publish. Click Generate Code first.');
+    if(!text) throw new Error('Nothing to publish. Please check the entry fields and click Publish again.');
     try { return JSON.parse(text); } catch(_) {}
     try { return Function('"use strict"; return ('+text+');')(); }
     catch(e) { throw new Error('Generated entry code is invalid: '+e.message+'. Please click Generate Code again, then publish.'); }
