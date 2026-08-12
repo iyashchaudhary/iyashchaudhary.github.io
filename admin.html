@@ -87,6 +87,13 @@
   .cms-history a{color:var(--pink-soft);}
   .btn.secondary{background:rgba(226,85,123,.08);border-color:rgba(226,85,123,.25);color:var(--pink-soft);}
 
+
+    .edit-media-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0 16px}
+    .edit-media-item{position:relative;padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.05)}
+    .edit-media-item img,.edit-media-item video{display:block;width:100%;height:130px;object-fit:cover;border-radius:10px;background:#120b16}
+    .edit-media-item input{margin-top:8px;width:100%}
+    .edit-media-remove{margin-top:8px;width:100%;background:#6e1730!important;border-color:#a43a58!important}
+    @media(max-width:620px){.edit-media-list{grid-template-columns:repeat(2,minmax(0,1fr))}.edit-media-item img,.edit-media-item video{height:112px}}
 </style>
 </head>
 <body>
@@ -191,17 +198,45 @@
           <div>
             <label class="first">Search by Day number or Date</label>
             <input type="text" id="edit-search" placeholder="e.g. 12 or 2026-08-12" oninput="filterEditList()">
-            <div class="hint">Type a day number like <b>12</b> or a date like <b>2026-08-12</b> to filter. Leave blank to show all.</div>
+            <div class="hint">Choose a day, then load it here. Nothing is transferred to Daily Entry.</div>
           </div>
-          <button class="btn" onclick="clearEditSearch()" style="margin-bottom:2px;">✕</button>
+          <button class="btn" type="button" onclick="clearEditSearch()" style="margin-bottom:2px;">✕</button>
         </div>
         <label class="first">Pick the day you want to edit</label>
         <select id="edit-select"></select>
         <div class="actions" style="margin-top:12px;">
-          <button class="btn" onclick="loadEntryForEdit()">Load this entry</button>
-          <button class="btn" style="background:#8b0000;border-color:#8b0000;" onclick="deleteEntryForEdit()">🗑️ Delete this entry</button>
+          <button class="btn" type="button" onclick="loadEntryForEdit()">Load this entry here</button>
+          <button class="btn" type="button" style="background:#8b0000;border-color:#8b0000;" onclick="deleteEntryForEdit()">🗑️ Delete this entry</button>
         </div>
       </fieldset>
+      <div id="edit-entry-form" style="display:none;">
+        <fieldset>
+          <legend>Entry details</legend>
+          <div class="row2">
+            <div><label class="first">Day number</label><input type="number" id="e-day" min="1"></div>
+            <div><label class="first">Date</label><input type="date" id="e-date"></div>
+          </div>
+          <label class="first">Journal note</label>
+          <textarea class="journal" id="e-journal" placeholder="Edit the full journal note"></textarea>
+          <label class="first">Daily Completion Percentage (%)</label>
+          <input type="number" id="e-discipline" min="0" max="100" step="1" value="0">
+        </fieldset>
+        <fieldset>
+          <legend>Scrapbook media</legend>
+          <div class="hint">Captions are optional. Remove any item with its own button, or add new photos/videos below.</div>
+          <div class="edit-media-list" id="e-media-list"></div>
+          <label class="first">Add photos</label>
+          <input type="file" id="e-media-images" accept="image/*" multiple onchange="onEditMediaPicked(this, 'image')">
+          <label> add short videos</label>
+          <input type="file" id="e-media-videos" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onEditMediaPicked(this, 'video')">
+          <div class="upload-status" id="e-media-status"></div>
+        </fieldset>
+        <div class="actions">
+          <button class="btn" type="button" onclick="saveEditDraft()">Save edit draft</button>
+          <button class="btn primary" type="button" onclick="prepareEditPublish()">🚀 Publish this edited entry</button>
+          <button class="btn" type="button" onclick="cancelEditEntry()">Cancel</button>
+        </div>
+      </div>
     </div>
 
     <!-- ========== POST TO SECTION ========== -->
@@ -758,58 +793,90 @@
   }
 
   function populateEditSelect(filter){
-    const sel = document.getElementById('edit-select');
-    sel.innerHTML = '';
+    const sel = document.getElementById('edit-select'); sel.innerHTML = '';
     const f = (filter||'').trim().toLowerCase();
     (window.UNFILTERED_ENTRIES || []).slice().reverse().forEach(e=>{
-      if(f && String(e.day) !== f && e.date !== f) return;
-      const o = document.createElement('option');
-      o.value = e.day;
-      o.textContent = `Day ${String(e.day).padStart(2,'0')} — ${e.date} — ${e.journal.slice(0,40)}...`;
+      if(f && String(e.day) !== f && String(e.date||'').toLowerCase() !== f) return;
+      const o=document.createElement('option'); o.value=e.day;
+      o.textContent=`Day ${String(e.day).padStart(2,'0')} — ${e.date||'No date'} — ${String(e.journal||'').replace(/\s+/g,' ').slice(0,40)}${String(e.journal||'').length>40?'…':''}`;
       sel.appendChild(o);
     });
-    if(!sel.options.length) sel.innerHTML = '<option disabled>No entries match your search</option>';
+    if(!sel.options.length) sel.innerHTML='<option disabled>No entries match your search</option>';
   }
   function filterEditList(){ populateEditSelect(document.getElementById('edit-search').value); }
-  function clearEditSearch(){ document.getElementById('edit-search').value = ''; populateEditSelect(); }
-  function loadEntryForEdit(){ loadEntryFromData(parseInt(document.getElementById('edit-select').value)); }
-  function deleteEntryForEdit(){
-    const dayNum=parseInt(document.getElementById('edit-select').value);
-    const e=(window.UNFILTERED_ENTRIES||[]).find(x=>x.day===dayNum);
-    if(!e) return alert('No entry selected.');
-    if(!confirm(`Delete Day ${String(e.day).padStart(2,'0')} — ${e.date} permanently from the live journal? A protected backup will be created first.`)) return;
-    currentMode='entry';
-    window._isDeletingExisting=true;
-    window._deleteMode=e;
-    setCmsStatus(`Ready to permanently delete Day ${e.day}. Click Publish to GitHub to confirm the protected deletion.`, 'info');
-    updatePublishButtons();
+  function clearEditSearch(){ document.getElementById('edit-search').value=''; populateEditSelect(); }
+  function editMediaItems(e){
+    const out=[];
+    (e.photos||[]).forEach(x=>{if(x&&x.src)out.push({src:x.src,type:'image',caption:x.caption||''});});
+    if(e.photo&&e.photo.src&&!out.some(x=>x.src===e.photo.src)) out.unshift({src:e.photo.src,type:'image',caption:e.photo.caption||''});
+    (e.videos||[]).forEach(x=>{const v=typeof x==='string'?{src:x}:x;if(v&&v.src)out.push({src:v.src,type:'video',caption:v.caption||''});});
+    return out.slice(0,8);
+  }
+  function renderEditMedia(){
+    const box=document.getElementById('e-media-list'); if(!box)return;
+    box.innerHTML='';
+    (window._editMedia||[]).forEach((m,i)=>{
+      const item=document.createElement('div'); item.className='edit-media-item';
+      item.innerHTML=(m.type==='video'?`<video muted preload="metadata" src="${esc(m.src)}"></video>`:`<img src="${esc(m.src)}" alt="Editable scrapbook media">`)+
+        `<input type="text" data-cap="${i}" value="${esc(m.caption||'')}" placeholder="Caption (optional)">`+
+        `<button type="button" class="btn edit-media-remove" data-remove="${i}">Remove this ${m.type}</button>`;
+      item.querySelector('[data-cap]').addEventListener('input',ev=>{window._editMedia[i].caption=ev.target.value;});
+      item.querySelector('[data-remove]').addEventListener('click',()=>{window._editMedia.splice(i,1);renderEditMedia();});
+      box.appendChild(item);
+    });
+  }
+  async function onEditMediaPicked(input,type){
+    const files=[...(input.files||[])];
+    if((window._editMedia||[]).length+files.length>8){alert('Maximum 8 total media items per entry.');input.value='';return;}
+    if(!files.length)return;
+    const status=document.getElementById('e-media-status'); status.className='upload-status'; status.textContent='Preparing media…';
+    try{
+      for(const file of files){
+        if(type==='video' && file.size>25*1024*1024) throw new Error(`${file.name} is over 25 MB.`);
+        const data=type==='image'?await compressImage(file):await fileToDataUrl(file);
+        const ext=type==='image'?(file.type==='image/png'?'png':'webp'):(file.name.split('.').pop()||'mp4').toLowerCase();
+        const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+        const token=getGithubToken();
+        if(token) await uploadImageToGitHub(token,filename,data);
+        window._editMedia.push({src:token?filename:data,type,caption:'',name:file.name});
+      }
+      renderEditMedia(); status.className='upload-status ok'; status.textContent=getGithubToken()?'✅ Media uploaded to GitHub and added to this entry.':'Media ready. Add the GitHub token before publishing.';
+    }catch(e){status.className='upload-status err';status.textContent='❌ '+e.message;}
+    finally{input.value='';}
+  }
+  function loadEntryForEdit(){
+    const dayNum=parseInt(document.getElementById('edit-select').value); loadEntryFromData(dayNum);
   }
   function loadEntryFromData(dayNum){
-    const e = (window.UNFILTERED_ENTRIES || []).find(x=>x.day===dayNum);
-    if(!e) return alert('Not found');
-    switchMode('entry');
-    document.getElementById('f-day').value = e.day;
-    document.getElementById('f-date').value = e.date;
-    document.getElementById('f-journal').value = e.journal;
-    document.getElementById('f-photo-src').value = e.photo?.src || '';
-    document.getElementById('f-photo-cap').value = e.photo?.caption || '';
-    document.getElementById('f-discipline').value = e.discipline ?? e.dailyDiscipline ?? 0;
-    uploadedJournalMedia['entry-images'] = (e.photos || []).map(x => ({src:x.src, name:x.caption||'Existing photo'}));
-    uploadedJournalMedia['entry-video'] = (e.videos || []).map(x => typeof x==='string'?{src:x,name:'Existing video'}:{src:x.src,name:x.caption||'Existing video'});
-    renderPickedMedia('entry-images'); renderPickedMedia('entry-video');
-    uploadedPhotoFilename = e.photo?.src || null;
-    const prev = document.getElementById('up-preview');
-    if(e.photo?.src){
-      document.getElementById('up-preview-img').src = e.photo.src;
-      document.getElementById('up-preview-meta').textContent = e.photo.src;
-      prev.classList.add('show');
-      const st = document.getElementById('up-status');
-      st.className = 'upload-status ok';
-      st.textContent = '✅ Image linked. Upload a new one to replace it.';
-    } else { prev.classList.remove('show'); }
-    window._editMode = e; window._isEditingExisting = true;
+    const e=(window.UNFILTERED_ENTRIES||[]).find(x=>x.day===dayNum); if(!e)return alert('Not found');
+    document.getElementById('edit-entry-form').style.display='block';
+    document.getElementById('e-day').value=e.day||''; document.getElementById('e-date').value=e.date||'';
+    document.getElementById('e-journal').value=e.journal||''; document.getElementById('e-discipline').value=e.discipline??e.dailyDiscipline??0;
+    window._editMode=e; window._isEditingExisting=true; window._editMedia=editMediaItems(e); renderEditMedia();
+    currentMode='entry'; setCmsStatus(`Editing Day ${e.day} in this tab. Changes are local until you publish.`, 'info'); updatePublishButtons();
   }
-
+  function cancelEditEntry(){window._isEditingExisting=false;window._editMode=null;window._editMedia=[];document.getElementById('edit-entry-form').style.display='none';setCmsStatus('Past-entry edit cancelled.','info');}
+  function deleteEntryForEdit(){
+    const dayNum=parseInt(document.getElementById('edit-select').value), e=(window.UNFILTERED_ENTRIES||[]).find(x=>x.day===dayNum); if(!e)return alert('No entry selected.');
+    if(!confirm(`Delete Day ${String(e.day).padStart(2,'0')} — ${e.date} permanently? A protected backup will be created first.`))return;
+    currentMode='entry';window._isDeletingExisting=true;window._deleteMode=e;setCmsStatus(`Ready to delete Day ${e.day}. Click Publish to GitHub to confirm.`,'info');updatePublishButtons();
+  }
+  function prepareEditPublish(){
+    if(!window._editMode)return alert('Load an entry first.');
+    const day=Math.max(1,parseInt(document.getElementById('e-day').value)||window._editMode.day);
+    const date=document.getElementById('e-date').value||window._editMode.date||'';
+    const media=(window._editMedia||[]).filter(m=>m&&m.src).map(m=>({src:m.src,caption:(m.caption||'').trim()}));
+    const photos=media.filter(m=>m.type==='image'), videos=media.filter(m=>m.type==='video');
+    window._editPayload={day,date,journal:document.getElementById('e-journal').value,discipline:Math.max(0,Math.min(100,parseInt(document.getElementById('e-discipline').value)||0)),photos,videos};
+    // Keep the existing publish pipeline, but make it consume the in-place editor payload.
+    document.getElementById('output').value=JSON.stringify(window._editPayload,null,2);
+    window._isEditingExisting=true; currentMode='entry'; publishToGitHub();
+  }
+  function saveEditDraft(){
+    if(!window._editMode)return alert('Load an entry first.');
+    localStorage.setItem('uy_edit_draft',JSON.stringify({day:document.getElementById('e-day').value,date:document.getElementById('e-date').value,journal:document.getElementById('e-journal').value,discipline:document.getElementById('e-discipline').value,media:window._editMedia||[]}));
+    setCmsStatus('Edit draft saved on this device.','ok');
+  }
   // ---- Safe serialization helpers for publishToGitHub ----
   // Indent a JS value (object/array/primitive) as a formatted string
   function pretty(v, depth){
@@ -889,7 +956,7 @@
     const btn = document.getElementById('btn-publish');
     btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
-      if(!window._isDeletingPort && !window._isDeletingExisting) handleGenerate();
+      if(!window._isDeletingPort && !window._isDeletingExisting && !window._isEditingExisting) handleGenerate();
       const code = document.getElementById('output').value;
       let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null, dayToDelete = null;
       if(currentMode==='section') {
@@ -923,7 +990,8 @@
       } else if(dayToUpdate !== null) {
         const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToUpdate);
         if(idx === -1) throw new Error('Day not found in entries');
-        UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], eval('(' + code + ')'));
+        const edited = window._editPayload || eval('(' + code + ')');
+        UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], edited, { photos: edited.photos || [], videos: edited.videos || [] });
       } else if(currentMode === 'section') {
         const sec = document.getElementById('sec-select').value;
         let target = sec==='random' ? window.RANDOM_STUFF : sec==='tried' ? window.THINGS_TRIED : sec==='learned' ? window.THINGS_LEARNED : sec==='built' ? window.THINGS_BUILT : window.SMALL_WINS;
