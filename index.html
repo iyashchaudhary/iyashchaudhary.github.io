@@ -1886,7 +1886,7 @@
       </div>
       <div class="ai-header-text">
         <div class="ai-header-title">Yash's Assistant</div>
-        <div class="ai-header-status">Online · answers from this site</div>
+        <div class="ai-header-status">Online · site knowledge + live tools</div>
       </div>
       <button class="ai-header-voice" id="ai-voice-toggle" type="button" aria-label="Toggle voice replies" aria-pressed="false">🔇</button>
       <button class="ai-header-close" id="ai-close" type="button" aria-label="Close assistant">
@@ -1899,6 +1899,9 @@
       <button class="ai-chip" data-q="Show my credentials">Show my credentials</button>
       <button class="ai-chip" data-q="What skills do I have?">What skills do I have?</button>
       <button class="ai-chip" data-q="Contact information">Contact information</button>
+      <button class="ai-chip" data-q="What is the date and time right now?">Date & time</button>
+      <button class="ai-chip" data-q="What is the weather in Delhi today?">Weather</button>
+      <button class="ai-chip" data-q="Show me current news about technology">News & updates</button>
     </div>
     <div class="ai-input-row">
       <input type="text" id="ai-input" class="ai-input" placeholder="Ask about Yash's journey, skills, work…" autocomplete="off" spellcheck="false" aria-label="Message">
@@ -3208,8 +3211,8 @@
   })();
 
   /* ============================================================
-     PREMIUM AI ASSISTANT — fully offline, reads live site content
-     No external API. Ctrl/Cmd+J to toggle. Esc / outside click closes.
+     PREMIUM AI ASSISTANT — site knowledge plus privacy-friendly live tools
+     No private API keys in the browser. Ctrl/Cmd+J to toggle. Esc / outside click closes.
   ============================================================ */
   (function(){
     const orb = document.getElementById('ai-orb');
@@ -3356,6 +3359,79 @@
       const m = msg.toLowerCase();
       return NAV_VERBS.some(v => m.includes(v));
     }
+    function aiEsc(value){
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+    function aiLink(url, label){
+      return `<a href="${aiEsc(url)}" target="_blank" rel="noopener noreferrer">${aiEsc(label)}</a>`;
+    }
+    function formatLocalTime(date, timeZone){
+      const zone = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const text = new Intl.DateTimeFormat(undefined, {dateStyle:'full', timeStyle:'short', timeZone:zone}).format(date);
+      return {zone, text};
+    }
+    function weatherLabel(code){
+      const map = {0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'foggy',48:'rime fog',51:'light drizzle',53:'drizzle',55:'heavy drizzle',61:'light rain',63:'rain',65:'heavy rain',71:'light snow',73:'snow',75:'heavy snow',80:'rain showers',81:'rain showers',82:'heavy rain showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};
+      return map[code] || 'mixed conditions';
+    }
+    function extractPlace(msg, fallback='Delhi'){
+      const match = msg.match(/(?:weather|time|temperature)\s+(?:in|at|for)\s+(.+?)(?:\?|$)/i);
+      return clean(match?.[1] || fallback).replace(/[.!]+$/,'') || fallback;
+    }
+    async function liveWeather(msg){
+      const place = extractPlace(msg, 'Delhi');
+      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`;
+      const geo = await fetch(geoUrl, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('geocoding'); return r.json();});
+      const hit = geo?.results?.[0];
+      if(!hit) return `I couldn't locate <strong>${aiEsc(place)}</strong>. Try a city and country, such as <em>Delhi, India</em>.`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${hit.latitude}&longitude=${hit.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
+      const data = await fetch(url, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('weather'); return r.json();});
+      const c = data.current || {};
+      const unit = data.current_units || {};
+      const now = formatLocalTime(new Date(), data.timezone);
+      return `<strong>${aiEsc(hit.name)}, ${aiEsc(hit.country || '')}</strong><br>${weatherLabel(c.weather_code)} · ${c.temperature_2m}${unit.temperature_2m || '°C'} (feels like ${c.apparent_temperature}${unit.apparent_temperature || '°C'})<br>Humidity ${c.relative_humidity_2m}% · Wind ${c.wind_speed_10m}${unit.wind_speed_10m || ' km/h'}<br><span style="opacity:.72">Local time: ${aiEsc(now.text)} · ${aiEsc(data.timezone || '')}</span><br><small>Live data via Open-Meteo.</small>`;
+    }
+    async function liveWikipedia(msg){
+      const match = msg.match(/^(?:who is|what is|what are|define|explain|tell me about)\s+(.+?)[?.!]*$/i);
+      if(!match) return null;
+      const topic = clean(match[1]).replace(/^(the|a|an)\s+/i,'');
+      if(!topic || /^(yash|this website|my website|my skills|my journey|my credentials)/i.test(topic)) return null;
+      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic.replace(/\s+/g,'_'))}`;
+      const data = await fetch(url, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('wiki'); return r.json();});
+      if(!data?.extract) return null;
+      const snippet = data.extract.length > 700 ? data.extract.slice(0,700) + '…' : data.extract;
+      return `<strong>${aiEsc(data.title || topic)}</strong><br>${aiEsc(snippet)}<br>${aiLink(data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(topic.replace(/\s+/g,'_'))}`, 'Read more on Wikipedia')}`;
+    }
+    function liveSearchAnswer(msg){
+      const q = clean(msg.replace(/^(show|give|find|tell me|what are|what's|whats|latest|current|news about|updates on|search for)\s*/i,'')) || 'technology';
+      const encoded = encodeURIComponent(q);
+      return `<strong>Live search for “${aiEsc(q)}”</strong><br>${aiLink(`https://news.google.com/search?q=${encoded}`, 'Open current news')}<br>${aiLink(`https://www.google.com/search?q=${encoded}`, 'Open web results')}<br><small>I keep the static site fast and private by opening trusted live search results instead of exposing a paid news API key in the browser.</small>`;
+    }
+    async function liveToolAnswer(msg){
+      const m = msg.toLowerCase();
+      if(/\b(weather|temperature|forecast|rain|sunny|humidity)\b/.test(m)){
+        try { return {text: await liveWeather(msg), nav:null}; }
+        catch(e){ return {text:'Weather lookup is temporarily unavailable. Try again in a moment or ask for another city.', nav:null}; }
+      }
+      if(/\b(news|latest|current updates?|headlines?|articles?|movie|movies|film|song|music|trending)\b/.test(m)) return {text:liveSearchAnswer(msg), nav:null};
+      if(/\b(time|date|today|tomorrow|day is it|what day)\b/.test(m) && !/deadline|timeline|journey|news|headline|article|movie|film|song|music|trending/.test(m)){
+        const place = extractPlace(msg, '');
+        if(place){
+          try{
+            const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`).then(r=>r.json());
+            const hit = geo?.results?.[0];
+            if(hit?.timezone){ const t = formatLocalTime(new Date(), hit.timezone); return {text:`The local time in <strong>${aiEsc(hit.name)}</strong> is <strong>${aiEsc(t.text)}</strong>.<br><small>Timezone: ${aiEsc(t.zone)}</small>`, nav:null}; }
+          }catch(e){}
+        }
+        const t = formatLocalTime(new Date());
+        return {text:`Right now it is <strong>${aiEsc(t.text)}</strong>.<br><small>Your browser timezone is ${aiEsc(t.zone)}.</small>`, nav:null};
+      }
+      if(/^(who is|what is|what are|define|explain|tell me about)\b/i.test(msg.trim())){
+        try { const text = await liveWikipedia(msg); if(text) return {text, nav:null}; }
+        catch(e){}
+      }
+      return null;
+    }
 
     /* ---- Small talk layer — casual, friendly, not tied to site content ---- */
     function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
@@ -3422,7 +3498,7 @@
     }
 
     /* ---- Core answer engine ---- */
-    function answer(rawMsg){
+    async function answer(rawMsg){
       const msg = rawMsg.toLowerCase();
 
       const smalltalk = smalltalkReply(rawMsg);
@@ -3430,6 +3506,9 @@
 
       const section = detectSection(msg);
       const nav = section && hasNavIntent(msg);
+
+      const live = await liveToolAnswer(rawMsg);
+      if(live) return live;
 
       if(msg.includes('about') || msg.includes('who is yash') || msg.includes('who are you building') || msg.includes('tell me')){
         return { text: aboutText(), nav:null };
@@ -3511,9 +3590,9 @@
       sendBtn.disabled = true;
       showTyping();
       const delay = 420 + Math.min(500, msg.length * 12);
-      setTimeout(()=>{
+      setTimeout(async ()=>{
         removeTyping();
-        const res = answer(msg);
+        const res = await answer(msg);
         addMessage(res.text, 'bot');
         sendBtn.disabled = false;
         if(res.nav){
@@ -3542,7 +3621,7 @@
       springTo(panel, 'ai', 1, { preset:'panel', onUpdate: applyPanelVisual });
       if(!greeted){
         greeted = true;
-        setTimeout(()=> addMessage("Hi! I'm Yash's on-site assistant — ask me anything about his background, skills, credentials, journey, or how to get in touch.", 'bot'), 260);
+        setTimeout(()=> addMessage("Hi! I'm Yash's assistant — I know this portfolio and can also check time, weather, facts, news and live web results.", 'bot'), 260);
       }
       setTimeout(()=> inputEl.focus(), 300);
     }
