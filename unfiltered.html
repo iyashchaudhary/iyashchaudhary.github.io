@@ -441,6 +441,19 @@
   .uy-brand .tag{letter-spacing:.02em;}
   .uy-nav a{box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 16px 28px -20px rgba(0,0,0,.95),0 0 0 1px rgba(226,85,123,.04);}
   .uy-nav a.active{transform:translateY(-1px);}
+  .media-card{animation:uy-media-float 7s ease-in-out infinite;will-change:transform;}
+  .media-card:nth-child(2n){animation-delay:-2.1s}.media-card:nth-child(3n){animation-delay:-4.2s}
+  @keyframes uy-media-float{0%,100%{translate:0 0}50%{translate:0 -4px}}
+  .journal-tools{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 auto 16px;position:relative;z-index:3}
+  .journal-tools button{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:var(--uy-text);border-radius:999px;padding:8px 13px;cursor:pointer;font:600 .76rem Inter,sans-serif;backdrop-filter:blur(12px)}
+  .journal-tools button.active,.journal-tools button:hover{background:var(--uy-pink);border-color:var(--uy-pink);color:#fff}
+  .translation-note{font-size:.72rem;color:var(--uy-text-dim);text-align:center;margin:-6px auto 14px;max-width:620px}
+  .progress-section{position:relative;z-index:2}.progress-hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:22px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);box-shadow:0 20px 44px rgba(0,0,0,.28);backdrop-filter:blur(15px)}
+  .progress-copy h3{font:700 1.5rem Fraunces,serif;margin:0 0 5px;color:var(--uy-cream)}.progress-copy p{margin:0;color:var(--uy-text-dim);font-size:.86rem}
+  .progress-list{display:grid;gap:10px;margin-top:16px}.progress-row{display:grid;grid-template-columns:72px 1fr 48px;align-items:center;gap:10px;color:var(--uy-text-dim);font:10px 'IBM Plex Mono',monospace;text-transform:uppercase}.progress-row .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.progress-row .bar i{display:block;height:100%;width:var(--p);border-radius:inherit;background:linear-gradient(90deg,var(--uy-pink),var(--uy-pink-soft));transform-origin:left;animation:progress-fill 1s ease both}.progress-row.good .bar i{background:linear-gradient(90deg,#55c98a,#a8e8b4)}.progress-row.low .bar i{background:linear-gradient(90deg,#c98266,#e6b27e)}
+  @keyframes progress-fill{from{transform:scaleX(0)}}
+  @media (prefers-reduced-motion:reduce){.media-card{animation:none;will-change:auto}.progress-row .bar i{animation:none}}
+
   .ribbon{box-shadow:0 12px 24px -14px rgba(226,85,123,.9),inset 0 1px 0 rgba(255,255,255,.25);}
   .uy-day-panel{isolation:isolate;background:
       linear-gradient(145deg,rgba(255,255,255,.09),transparent 30%,rgba(226,85,123,.10)),
@@ -558,6 +571,7 @@
       <a href="#daily" data-view="daily" class="active"><span class="ic">🏠</span><span><span class="lbl">Daily Life</span><span class="sub">Day by day</span></span></a>
       <a href="#learned-tried" data-view="learned-tried"><span class="ic">🧪</span><span><span class="lbl">Things I Learned &amp; Tried</span><span class="sub">Courses, experiments &amp; new stuff</span></span></a>
       <a href="#random" data-view="random"><span class="ic">🖼️</span><span><span class="lbl">Random Stuff</span><span class="sub">Thoughts, pics, half-ideas</span></span></a>
+      <a href="#progress" data-view="progress"><span class="ic">📈</span><span><span class="lbl">Daily Progress</span><span class="sub">Execution & consistency</span></span></a>
     </nav>
     <div class="uy-side-quote">
       <span class="qmark">"</span>
@@ -620,6 +634,32 @@
     return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   }
 
+  function speakJournal(entry){
+    if(!('speechSynthesis' in window)||!entry)return;
+    speechSynthesis.cancel();
+    const text=(window.__uyLang==='hi'&&entry.journalHindi)?entry.journalHindi:(entry.journal||'');
+    const utter=new SpeechSynthesisUtterance(text); utter.lang=window.__uyLang==='hi'?'hi-IN':'en-IN'; utter.rate=.94; utter.pitch=1;
+    speechSynthesis.speak(utter);
+  }
+  async function translateJournal(entry){
+    if(!entry||!entry.journal)return;
+    if(entry.journalHindi){window.__uyLang='hi';renderDay(entry);return;}
+    const btn=document.getElementById('uy-hi-btn'); if(btn){btn.disabled=true;btn.textContent='Translating…';}
+    try{
+      const chunks=entry.journal.split(/\n+/).filter(Boolean); const translated=[];
+      for(const chunk of chunks){const q=encodeURIComponent(chunk.slice(0,450));const r=await fetch('https://api.mymemory.translated.net/get?q='+q+'&langpair=en|hi');const j=await r.json();translated.push(j?.responseData?.translatedText||chunk);}
+      entry.journalHindi=translated.join('\n\n'); window.__uyLang='hi'; renderDay(entry);
+    }catch(e){alert('Hindi translation is unavailable right now. You can still use English speech.');}
+  }
+  function renderProgress(){
+    const vals=entries.map(e=>({day:e.day,date:e.date,value:Math.max(0,Math.min(100,Number(e.discipline??e.dailyDiscipline??0)||0))}));
+    const avg=vals.length?Math.round(vals.reduce((a,x)=>a+x.value,0)/vals.length):0;
+    let body='<div class="progress-section"><div class="sec-head"><div><div class="day-num">📈 Daily Progress</div><p>Execution Index from Day 01 onward — update it every day from the admin panel.</p></div><div class="btn btn-add" onclick="location.href=\'admin.html\'">+ Add progress</div></div>';
+    body+='<div class="progress-hero">'+executionIndex({discipline:avg})+'<div class="progress-copy"><h3>Consistency at a glance</h3><p>Average completion across '+vals.length+' recorded day'+(vals.length===1?'':'s')+': <strong>'+avg+'%</strong></p></div></div>';
+    body+='<div class="progress-list">'+vals.map(x=>'<div class="progress-row '+(x.value>=80?'good':x.value<50?'low':'')+'"><span>Day '+String(x.day).padStart(2,'0')+'</span><div class="bar"><i style="--p:'+x.value+'%"></i></div><b>'+x.value+'%</b></div>').join('')+'</div>';
+    if(vals.length>1)body+=consistencyGraph(); body+='</div>'; dayContent.innerHTML=body;
+  }
+
   function renderDay(entry){
     if(!entry){
       dayContent.innerHTML = `<div class="empty-state"><div class="big">No entries yet</div>Day one is coming soon. 🌸</div>`;
@@ -629,6 +669,8 @@
     topDate.textContent = `${monthOf(entry.date)}${entry.weekday ? ', '+entry.weekday : ''}`;
 
     let body = `
+      <div class="journal-tools" aria-label="Journal reading controls"><button id="uy-en-btn" class="active" type="button" onclick="setJournalLanguage('en')">English</button><button id="uy-hi-btn" type="button" onclick="translateJournal(window.__uyCurrentEntry)">हिंदी</button><button type="button" onclick="speakJournal(window.__uyCurrentEntry)">🔊 Listen</button><button type="button" onclick="speechSynthesis.cancel()">■ Stop</button></div>
+      <div class="translation-note" id="uy-translation-note">Hindi is translated only when requested; no translation key is stored in the website.</div>
       <div class="day-head" style="position:relative;">
         <button class="btn-edit-entry" title="Edit this entry" onclick="editEntryPrompt(${entry.day})">✏️</button>
         <div class="day-num">DAY ${String(entry.day).padStart(2,'0')}</div>
@@ -641,7 +683,7 @@
         <div class="big-note">
           <div class="pin"></div>
           <div class="note-date">${monthOf(entry.date)}${entry.weekday ? ', '+entry.weekday : ''}</div>
-          <div class="note-text">${md(entry.journal)}</div>
+          <div class="note-text" id="uy-journal-text">${md(window.__uyLang==='hi'&&entry.journalHindi?entry.journalHindi:entry.journal)}</div>
         </div>`;
     }
 
@@ -649,7 +691,12 @@
     body += mediaBoard(entry);
     if(entries.length>1) body += consistencyGraph();
     dayContent.innerHTML = body;
+    window.__uyCurrentEntry=entry;
+    const en=document.getElementById('uy-en-btn'),hi=document.getElementById('uy-hi-btn'); if(en&&hi){en.classList.toggle('active',window.__uyLang!=='hi');hi.classList.toggle('active',window.__uyLang==='hi');}
   }
+  window.setJournalLanguage=function(lang){window.__uyLang=lang; if(window.__uyCurrentEntry)renderDay(window.__uyCurrentEntry);};
+  window.speakJournal=speakJournal;
+  window.translateJournal=translateJournal;
 
   function renderStrip(){
     if(!entries.length){ stripDays.innerHTML=''; monthLabel.textContent='—'; return; }
@@ -763,7 +810,8 @@
 
   const secMeta = {
     'learned-tried': { icon:'🧪', title:'Things I Learned &amp; Tried'.replace('&amp;','&'), sub:'Courses, skills, experiments and new stuff — what I actually learned, not just certificates.' },
-    random: { icon:'🖼️', title:'Random Stuff', sub:"Thoughts, screenshots, half-ideas — things that don't belong anywhere else." }
+    random: { icon:'🖼️', title:'Random Stuff', sub:"Thoughts, screenshots, half-ideas — things that don't belong anywhere else." },
+    progress: { icon:'📈', title:'Daily Progress', sub:'Your execution percentage, day by day.' }
   };
 
   function secAddButton(view){
@@ -831,7 +879,7 @@
     dayContent.innerHTML = body;
   }
 
-  const sectionRenderers = { 'learned-tried':renderLearnedTried, random:renderRandom };
+  const sectionRenderers = { 'learned-tried':renderLearnedTried, random:renderRandom, progress:renderProgress };
 
   // section nav
   document.getElementById('uy-nav').addEventListener('click', (e)=>{
