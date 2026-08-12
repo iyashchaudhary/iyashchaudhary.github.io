@@ -119,7 +119,7 @@
       <h3>🚀 GitHub Auto-Publish</h3>
       <input type="password" id="gh-token" placeholder="Enter GitHub Personal Access Token (PAT)" onchange="saveGhToken()">
       <div class="actions" style="margin-top:8px;"><button class="btn secondary" type="button" onclick="forgetGhToken()">Forget token on this device</button></div>
-      <div class="hint" style="margin-top:6px;">Your token is held <b>only in this tab's memory</b> and is cleared when the tab closes or you forget it. It allows this page to commit changes directly to your GitHub repository. Existing website data is not deleted when the token is cleared.</div>
+      <div class="hint" style="margin-top:6px;">Your token is saved <b>on this device</b> so publishing stays automatic across refreshes. Use “Forget token” on any shared/public device. Existing website data is not deleted when the token is cleared.</div>
     </div>
 
     <div class="tabs" id="mode-tabs">
@@ -407,15 +407,17 @@
   const PASSCODE = "yash2026";
   const GITHUB_REPO = "iyashchaudhary/iyashchaudhary.github.io";
   let currentMode = 'entry';
-  // Security hardening: the PAT is memory-only and is never persisted in browser storage.
-  let ghToken = '';
+  // Convenience mode: keep the existing automatic publishing workflow across refreshes.
+  // The token is stored locally on this device; never use this on a shared/public computer.
+  let ghToken = localStorage.getItem('uy_gh_token') || '';
   function getGithubToken(){ return ghToken.trim(); }
 
   function tryUnlock(){
     if(document.getElementById('passcode').value.trim() === PASSCODE){
       document.getElementById('lock').classList.remove('show');
       document.getElementById('form-card').classList.add('show');
-      // Do not restore a GitHub token from localStorage/sessionStorage. It must be entered for this tab.
+      const savedToken = getGithubToken();
+      if(savedToken) document.getElementById('gh-token').value = savedToken;
       updatePublishButtons();
       loadDraft();
       renderPublishHistory();
@@ -443,8 +445,8 @@
   }
   document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click', ()=>switchMode(btn.dataset.mode)));
 
-  function saveGhToken() { ghToken = document.getElementById('gh-token').value.trim(); updatePublishButtons(); setCmsStatus('Token is held in memory for this tab only and clears when the tab closes.', 'info'); }
-  function forgetGhToken() { ghToken = ''; document.getElementById('gh-token').value=''; updatePublishButtons(); setCmsStatus('Token cleared from memory. Existing GitHub data was not changed.', 'ok'); }
+  function saveGhToken() { ghToken = document.getElementById('gh-token').value.trim(); if(ghToken) localStorage.setItem('uy_gh_token', ghToken); else localStorage.removeItem('uy_gh_token'); updatePublishButtons(); setCmsStatus('Token saved on this device so publishing remains automatic. Use Forget token on shared devices.', 'info'); }
+  function forgetGhToken() { ghToken = ''; localStorage.removeItem('uy_gh_token'); document.getElementById('gh-token').value=''; updatePublishButtons(); setCmsStatus('Token removed from this device. Existing GitHub data was not changed.', 'ok'); }
   function updatePublishButtons() { const display = getGithubToken() ? 'inline-block' : 'none'; document.getElementById('btn-publish').style.display = display; }
 
   // --- Daily Entry Logic ---
