@@ -481,6 +481,12 @@
   (function(){ if(!document.getElementById('f-date').value) document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; fillDayNumber(); })();
 
   function esc(s){ return (s||'').toString().replace(/"/g,'\\"'); }
+  function resolveMediaSrc(src){
+    const value=String(src||'').trim();
+    if(!value) return '';
+    if(/^(data:|blob:|https?:|\/\/)/i.test(value)) return value;
+    return new URL(value.replace(/^\/+/,''), document.baseURI).href;
+  }
 
   // ============ AUTOMATIC IMAGE UPLOAD (gallery → GitHub) ============
   let uploadedPhotoFilename = null;
@@ -812,7 +818,7 @@
     box.innerHTML='';
     (window._editMedia||[]).forEach((m,i)=>{
       const item=document.createElement('div'); item.className='edit-media-item';
-      item.innerHTML=(m.type==='video'?`<video muted preload="metadata" src="${esc(m.src)}"></video>`:`<img src="${esc(m.src)}" alt="Editable scrapbook media">`)+
+      item.innerHTML=(m.type==='video'?`<video muted preload="metadata" src="${esc(resolveMediaSrc(m.src))}"></video>`:`<img src="${esc(resolveMediaSrc(m.src))}" alt="Editable scrapbook media">`)+
         `<input type="text" data-cap="${i}" value="${esc(m.caption||'')}" placeholder="Caption (optional)">`+
         `<button type="button" class="btn edit-media-remove" data-remove="${i}">Remove this ${m.type}</button>`;
       item.querySelector('[data-cap]').addEventListener('input',ev=>{window._editMedia[i].caption=ev.target.value;});
