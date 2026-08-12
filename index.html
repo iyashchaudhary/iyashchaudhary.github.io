@@ -112,29 +112,29 @@
 
 <style>
   :root{
-    --bg:#F3F6FC;
+    --bg:#F5F8FD;
     --card:#FFFFFF;
-    --primary:#C2185B;
-    --accent:#3E6FE0;
-    --cyan:#3E9FE0;
-    --text:#16213A;
-    --text-dim:#5C6B87;
-    --line:#DCE4F2;
-    --shadow: 0 16px 40px -16px rgba(37,79,192,0.20);
+    --primary:#246BDB;
+    --accent:#4B8FF5;
+    --cyan:#78B7FF;
+    --text:#0B1830;
+    --text-dim:#586A86;
+    --line:#D9E3F2;
+    --shadow: 0 16px 40px -16px rgba(30,78,155,0.22);
     --glass-hl: rgba(255,255,255,0.6);
     --glass-hl-soft: rgba(255,255,255,0.26);
     --glass-shadow: rgba(22,33,58,0.22);
     --glass-tint: var(--primary);
   }
   html[data-theme="dark"]{
-    --bg:#0B0E1A;
-    --card:#161225;
-    --primary:#F2577E;
-    --accent:#5B8CFF;
-    --cyan:#5B8CFF;
-    --text:#EAF0FF;
-    --text-dim:#9AA8C7;
-    --line:#232035;
+    --bg:#091426;
+    --card:#111F37;
+    --primary:#6EA9FF;
+    --accent:#4D91F7;
+    --cyan:#8BC7FF;
+    --text:#F1F6FF;
+    --text-dim:#A8B9D2;
+    --line:#213653;
     --shadow: 0 16px 40px -16px rgba(0,0,0,0.6);
     --glass-hl: rgba(255,255,255,0.14);
     --glass-hl-soft: rgba(255,255,255,0.06);
@@ -142,29 +142,29 @@
     --glass-tint: var(--primary);
   }
   html[data-theme="morning"]{
-    --bg:#FFEADA;
+    --bg:#EEF6FF;
     --card:#FFFFFF;
-    --primary:#D9536B;
-    --accent:#EC7F52;
-    --cyan:#EBAA3B;
-    --text:#3A1220;
-    --text-dim:#A66E5C;
-    --line:#FBD9C4;
-    --shadow: 0 16px 40px -16px rgba(217,83,107,0.28);
+    --primary:#2474D8;
+    --accent:#78B8F5;
+    --cyan:#A3D8FF;
+    --text:#102A49;
+    --text-dim:#607D9C;
+    --line:#D8EAF8;
+    --shadow: 0 16px 40px -16px rgba(36,116,216,0.22);
     --glass-hl: rgba(255,255,255,0.65);
     --glass-hl-soft: rgba(255,255,255,0.28);
     --glass-shadow: rgba(58,18,32,0.24);
     --glass-tint: var(--primary);
   }
   html[data-theme="evening"]{
-    --bg:#190F2E;
-    --card:#241A3D;
-    --primary:#E8397B;
-    --accent:#7C6FF0;
-    --cyan:#E8B84B;
-    --text:#F3EEFF;
-    --text-dim:#B7A8D6;
-    --line:#332756;
+    --bg:#101A35;
+    --card:#19284A;
+    --primary:#7AAEFF;
+    --accent:#628EF4;
+    --cyan:#9ED4FF;
+    --text:#F2F6FF;
+    --text-dim:#B0BED6;
+    --line:#2A4068;
     --shadow: 0 16px 40px -16px rgba(0,0,0,0.6);
     --glass-hl: rgba(255,255,255,0.14);
     --glass-hl-soft: rgba(255,255,255,0.06);
@@ -204,11 +204,11 @@
   /* Static background replaces the old autoplay video for faster first paint. */
   .tree-bg-glow{
     position:absolute; inset:0; mix-blend-mode:screen; pointer-events:none;
-    background:radial-gradient(46% 40% at 32% 30%, rgba(242,184,75,0.45), transparent 68%);
+    background:radial-gradient(46% 40% at 32% 30%, rgba(108,174,255,0.34), transparent 68%);
     animation:tree-glow-pulse 5.5s ease-in-out infinite;
   }
   .tree-bg-glow-2{
-    background:radial-gradient(38% 34% at 60% 46%, rgba(242,87,126,0.30), transparent 70%);
+    background:radial-gradient(38% 34% at 60% 46%, rgba(80,143,245,0.26), transparent 70%);
     animation-duration:7s; animation-delay:-2.5s;
   }
   @keyframes tree-glow-pulse{ 0%,100%{ opacity:.5; } 50%{ opacity:1; } }
@@ -218,13 +218,13 @@
     transition:background .4s ease;
   }
   html[data-theme="evening"] .tree-bg-scrim{
-    background:linear-gradient(180deg, rgba(19,12,36,0.20) 0%, rgba(19,12,36,0.52) 55%, rgba(19,12,36,0.87) 100%);
+    background:linear-gradient(180deg, rgba(12,25,55,0.20) 0%, rgba(12,25,55,0.52) 55%, rgba(12,25,55,0.87) 100%);
   }
   html[data-theme="light"] .tree-bg-scrim{
     background:linear-gradient(180deg, rgba(243,246,252,0.24) 0%, rgba(243,246,252,0.6) 55%, rgba(243,246,252,0.9) 100%);
   }
   html[data-theme="morning"] .tree-bg-scrim{
-    background:linear-gradient(180deg, rgba(255,241,245,0.22) 0%, rgba(255,241,245,0.58) 55%, rgba(255,241,245,0.9) 100%);
+    background:linear-gradient(180deg, rgba(238,246,255,0.22) 0%, rgba(238,246,255,0.58) 55%, rgba(238,246,255,0.9) 100%);
   }
   @media (prefers-reduced-motion: reduce){ .tree-bg-glow{ animation:none; opacity:.75; } }
 
@@ -363,8 +363,8 @@
   .light-beam.light-beam-ready{ opacity:0.24; }
   .light-beam.light-beam-ready.is-focused{ opacity:0.48; }
   .light-beam.is-focused{ transform:translate(-50%,-50%) scale(1.12); }
-  .light-beam-blue{ background:radial-gradient(circle, rgba(194,24,91,0.95), rgba(194,24,91,0.28) 42%, transparent 72%); margin-left:-18vw; }
-  .light-beam-cyan{ background:radial-gradient(circle, rgba(232,184,75,0.9), rgba(232,184,75,0.22) 42%, transparent 72%); margin-left:20vw; }
+  .light-beam-blue{ background:radial-gradient(circle, rgba(83,145,245,0.9), rgba(83,145,245,0.26) 42%, transparent 72%); margin-left:-18vw; }
+  .light-beam-cyan{ background:radial-gradient(circle, rgba(124,196,255,0.82), rgba(124,196,255,0.20) 42%, transparent 72%); margin-left:20vw; }
   .light-beam-white{ background:radial-gradient(circle, rgba(255,255,255,0.75), rgba(255,255,255,0.16) 42%, transparent 72%); margin-left:0; }
   .light-beam-teal{ background:radial-gradient(circle, rgba(20,184,166,0.9), rgba(20,184,166,0.22) 42%, transparent 72%); margin-left:16vw; }
   .light-beam-amber{ background:radial-gradient(circle, rgba(245,158,11,0.85), rgba(245,158,11,0.2) 42%, transparent 72%); margin-left:-16vw; }
@@ -1658,12 +1658,12 @@
   /* ---------- STATIC PORTFOLIO BACKGROUND POLISH ---------- */
   .tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.16),rgba(8,1,9,.42));background-size:cover;background-position:center top;background-blend-mode:multiply,normal;contain:paint;}
   .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(255,214,226,.2),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;z-index:2;}
-  .tree-bg-glow{opacity:.32;animation-duration:13s;background:radial-gradient(circle,rgba(255,132,177,.3),transparent 68%);}
-  .tree-bg-glow-2{opacity:.26;animation-duration:17s;background:radial-gradient(circle,rgba(230,88,144,.26),transparent 68%);}
+  .tree-bg-glow{opacity:.32;animation-duration:13s;background:radial-gradient(circle,rgba(110,174,255,.28),transparent 68%);}
+  .tree-bg-glow-2{opacity:.26;animation-duration:17s;background:radial-gradient(circle,rgba(80,143,245,.24),transparent 68%);}
   @keyframes portfolio-mobile-bg-drift{0%,100%{transform:translate3d(-1.2%,-.6%,0) scale(1.06);}50%{transform:translate3d(1.2%,.8%,0) scale(1.11);}}
   @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg::after{content:"";position:absolute;inset:-7%;background:url("assets/portfolio-center-editorial.webp") center/cover no-repeat;transform-origin:center;animation:portfolio-mobile-bg-drift 26s ease-in-out infinite alternate;will-change:transform;z-index:0;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
-  html{overflow:visible;overscroll-behavior-y:auto;}
-  body{overflow-x:clip;overflow-y:visible;touch-action:pan-y;overscroll-behavior-y:auto;}
+  html{overflow-x:hidden;overflow-y:visible;overscroll-behavior-y:auto;}
+  body{overflow-x:hidden;overflow-y:visible;touch-action:pan-y;overscroll-behavior-y:auto;}
   /* Final performance layer: retain the premium atmosphere, remove only nonessential animation and expensive blur work. */
   .mesh-blob-1,.mesh-blob-2,.mesh-blob-3,.mesh-blob-4,.mesh-particles span{animation:none !important;}
   .particle-layer,#cursor-glow{display:none !important;}
