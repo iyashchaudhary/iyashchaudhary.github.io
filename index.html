@@ -1656,31 +1656,36 @@
   .portfolio-inline-image{display:block;width:100%;margin-top:14px;padding:0;border:0;background:none;cursor:pointer;}
   .portfolio-inline-image img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.1);}
   /* ---------- STATIC PORTFOLIO BACKGROUND POLISH ---------- */
-  .tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.16),rgba(8,1,9,.42));background-size:cover;background-position:center top;background-blend-mode:multiply,normal;contain:paint;}
-  .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(255,214,226,.2),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;z-index:2;}
-  .tree-bg-glow{opacity:.32;animation-duration:13s;background:radial-gradient(circle,rgba(110,174,255,.28),transparent 68%);}
-  .tree-bg-glow-2{opacity:.26;animation-duration:17s;background:radial-gradient(circle,rgba(80,143,245,.24),transparent 68%);}
+  .tree-bg{background-color:#F5F8FD;background-image:radial-gradient(60% 52% at 18% 14%,rgba(145,205,255,.72),transparent 68%),radial-gradient(58% 48% at 82% 26%,rgba(207,225,255,.9),transparent 70%),linear-gradient(180deg,#F8FBFF 0%,#EAF3FF 52%,#DCEBFC 100%);background-size:118% 118%,112% 112%,100% 100%;background-position:0% 0%,100% 0%,center;contain:paint;}
+  html[data-theme="dark"] .tree-bg{background-color:#091426;background-image:radial-gradient(58% 48% at 18% 16%,rgba(46,105,190,.48),transparent 70%),radial-gradient(62% 52% at 82% 34%,rgba(34,77,145,.45),transparent 72%),linear-gradient(180deg,#0B1C35 0%,#091426 56%,#06101F 100%);}
+  html[data-theme="evening"] .tree-bg{background-color:#101A35;background-image:radial-gradient(58% 50% at 22% 18%,rgba(79,119,224,.5),transparent 70%),radial-gradient(56% 48% at 80% 30%,rgba(60,169,222,.28),transparent 72%),linear-gradient(180deg,#182A51 0%,#101A35 58%,#0A132B 100%);}
+  html[data-theme="morning"] .tree-bg{background-color:#EEF6FF;background-image:radial-gradient(60% 50% at 22% 16%,rgba(166,220,255,.78),transparent 70%),radial-gradient(58% 48% at 82% 28%,rgba(221,236,255,.96),transparent 72%),linear-gradient(180deg,#F8FCFF 0%,#EEF7FF 56%,#DCEEFF 100%);}
+  .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(154,211,255,.18),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;z-index:2;}
+  .tree-bg-glow{opacity:.32;animation:tree-glow-pulse 13s ease-in-out infinite;background:radial-gradient(circle,rgba(110,174,255,.28),transparent 68%);}
+  .tree-bg-glow-2{opacity:.26;animation:tree-glow-pulse 17s ease-in-out -4s infinite;background:radial-gradient(circle,rgba(80,143,245,.24),transparent 68%);}
   @keyframes portfolio-mobile-bg-drift{0%,100%{transform:translate3d(-1.2%,-.6%,0) scale(1.06);}50%{transform:translate3d(1.2%,.8%,0) scale(1.11);}}
-  @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg::after{content:"";position:absolute;inset:-7%;background:url("assets/portfolio-center-editorial.webp") center/cover no-repeat;transform-origin:center;animation:portfolio-mobile-bg-drift 26s ease-in-out infinite alternate;will-change:transform;z-index:0;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
+  @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg::after{content:"";position:absolute;inset:-7%;background:radial-gradient(52% 44% at 22% 22%,rgba(110,174,255,.32),transparent 72%),radial-gradient(56% 48% at 80% 36%,rgba(78,143,245,.22),transparent 72%);transform-origin:center;animation:portfolio-mobile-bg-drift 26s ease-in-out infinite alternate;will-change:transform;z-index:0;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
   html{overflow-x:hidden;overflow-y:visible;overscroll-behavior-y:auto;}
   body{overflow-x:hidden;overflow-y:visible;touch-action:pan-y;overscroll-behavior-y:auto;}
+  #mesh-bg,#tree-bg{overflow:hidden;}
+  #mesh-bg{display:none !important;}
   /* Final performance layer: retain the premium atmosphere, remove only nonessential animation and expensive blur work. */
   .mesh-blob-1,.mesh-blob-2,.mesh-blob-3,.mesh-blob-4,.mesh-particles span{animation:none !important;}
   .particle-layer,#cursor-glow{display:none !important;}
   @media (max-width:720px){
     /* The visual layer is #tree-bg, not body: target it directly so mobile gets the center-safe composition. */
-    #tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.12),rgba(8,1,9,.38)) !important;background-position:center top !important;background-size:cover !important;background-attachment:scroll !important;transform:none !important;}
+    #tree-bg{background-position:center top !important;background-size:cover !important;background-attachment:scroll !important;transform:none !important;}
     #tree-bg::before{opacity:.16;background:repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px) !important;}
     .hero-glass,.glass-card,.section.bento-card,.topnav,.dock{backdrop-filter:blur(10px) saturate(125%) !important;-webkit-backdrop-filter:blur(10px) saturate(125%) !important;}
   }
   @media (min-width:721px){
     .hero-glass,.glass-card,.section.bento-card{backdrop-filter:blur(14px) saturate(145%) !important;-webkit-backdrop-filter:blur(14px) saturate(145%) !important;}
   }
-  /* Keep functional motion only; remove ambient loops that add work without adding meaning. */
-  .tree-bg-glow,.firefly,.scroll-indicator .chevron,#study-buddy{animation:none !important;}
+  /* Keep only lightweight CSS motion for the visual atmosphere; no scroll-time JavaScript. */
+  .firefly,.scroll-indicator .chevron,#study-buddy{animation:none !important;}
   #study-buddy{transition:none !important;}
   /* Subtle CSS-only depth: no scroll listener, no requestAnimationFrame loop. */
-  @keyframes portfolio-bg-drift{0%{background-position:39% -1%;background-size:106% 106%;}50%{background-position:61% 4.8%;background-size:116% 116%;}100%{background-position:43% 1.8%;background-size:108% 108%;}}
+  @keyframes portfolio-bg-drift{0%{background-position:0% 0%,100% 0%,center;background-size:112% 112%,108% 108%,100% 100%;}50%{background-position:18% 5%,82% 8%,center;background-size:126% 126%,120% 120%,100% 100%;}100%{background-position:4% 2%,96% 3%,center;background-size:116% 116%,112% 112%,100% 100%;}}
   #tree-bg{animation:portfolio-bg-drift 22s ease-in-out infinite alternate;will-change:background-position,background-size;}
   @media (max-width:720px){#tree-bg{animation-duration:26s;will-change:background-position,background-size;}}
   @media (prefers-reduced-motion:reduce){#tree-bg{animation:none !important;will-change:auto !important;}#tree-bg::after{animation:none !important;transform:none !important;will-change:auto !important;}}
