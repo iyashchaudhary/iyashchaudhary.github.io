@@ -1700,6 +1700,40 @@
   @media (max-width:720px){.topnav{max-width:calc(100% - 20px);margin-top:8px;border-radius:16px;}.hero-glass{background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(235,245,255,.72)) !important;}.hero-grid{gap:24px;}.profile-verified{width:25px;height:25px;font-size:12px;border-width:3px;right:-5px;}.stats-row{gap:10px;}.stat-card{grid-template-columns:32px 1fr;padding:14px 12px;}.stat-icon{width:30px;height:30px;border-radius:10px;font-size:16px;}.stat-card .num{font-size:1.4rem;}.ai-orb{right:14px;bottom:calc(88px + env(safe-area-inset-bottom,0px));}}
   @media (prefers-reduced-motion:reduce){.hero-glass::before{display:none;}}
   html,body{overflow-x:clip !important;}
+  /* Scenic reference atmosphere: real landscape depth behind the glass portfolio UI */
+  .tree-bg{
+    background-color:#173d78 !important;
+    background-image:linear-gradient(180deg,rgba(8,34,82,.34),rgba(53,135,220,.12) 46%,rgba(8,28,67,.36)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-size:cover,cover !important;
+    background-position:center,center !important;
+    background-repeat:no-repeat !important;
+  }
+  .tree-bg::after{
+    content:"";position:absolute;inset:-3%;pointer-events:none;z-index:0;
+    background:url('assets/portfolio-scenic-blue-hero.jpg') center/cover no-repeat;
+    opacity:.23;transform:translate3d(-1.2%,-.6%,0) scale(1.05);
+    animation:portfolio-scenic-drift 34s ease-in-out infinite alternate;
+    will-change:transform;mix-blend-mode:screen;
+  }
+  @keyframes portfolio-scenic-drift{
+    0%{transform:translate3d(-1.2%,-.6%,0) scale(1.05);}
+    50%{transform:translate3d(.8%,.5%,0) scale(1.085);}
+    100%{transform:translate3d(1.4%,-.4%,0) scale(1.06);}
+  }
+  html[data-theme="dark"] .tree-bg{
+    background-image:linear-gradient(180deg,rgba(3,13,35,.66),rgba(15,55,112,.34) 48%,rgba(2,10,26,.72)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+  }
+  html[data-theme="evening"] .tree-bg{
+    background-image:linear-gradient(180deg,rgba(13,27,70,.52),rgba(30,92,170,.24) 48%,rgba(8,18,50,.58)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+  }
+  html[data-theme="morning"] .tree-bg{
+    background-image:linear-gradient(180deg,rgba(217,239,255,.22),rgba(112,181,237,.08) 48%,rgba(31,83,151,.24)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+  }
+  @media (max-width:720px){
+    .tree-bg{background-position:center top,center top !important;}
+    .tree-bg::after{inset:-5%;opacity:.2;animation-duration:38s;}
+  }
+  @media (prefers-reduced-motion:reduce){.tree-bg::after{animation:none;transform:none;}}
 </style>
 </head>
 <body>
