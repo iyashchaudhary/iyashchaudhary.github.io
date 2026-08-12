@@ -520,9 +520,12 @@
   /* Final visual source-of-truth override */
   html body{background-image:linear-gradient(180deg,rgba(18,4,12,.08),rgba(13,3,9,.16)),url('assets/unfiltered-burgundy-blossom-bg.webp') !important;background-position:center top !important;background-size:cover !important;background-attachment:fixed !important;}
   .uy-blossoms{display:none !important;}
+
+  .media-board-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}.media-board-head h3{margin:0}.media-board-head span{font-size:.75rem;color:var(--uy-text-dim);font-family:'IBM Plex Mono',monospace}.media-card{cursor:zoom-in;transition:transform .35s ease,box-shadow .35s ease}.media-card:hover{transform:rotate(0deg) translateY(-6px) scale(1.025);box-shadow:0 22px 34px rgba(0,0,0,.42)}.media-card video{cursor:zoom-in}.media-play{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(20,8,14,.72);color:#fff;border:1px solid rgba(255,255,255,.5);pointer-events:none}.execution-index{display:flex;align-items:center;gap:13px;margin:22px auto 0;padding:12px 16px;max-width:280px;border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.045));border:1px solid rgba(255,255,255,.17);box-shadow:0 16px 32px rgba(0,0,0,.24);backdrop-filter:blur(14px)}.execution-index strong{display:block;font-family:'Fraunces',serif;color:var(--uy-cream);font-size:1rem}.execution-index span{display:block;color:var(--uy-text-dim);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-top:3px}.execution-ring{position:relative;width:58px;height:58px;flex:none}.execution-ring svg{width:100%;height:100%;transform:rotate(-90deg)}.execution-ring circle{fill:none;stroke-width:5}.ring-track{stroke:rgba(255,255,255,.14)}.ring-value{stroke:var(--uy-pink);stroke-linecap:round;transition:stroke-dasharray 1s ease}.execution-index.success .ring-value{stroke:#77d6a0}.execution-index.success{box-shadow:0 0 0 1px rgba(119,214,160,.22),0 16px 32px rgba(35,120,78,.2)}.execution-index.warning .ring-value{stroke:#d9a16d}.execution-ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--uy-text)}.consistency-graph{margin:28px 0 4px;padding:16px 18px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);box-shadow:0 16px 34px rgba(0,0,0,.22);backdrop-filter:blur(13px)}.graph-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:10px}.graph-head strong{font-family:'Fraunces',serif;color:var(--uy-cream)}.graph-head span,.graph-axis{font:10px 'IBM Plex Mono',monospace;color:var(--uy-text-dim);text-transform:uppercase;letter-spacing:.07em}.consistency-graph svg{display:block;width:100%;height:100px;overflow:visible}.consistency-graph polyline{fill:none;stroke:var(--uy-pink-soft);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}.graph-fill{fill:rgba(226,85,123,.13);stroke:none}.graph-axis{display:flex;justify-content:space-between;margin-top:5px}.uy-lightbox{position:fixed;inset:0;z-index:1000;display:none;place-items:center;padding:24px;background:rgba(8,3,7,.86);backdrop-filter:blur(18px)}.uy-lightbox.show{display:grid}.uy-lightbox img,.uy-lightbox video{max-width:min(92vw,980px);max-height:78vh;border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.55);object-fit:contain}.lb-close{position:absolute;top:22px;right:24px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.8rem;cursor:pointer}.lb-caption{position:absolute;bottom:26px;max-width:80vw;color:#fff;text-align:center;font:1.1rem 'Caveat',cursive}.lb-open{overflow:hidden}@media(max-width:520px){.media-board-head{display:block}.media-board-head span{display:block;margin-top:4px}.execution-index{margin-top:16px}.consistency-graph{padding:13px}.graph-head{display:block}.graph-head span{display:block;margin-top:4px}}
 </style>
 </head>
 <body>
+<div id="uy-lightbox" class="uy-lightbox" aria-modal="true" role="dialog" onclick="if(event.target===this)closeMediaLightbox()"></div>
 <a class="uy-skip-link" href="#uy-day-content">Skip to journal content</a>
 
 <div class="uy-blossoms" aria-hidden="true">
@@ -602,14 +605,15 @@
 
   function esc(s){return (s??'').toString().replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
   function md(s){let x=esc(s);x=x.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');const lines=x.split(/\n+/);let out='',inList=false;lines.forEach(line=>{if(/^\s*[-*]\s+/.test(line)){if(!inList){out+='<ul>';inList=true}out+='<li>'+line.replace(/^\s*[-*]\s+/,'')+'</li>';}else{if(inList){out+='</ul>';inList=false}if(line.trim())out+='<p>'+line+'</p>';}});if(inList)out+='</ul>';return '<div class="markdown-content">'+out+'</div>';}
-  function mediaBoard(item){const photos=[...(item.photos||[])];if(item.photo&&item.photo.src&&!photos.some(x=>x.src===item.photo.src))photos.unshift(item.photo);const videos=[...(item.videos||[])];if(!photos.length&&!videos.length)return '';return '<div class="media-board"><h3>Scrapbook wall</h3><div class="media-collage">'+photos.map((p,i)=>'<figure class="media-card" style="--rot:'+((i%3)-1)*.9+'deg"><img src="'+esc(p.src)+'" alt="'+esc(p.caption||'Journal photo')+'" loading="lazy"><figcaption>'+esc(p.caption||'A moment from the day')+'</figcaption></figure>').join('')+videos.map(v=>'<figure class="media-card"><video controls preload="metadata" src="'+esc(v.src)+'"></video><figcaption>'+esc(v.caption||'A journal video')+'</figcaption></figure>').join('')+'</div></div>';}
+  function mediaItems(item){const photos=[...(item.photos||[])];if(item.photo&&item.photo.src&&!photos.some(x=>x.src===item.photo.src))photos.unshift(item.photo);const videos=(item.videos||[]).map(v=>typeof v==='string'?{src:v}:v);return photos.map(x=>({...x,type:'image'})).concat(videos.map(x=>({...x,type:'video'}))).slice(0,8);}
+  function openMediaLightbox(src,type,caption){const box=document.getElementById('uy-lightbox');if(!box)return;box.innerHTML=type==='video'?`<button class="lb-close" onclick="closeMediaLightbox()">×</button><video controls autoplay src="${esc(src)}"></video><div class="lb-caption">${esc(caption||'')}</div>`:`<button class="lb-close" onclick="closeMediaLightbox()">×</button><img src="${esc(src)}" alt="${esc(caption||'')}"><div class="lb-caption">${esc(caption||'')}</div>`;box.classList.add('show');document.body.classList.add('lb-open');}
+  function closeMediaLightbox(){const box=document.getElementById('uy-lightbox');if(box){box.classList.remove('show');box.innerHTML='';}document.body.classList.remove('lb-open');}
+  window.closeMediaLightbox=closeMediaLightbox;
+  window.openMediaLightbox=openMediaLightbox;
+  function mediaBoard(item){const items=mediaItems(item);if(!items.length)return '';const cap=item.mediaCaption||'';return '<div class="media-board"><div class="media-board-head"><h3>Scrapbook wall</h3>'+(cap?'<span>'+esc(cap)+'</span>':'')+'</div><div class="media-collage">'+items.map((m,i)=>`<figure class="media-card" style="--rot:${((i%3)-1)*.9}deg" onclick="openMediaLightbox('${esc(m.src)}','${m.type}','${esc(m.caption||cap||'Journal moment')}')">${m.type==='video'?`<video muted preload="metadata" src="${esc(m.src)}"></video><span class="media-play">▶</span>`:`<img src="${esc(m.src)}" alt="${esc(m.caption||cap||'Journal photo')}" loading="lazy">`}<figcaption>${esc(m.caption||cap||'A moment from the day')}</figcaption></figure>`).join('')+'</div></div>';}
+  function executionIndex(entry){const n=Math.max(0,Math.min(100,Number(entry.discipline??entry.dailyDiscipline??0)||0));const r=26,c=2*Math.PI*r,dash=(c*n/100).toFixed(1);return `<div class="execution-index ${n>=80?'success':n<50?'warning':''}"><div class="execution-ring"><svg viewBox="0 0 64 64"><circle class="ring-track" cx="32" cy="32" r="26"></circle><circle class="ring-value" cx="32" cy="32" r="26" stroke-dasharray="${dash} ${c.toFixed(1)}"></circle></svg><b>${n}%</b></div><div><strong>Execution Index</strong><span>Daily discipline</span></div></div>`;}
+  function consistencyGraph(){const vals=entries.map(e=>Math.max(0,Math.min(100,Number(e.discipline??e.dailyDiscipline??0)||0)));if(!vals.length)return '';const pts=vals.map((v,i)=>`${(i/(Math.max(1,vals.length-1))*100).toFixed(1)},${(100-v).toFixed(1)}`).join(' ');return `<div class="consistency-graph"><div class="graph-head"><strong>Consistency</strong><span>Daily discipline over time</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="graph-fill" d="M 0 100 L ${pts.replace(/ /g,' L ')} L 100 100 Z"></path><polyline points="${pts}"></polyline></svg><div class="graph-axis"><span>DAY 01</span><span>${vals.length?`DAY ${String(entries[entries.length-1].day).padStart(2,'0')}`:''}</span></div></div>`;}
 
-
-  function ytId(url){
-    if(!url) return null;
-    var m = url.toString().match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
-    return m ? m[1] : null;
-  }
 
   function monthOf(dateStr){
     const d = new Date(dateStr);
@@ -641,29 +645,9 @@
         </div>`;
     }
 
+    body += executionIndex(entry);
     body += mediaBoard(entry);
-
-    // documentary
-    if(entry.documentary && entry.documentary.youtubeUrl){
-      const id = ytId(entry.documentary.youtubeUrl);
-      if(id){
-        const title = (entry.documentary.title && entry.documentary.title.trim()) || 'Today\'s documentary';
-        const thumb = entry.documentary.thumbnail || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-        body += `
-          <div class="note-doc">
-            <div class="doc-frame">
-              <iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" title="${esc(title)} — Day ${String(entry.day).padStart(2,'0')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="doc-card">
-              <a class="doc-card-thumb" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">
-                <img src="${esc(thumb)}" alt="${esc(title)} thumbnail" loading="lazy"><span class="doc-play">▶</span>
-              </a>
-              <div class="doc-card-info"><div class="doc-label">▶ YouTube</div><h3>${esc(title)}</h3><div class="doc-meta">Day ${String(entry.day).padStart(2,'0')} · documentary</div><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>
-            </div>
-          </div>`;
-      }
-    }
-
+    if(entries.length>1) body += consistencyGraph();
     dayContent.innerHTML = body;
   }
 
@@ -708,8 +692,8 @@
       const hay = [
         'DAY '+String(e.day).padStart(2,'0'), monthOf(e.date), e.weekday||'',
         e.journal||'',
-        e.documentary && e.documentary.title || '',
-        e.photo && e.photo.caption || ''
+        (e.photos||[]).map(x=>x.caption||'').join(' '),
+        e.mediaCaption||'', e.photo && e.photo.caption || ''
       ].join(' ').toLowerCase();
       return hay.includes(f);
     });
@@ -740,8 +724,8 @@
         body += '<div class="arch-month">' + m + '</div><div class="arch-grid">';
         groups[y][m].forEach(e=>{
           const snip = e.journal ? e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean)[0].slice(0,90) : '';
-          const hasVideo = !!ytId(e.documentary && e.documentary.youtubeUrl);
-          body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasVideo?'<span class="ad-video">🎥</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="ad-actions"><button data-go="'+e.day+'">Open day →</button>'+(hasVideo?'<a class="ad-vlink" href="https://www.youtube.com/watch?v='+ytId(e.documentary.youtubeUrl)+'" target="_blank" rel="noopener">Watch documentary →</a>':'')+'</div></div>';
+          const hasMedia = mediaItems(e).length>0;
+          body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasMedia?'<span class="ad-video">▣</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="ad-actions"><button data-go="'+e.day+'">Open day →</button></div></div>';
         });
         body += '</div>';
       });

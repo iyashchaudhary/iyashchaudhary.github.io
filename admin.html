@@ -71,14 +71,6 @@
   .up-preview img{width:100%;border-radius:8px;max-height:180px;object-fit:cover;}
   .up-preview .meta{font-size:.72rem;color:var(--dim);margin-top:6px;font-family:'IBM Plex Mono',monospace;word-break:break-all;}
 
-  .yt-preview{display:none;margin-top:14px;border:1px dashed var(--pink-soft);border-radius:12px;padding:12px;background:rgba(226,85,123,.06);}
-  .yt-preview.show{display:block;}
-  .yt-preview .row{display:flex;gap:12px;align-items:center;}
-  .yt-preview img{width:160px;flex:none;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.4);}
-  .yt-preview .meta{font-size:.88rem;color:var(--text);line-height:1.45;}
-  .yt-preview .meta b{display:block;font-family:'Fraunces',serif;font-size:1rem;color:var(--pink-soft);margin-bottom:4px;}
-  .yt-preview .meta span{color:var(--dim);font-size:.78rem;font-family:'IBM Plex Mono',monospace;}
-
   .output{margin-top:22px;}
   .output textarea{width:100%;min-height:260px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;background:#0f080c;border:1px solid var(--line);border-radius:12px;padding:14px;color:#dfe;line-height:1.5;}
   .steps{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--dim);margin-bottom:12px;}
@@ -169,30 +161,25 @@
       </fieldset>
 
       <fieldset>
-        <legend>Today's documentary (optional)</legend>
-        <label class="first">YouTube URL</label>
-        <input type="url" id="f-doc-url" placeholder="https://youtube.com/watch?v=...">
-        <div class="yt-preview" id="yt-preview">
-          <div class="row">
-            <img id="yt-thumb" alt="video thumbnail">
-            <div class="meta"><b id="yt-title">—</b><span id="yt-meta"></span></div>
-          </div>
-        </div>
+        <legend>Daily Discipline</legend>
+        <label class="first">Daily Completion Percentage (%)</label>
+        <input type="number" id="f-discipline" min="0" max="100" step="1" value="0" placeholder="e.g. 85">
+        <div class="hint">How much of today’s planned work did you complete? Enter a value from 0 to 100.</div>
       </fieldset>
 
       <fieldset>
-        <legend>Scrapbook media (optional)</legend>
-        <label class="first">Multiple photos / collage</label>
+        <legend>Scrapbook gallery (up to 8 items)</legend>
+        <label class="first">Photos</label>
         <input type="file" id="f-media-images" accept="image/*" multiple onchange="onJournalMediaPicked(this, 'entry-images')">
-        <div class="hint">Select 2–6 photos. Existing single-photo entries remain fully compatible.</div>
+        <div class="hint">Select up to 8 photos. Existing single-photo entries remain fully compatible.</div>
         <div class="upload-status" id="f-media-status"></div>
         <div class="media-pick-list" id="f-media-list"></div>
-        <label>Direct video link (YouTube or MP4/WebM URL)</label>
-        <input type="url" id="f-video-url" placeholder="https://...">
-        <label>Or upload a short video</label>
-        <input type="file" id="f-video-file" accept="video/*" onchange="onJournalVideoPicked(this, 'entry-video')">
-        <input type="hidden" id="f-video-src">
+        <label>Short videos</label>
+        <input type="file" id="f-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'entry-video')">
+        <div class="hint">You can add short MP4/WebM videos. Total gallery items are capped at 8.</div>
         <div class="upload-status" id="f-video-status"></div>
+        <label>Gallery caption (optional)</label>
+        <input type="text" id="f-media-caption" placeholder="e.g. A quiet day around campus">
       </fieldset>
     </div>
 
@@ -233,7 +220,7 @@
 
         <div id="sec-tried-fields" style="display:none;">
           <label class="first">What did you try? (title)</label>
-          <input type="text" id="s-tried-title" placeholder="e.g. Editing my first YouTube documentary in CapCut">
+          <input type="text" id="s-tried-title" placeholder="e.g. Testing a new editing workflow">
           <div class="row2">
             <div><label class="first">Expected</label><input type="text" id="s-tried-expected"></div>
             <div><label class="first">Actual</label><input type="text" id="s-tried-actual"></div>
@@ -275,15 +262,15 @@
           <legend>Scrapbook media (optional)</legend>
           <label class="first">Photos for this section card</label>
           <input type="file" id="s-media-images" accept="image/*" multiple onchange="onJournalMediaPicked(this, 'section-images')">
-          <div class="hint">These become a pinned collage on the public page.</div>
+          <div class="hint">These become a premium scrapbook gallery on the public page. Up to 8 total photos/videos.</div>
           <div class="upload-status" id="s-media-status"></div>
           <div class="media-pick-list" id="s-media-list"></div>
-          <label>Video link (YouTube or MP4/WebM URL)</label>
-          <input type="url" id="s-video-url" placeholder="https://...">
-          <label>Or upload a short video</label>
-          <input type="file" id="s-video-file" accept="video/*" onchange="onJournalVideoPicked(this, 'section-video')">
-          <input type="hidden" id="s-video-src">
+          <label>Short videos</label>
+          <input type="file" id="s-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'section-video')">
+          <div class="hint">Total photos + videos are capped at 8 for this card.</div>
           <div class="upload-status" id="s-video-status"></div>
+          <label>Gallery caption (optional)</label>
+          <input type="text" id="s-media-caption" placeholder="e.g. Small experiments and moments">
         </fieldset>
       </fieldset>
     </div>
@@ -461,22 +448,6 @@
   document.getElementById('f-date').addEventListener('change', fillDayNumber);
   (function(){ if(!document.getElementById('f-date').value) document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; fillDayNumber(); })();
 
-  let fetchedTitle = '';
-  function previewVideo(){
-    const url = document.getElementById('f-doc-url').value.trim();
-    const id = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1];
-    if(!id){ document.getElementById('yt-preview').classList.remove('show'); fetchedTitle=''; return; }
-    document.getElementById('yt-preview').classList.add('show');
-    document.getElementById('yt-thumb').src = 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
-    fetchedTitle = '';
-    document.getElementById('yt-title').textContent = 'Loading YouTube title…';
-    document.getElementById('yt-meta').textContent = 'Thumbnail ready';
-    const fallback = 'Today’s documentary';
-    const controller = new AbortController(); const timer = setTimeout(()=>controller.abort(), 4500);
-    fetch('https://noembed.com/embed?url='+encodeURIComponent(url), {signal: controller.signal}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{ fetchedTitle = d.title || fallback; document.getElementById('yt-title').textContent = fetchedTitle; document.getElementById('yt-meta').textContent = 'Fetched automatically'; }).catch(()=>{ fetchedTitle = fallback; document.getElementById('yt-title').textContent = fallback; document.getElementById('yt-meta').textContent = 'Thumbnail ready · title fallback'; }).finally(()=>clearTimeout(timer));
-  }
-  document.getElementById('f-doc-url').addEventListener('input', previewVideo);
-
   function esc(s){ return (s||'').toString().replace(/"/g,'\\"'); }
 
   // ============ AUTOMATIC IMAGE UPLOAD (gallery → GitHub) ============
@@ -625,20 +596,22 @@
     else if(currentMode==='portfolio') generatePortfolio();
   }
 
-  const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': '', 'section-video': '' };
+  const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': [], 'section-video': [] };
   function fileToDataUrl(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
   function mediaStatus(kind, text, cls=''){ const id = kind.startsWith('entry') ? (kind==='entry-images'?'f-media-status':'f-video-status') : (kind==='section-images'?'s-media-status':'s-video-status'); const el=document.getElementById(id); if(el){el.className='upload-status '+cls;el.textContent=text;} }
   function mediaList(kind){ return document.getElementById(kind==='entry-images'?'f-media-list':'s-media-list'); }
-  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map(x=>`<div class="media-pick">${x.src.startsWith('data:image')?`<img src="${x.src}" alt="">`:''}<span>${x.name||x.src}</span></div>`).join(''); }
+  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map(x=>`<div class="media-pick">${x.data&&x.data.startsWith('data:image')?`<img src="${x.data}" alt="">`:''}<span>${x.name||x.src}</span></div>`).join(''); }
+  function galleryCount(prefix){return uploadedJournalMedia[prefix+'-images'].length+uploadedJournalMedia[prefix+'-video'].length;}
   async function onJournalMediaPicked(input, kind){
-    const files=[...(input.files||[])].slice(0,6); if(!files.length)return;
-    uploadedJournalMedia[kind]=[]; mediaStatus(kind,'Preparing selected media…');
-    try{ for(const file of files){ const data=await compressImage(file); const ext=file.type==='image/png'?'png':'webp'; const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; uploadedJournalMedia[kind].push({src:filename,name:file.name, data}); } renderPickedMedia(kind); const token=getGithubToken(); if(token){ for(const x of uploadedJournalMedia[kind]) await uploadImageToGitHub(token,x.src,x.data); mediaStatus(kind,'✅ Photos uploaded to GitHub','ok'); } else mediaStatus(kind,'Photos ready. Add the GitHub token before publishing.'); }
+    const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return;
+    if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;}
+    uploadedJournalMedia[kind]=[]; mediaStatus(kind,'Preparing selected photos…');
+    try{ for(const file of files){ const data=await compressImage(file); const ext=file.type==='image/png'?'png':'webp'; const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); const token=getGithubToken(); if(token){ for(const x of uploadedJournalMedia[kind]) await uploadImageToGitHub(token,x.src,x.data); mediaStatus(kind,'✅ Photos uploaded to GitHub','ok'); } else mediaStatus(kind,'Photos ready. Add the GitHub token before publishing.'); }
     catch(e){ mediaStatus(kind,'❌ '+e.message,'err'); } finally { input.value=''; }
   }
-  async function onJournalVideoPicked(input, kind){ const file=input.files&&input.files[0]; if(!file)return; if(file.size>25*1024*1024){mediaStatus(kind,'Video is over 25 MB; use a hosted link instead.','err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}.${ext}`; const token=getGithubToken(); if(token){await uploadImageToGitHub(token,filename,data);mediaStatus(kind,'✅ Video uploaded to GitHub','ok');} else mediaStatus(kind,'Video ready. Add the GitHub token before publishing.'); uploadedJournalMedia[kind]=filename; document.getElementById(kind==='entry-video'?'f-video-src':'s-video-src').value=filename; }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
-  function mediaObjectArray(kind){ return (uploadedJournalMedia[kind]||[]).filter(x=>x&&x.src).map(x=>({src:x.src})); }
-  function journalMediaFields(prefix){ const imageKind=prefix==='entry'?'entry-images':'section-images'; const videoKind=prefix==='entry'?'entry-video':'section-video'; const photos=mediaObjectArray(imageKind); const link=document.getElementById(prefix==='entry'?'f-video-url':'s-video-url')?.value.trim()||''; const uploaded=uploadedJournalMedia[videoKind]||''; const video=link||uploaded; return {photos, video}; }
+  async function onJournalVideoPicked(input, kind){ const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return; if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ for(const file of files){ if(file.size>25*1024*1024) throw new Error(`${file.name} is over 25 MB.`); const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; const token=getGithubToken(); if(token) await uploadImageToGitHub(token,filename,data); uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); mediaStatus(kind,getGithubToken()?'✅ Videos uploaded to GitHub':'Videos ready. Add the GitHub token before publishing.','ok'); }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
+  function mediaObjectArray(kind){ return (uploadedJournalMedia[kind]||[]).filter(x=>x&&x.src).map(x=>({src:x.src,caption:x.caption||''})); }
+  function journalMediaFields(prefix){ const imageKind=prefix==='entry'?'entry-images':'section-images'; const videoKind=prefix==='entry'?'entry-video':'section-video'; return {photos:mediaObjectArray(imageKind),videos:mediaObjectArray(videoKind)}; }
 
   function generateEntry(){
     const day=parseInt(document.getElementById('f-day').value,10), date=document.getElementById('f-date').value, journal=document.getElementById('f-journal').value.trim();
@@ -647,8 +620,11 @@
     let out=`  {\n    day: ${day},\n    date: "${date}",\n    weekday: "${new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'})}",\n    journal: "${paras.map(p=>esc(p)).join('\\n\\n')}",\n`;
     if(photoSrc)out+=`    photo: { src: "${photoSrc}", caption: "${esc(document.getElementById('f-photo-cap').value)}" },\n`;
     if(media.photos.length)out+=`    photos: ${JSON.stringify(media.photos)},\n`;
-    if(media.video)out+=`    videos: [{ src: "${esc(media.video)}" }],\n`;
-    const docUrl=document.getElementById('f-doc-url').value.trim(); if(docUrl){const id=docUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/)?.[1]||'';out+=`    documentary: { youtubeUrl: "${esc(docUrl)}", title: "${esc(fetchedTitle||"Today’s documentary")}", thumbnail: "${id?`https://i.ytimg.com/vi/${id}/hqdefault.jpg`:''}" },\n`;}
+    if(media.videos.length)out+=`    videos: ${JSON.stringify(media.videos)},\n`;
+    const discipline=Math.max(0,Math.min(100,parseInt(document.getElementById('f-discipline').value||'0',10)||0));
+    out+=`    discipline: ${discipline},\n`;
+    const mediaCaption=document.getElementById('f-media-caption')?.value.trim()||'';
+    if(mediaCaption) out+=`    mediaCaption: "${esc(mediaCaption)}",\n`;
     out=out.replace(/,\\n$/,'\\n')+`  }`;document.getElementById('output').value=out;document.getElementById('output-wrap').style.display='block';document.getElementById('content-preview').style.display='none';saveDraft();
   }
 
@@ -663,7 +639,7 @@
     if(t==='random')out=`  { type: "text", text: "${esc(document.getElementById('s-random-text').value.trim())}", date: "${new Date().toISOString().slice(0,10)}"`;
     else if(t==='tried')out=`  {\n    title: "${esc(document.getElementById('s-tried-title').value)}",\n    date: "${esc(document.getElementById('s-tried-date').value)}",\n    outcome: "${document.getElementById('s-tried-outcome').value}",\n    expected: "${esc(document.getElementById('s-tried-expected').value)}",\n    actual: "${esc(document.getElementById('s-tried-actual').value)}",\n    learned: "${esc(document.getElementById('s-tried-learned').value)}"`;
     else {const status=document.getElementById('s-learned-status').value;out=`  {\n    course: "${esc(document.getElementById('s-learned-course').value)}",\n    completedDate: ${status==='done'?`"${esc(document.getElementById('s-learned-done').value)}"`:'null'},\n    inProgress: ${status==='in'},\n    learned: "${esc(document.getElementById('s-learned-items').value)}",\n    usedFor: "${esc(document.getElementById('s-learned-used').value)}",\n    proofUrl: ""`;}
-    if(media.photos.length)out+=`,\n    photos: ${JSON.stringify(media.photos)}`; if(media.video)out+=`,\n    videos: [{ src: "${esc(media.video)}" }]`; out+=' }'; document.getElementById('output').value=out; document.getElementById('output-wrap').style.display='block';
+    if(media.photos.length)out+=`,\n    photos: ${JSON.stringify(media.photos)}`; if(media.videos.length)out+=`,\n    videos: ${JSON.stringify(media.videos)}`; const cap=document.getElementById(t==='random'?'s-media-caption':'s-media-caption')?.value.trim()||''; if(cap)out+=`,\n    mediaCaption: "${esc(cap)}"`; out+=' }'; document.getElementById('output').value=out; document.getElementById('output-wrap').style.display='block';
   }
 
   function onPortTypeChange() {
@@ -805,8 +781,10 @@
     document.getElementById('f-journal').value = e.journal;
     document.getElementById('f-photo-src').value = e.photo?.src || '';
     document.getElementById('f-photo-cap').value = e.photo?.caption || '';
-    document.getElementById('f-doc-url').value = e.documentary?.youtubeUrl || '';
-    previewVideo();
+    document.getElementById('f-discipline').value = e.discipline ?? e.dailyDiscipline ?? 0;
+    uploadedJournalMedia['entry-images'] = (e.photos || []).map(x => ({src:x.src, name:x.caption||'Existing photo'}));
+    uploadedJournalMedia['entry-video'] = (e.videos || []).map(x => typeof x==='string'?{src:x,name:'Existing video'}:{src:x.src,name:x.caption||'Existing video'});
+    renderPickedMedia('entry-images'); renderPickedMedia('entry-video');
     uploadedPhotoFilename = e.photo?.src || null;
     const prev = document.getElementById('up-preview');
     if(e.photo?.src){
@@ -848,8 +826,8 @@
     if(currentMode==='entry'){
       if(!document.getElementById('f-date').value) issues.push('Date is missing.');
       if(!document.getElementById('f-journal').value.trim()) issues.push('Journal text is missing.');
-      const yt = document.getElementById('f-doc-url').value.trim();
-      if(yt && !yt.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{6,}/)) issues.push('YouTube URL format looks invalid.');
+      const discipline = Number(document.getElementById('f-discipline').value);
+      if(!Number.isFinite(discipline) || discipline < 0 || discipline > 100) issues.push('Daily discipline must be between 0 and 100.');
       if(document.getElementById('f-photo-src').value.trim() && !document.getElementById('f-photo-cap').value.trim()) issues.push('Photo caption/alt text is missing.');
     } else if(currentMode==='section'){
       const type = document.getElementById('sec-select').value;
@@ -990,8 +968,8 @@
     } catch (err) { setCmsStatus(err.message, 'error'); alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
 
-  function saveDraft(){ localStorage.setItem('uy_draft2', JSON.stringify({ day: document.getElementById('f-day').value, date: document.getElementById('f-date').value, journal: document.getElementById('f-journal').value, photo: { src: document.getElementById('f-photo-src').value, caption: document.getElementById('f-photo-cap').value }, documentary: { youtubeUrl: document.getElementById('f-doc-url').value } })); document.getElementById('draft-note').textContent = 'Draft saved'; }
-  function loadDraft(){ try { const d = JSON.parse(localStorage.getItem('uy_draft2')); if(d){ document.getElementById('f-day').value = d.day; document.getElementById('f-date').value = d.date; document.getElementById('f-journal').value = d.journal; document.getElementById('f-photo-src').value = d.photo.src; document.getElementById('f-photo-cap').value = d.photo.caption; document.getElementById('f-doc-url').value = d.documentary.youtubeUrl; previewVideo(); } } catch(e){} }
+  function saveDraft(){ localStorage.setItem('uy_draft2', JSON.stringify({ day: document.getElementById('f-day').value, date: document.getElementById('f-date').value, journal: document.getElementById('f-journal').value, discipline: document.getElementById('f-discipline').value, photo: { src: document.getElementById('f-photo-src').value, caption: document.getElementById('f-photo-cap').value } })); document.getElementById('draft-note').textContent = 'Draft saved'; }
+  function loadDraft(){ try { const d = JSON.parse(localStorage.getItem('uy_draft2')); if(d){ document.getElementById('f-day').value = d.day||''; document.getElementById('f-date').value = d.date||''; document.getElementById('f-journal').value = d.journal||''; document.getElementById('f-discipline').value = d.discipline??0; document.getElementById('f-photo-src').value = d.photo?.src||''; document.getElementById('f-photo-cap').value = d.photo?.caption||''; } } catch(e){} }
   function clearDraft(){ if(confirm("Clear?")){ localStorage.removeItem('uy_draft2'); location.reload(); } }
 </script>
 </body>
