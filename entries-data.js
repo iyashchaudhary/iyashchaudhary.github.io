@@ -16,7 +16,13 @@ const UNFILTERED_ENTRIES = [
       src: "photos/day01.png",
       caption: ""
     },
-    photos: [],
+    photos: [
+      { src: "media/journal-1786547199966-6kksa.png", caption: "" },
+      { src: "media/journal-1786547200766-lp29j.webp", caption: "" },
+      { src: "media/journal-1786547201317-u2zfo.png", caption: "" },
+      { src: "media/journal-1786547201913-hdavs.webp", caption: "" },
+      { src: "media/journal-1786547202516-vohkm.png", caption: "" }
+    ],
     discipline: 32,
     videos: [],
     mediaCaption: ""
