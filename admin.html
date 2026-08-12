@@ -185,8 +185,6 @@
         <input type="file" id="f-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'entry-video')">
         <div class="hint">You can add short MP4/WebM videos. Total gallery items are capped at 8.</div>
         <div class="upload-status" id="f-video-status"></div>
-        <label>Gallery caption (optional)</label>
-        <input type="text" id="f-media-caption" placeholder="e.g. A quiet day around campus">
       </fieldset>
     </div>
 
@@ -305,8 +303,6 @@
           <input type="file" id="s-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'section-video')">
           <div class="hint">Total photos + videos are capped at 8 for this card.</div>
           <div class="upload-status" id="s-video-status"></div>
-          <label>Gallery caption (optional)</label>
-          <input type="text" id="s-media-caption" placeholder="e.g. Small experiments and moments">
         </fieldset>
       </fieldset>
     </div>
@@ -636,7 +632,7 @@
   function fileToDataUrl(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
   function mediaStatus(kind, text, cls=''){ const id = kind.startsWith('entry') ? (kind==='entry-images'?'f-media-status':'f-video-status') : (kind==='section-images'?'s-media-status':'s-video-status'); const el=document.getElementById(id); if(el){el.className='upload-status '+cls;el.textContent=text;} }
   function mediaList(kind){ return document.getElementById(kind==='entry-images'?'f-media-list':'s-media-list'); }
-  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map(x=>`<div class="media-pick">${x.data&&x.data.startsWith('data:image')?`<img src="${x.data}" alt="">`:''}<span>${x.name||x.src}</span></div>`).join(''); }
+  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map((x,i)=>`<div class="media-pick">${x.data&&x.data.startsWith('data:image')?`<img src="${x.data}" alt="">`:''}<span>${x.name||x.src}</span><input type="text" placeholder="Caption (optional)" value="${esc(x.caption||'')}" data-caption="${i}"><button type="button" class="btn" data-remove-media="${i}">Remove</button></div>`).join(''); list.querySelectorAll('[data-caption]').forEach(el=>el.addEventListener('input',e=>{uploadedJournalMedia[kind][Number(e.target.dataset.caption)].caption=e.target.value;})); list.querySelectorAll('[data-remove-media]').forEach(el=>el.addEventListener('click',e=>{uploadedJournalMedia[kind].splice(Number(e.target.dataset.removeMedia),1);renderPickedMedia(kind);})); }
   function galleryCount(prefix){return uploadedJournalMedia[prefix+'-images'].length+uploadedJournalMedia[prefix+'-video'].length;}
   async function onJournalMediaPicked(input, kind){
     const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return;
@@ -867,7 +863,8 @@
     const date=document.getElementById('e-date').value||window._editMode.date||'';
     const media=(window._editMedia||[]).filter(m=>m&&m.src).map(m=>({src:m.src,caption:(m.caption||'').trim()}));
     const photos=media.filter(m=>m.type==='image'), videos=media.filter(m=>m.type==='video');
-    window._editPayload={day,date,journal:document.getElementById('e-journal').value,discipline:Math.max(0,Math.min(100,parseInt(document.getElementById('e-discipline').value)||0)),photos,videos};
+    const legacyPhoto=window._editMode.photo&&window._editMode.photo.src?{src:window._editMode.photo.src,caption:window._editMode.photo.caption||''}:null;
+    window._editPayload={day,date,journal:document.getElementById('e-journal').value,discipline:Math.max(0,Math.min(100,parseInt(document.getElementById('e-discipline').value)||0)),photo:legacyPhoto,photos,videos,mediaCaption:''};
     // Keep the existing publish pipeline, but make it consume the in-place editor payload.
     document.getElementById('output').value=JSON.stringify(window._editPayload,null,2);
     window._isEditingExisting=true; currentMode='entry'; publishToGitHub();
