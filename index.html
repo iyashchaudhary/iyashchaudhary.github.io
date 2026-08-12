@@ -1656,11 +1656,12 @@
   .portfolio-inline-image{display:block;width:100%;margin-top:14px;padding:0;border:0;background:none;cursor:pointer;}
   .portfolio-inline-image img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.1);}
   /* ---------- STATIC PORTFOLIO BACKGROUND POLISH ---------- */
-  .tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.16),rgba(8,1,9,.42)),url("assets/portfolio-center-editorial.webp");background-size:cover;background-position:center top;background-blend-mode:multiply,normal;}
-  .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(255,214,226,.2),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;}
+  .tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.16),rgba(8,1,9,.42));background-size:cover;background-position:center top;background-blend-mode:multiply,normal;contain:paint;}
+  .tree-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;background:radial-gradient(ellipse at 50% 18%,rgba(255,214,226,.2),transparent 42%),repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 1px,transparent 1px 5px);mix-blend-mode:screen;z-index:2;}
   .tree-bg-glow{opacity:.32;animation-duration:13s;background:radial-gradient(circle,rgba(255,132,177,.3),transparent 68%);}
   .tree-bg-glow-2{opacity:.26;animation-duration:17s;background:radial-gradient(circle,rgba(230,88,144,.26),transparent 68%);}
-  @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
+  @keyframes portfolio-mobile-bg-drift{0%,100%{transform:translate3d(-1.2%,-.6%,0) scale(1.06);}50%{transform:translate3d(1.2%,.8%,0) scale(1.11);}}
+  @media (max-width:720px){.tree-bg{background-position:center top;}.tree-bg::after{content:"";position:absolute;inset:-7%;background:url("assets/portfolio-center-editorial.webp") center/cover no-repeat;transform-origin:center;animation:portfolio-mobile-bg-drift 26s ease-in-out infinite alternate;will-change:transform;z-index:0;}.tree-bg-glow,.tree-bg-glow-2{opacity:.16;}}
   html{overflow:visible;overscroll-behavior-y:auto;}
   body{overflow-x:clip;overflow-y:visible;touch-action:pan-y;overscroll-behavior-y:auto;}
   /* Final performance layer: retain the premium atmosphere, remove only nonessential animation and expensive blur work. */
@@ -1668,7 +1669,7 @@
   .particle-layer,#cursor-glow{display:none !important;}
   @media (max-width:720px){
     /* The visual layer is #tree-bg, not body: target it directly so mobile gets the center-safe composition. */
-    #tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.12),rgba(8,1,9,.38)),url('assets/portfolio-center-editorial.webp') !important;background-position:center top !important;background-size:cover !important;background-attachment:scroll !important;}
+    #tree-bg{background-image:linear-gradient(180deg,rgba(20,3,14,.12),rgba(8,1,9,.38)) !important;background-position:center top !important;background-size:cover !important;background-attachment:scroll !important;transform:none !important;}
     #tree-bg::before{opacity:.16;background:repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px) !important;}
     .hero-glass,.glass-card,.section.bento-card,.topnav,.dock{backdrop-filter:blur(10px) saturate(125%) !important;-webkit-backdrop-filter:blur(10px) saturate(125%) !important;}
   }
@@ -1682,7 +1683,7 @@
   @keyframes portfolio-bg-drift{0%{background-position:39% -1%;background-size:106% 106%;}50%{background-position:61% 4.8%;background-size:116% 116%;}100%{background-position:43% 1.8%;background-size:108% 108%;}}
   #tree-bg{animation:portfolio-bg-drift 22s ease-in-out infinite alternate;will-change:background-position,background-size;}
   @media (max-width:720px){#tree-bg{animation-duration:26s;will-change:background-position,background-size;}}
-  @media (prefers-reduced-motion:reduce){#tree-bg{animation:none !important;will-change:auto !important;}}
+  @media (prefers-reduced-motion:reduce){#tree-bg{animation:none !important;will-change:auto !important;}#tree-bg::after{animation:none !important;transform:none !important;will-change:auto !important;}}
 </style>
 </head>
 <body>
