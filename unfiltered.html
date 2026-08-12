@@ -544,6 +544,9 @@
   .media-card{min-height:230px;padding:10px 10px 30px}
   .media-card img,.media-card video{width:100%;height:clamp(210px,24vw,330px);object-fit:cover;border-radius:12px}
   .media-card:not(:has(figcaption)){padding-bottom:10px}
+  .entry-thumbnail{width:min(100%,760px);margin:18px auto 24px;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:20px;background:rgba(255,255,255,.07);box-shadow:0 18px 44px rgba(0,0,0,.24);text-align:center}
+  .entry-thumbnail img{display:block;width:100%;height:auto;max-height:620px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.12)}
+  .entry-thumbnail figcaption{margin-top:9px;color:rgba(255,255,255,.8);font-size:.95rem}
   @media(max-width:620px){.media-collage{grid-template-columns:1fr;gap:15px}.media-card{min-height:0}.media-card img,.media-card video{height:min(72vw,330px)}}
 </style>
 </head>
@@ -629,7 +632,7 @@
 
   function esc(s){return (s??'').toString().replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
   function md(s){let x=esc(s);x=x.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');const lines=x.split(/\n+/);let out='',inList=false;lines.forEach(line=>{if(/^\s*[-*]\s+/.test(line)){if(!inList){out+='<ul>';inList=true}out+='<li>'+line.replace(/^\s*[-*]\s+/,'')+'</li>';}else{if(inList){out+='</ul>';inList=false}if(line.trim())out+='<p>'+line+'</p>';}});if(inList)out+='</ul>';return '<div class="markdown-content">'+out+'</div>';}
-  function mediaItems(item){const photos=[...(item.photos||[])];if(item.photo&&item.photo.src&&!photos.some(x=>x.src===item.photo.src))photos.unshift(item.photo);const videos=(item.videos||[]).map(v=>typeof v==='string'?{src:v}:v);return photos.map(x=>({...x,type:'image'})).concat(videos.map(x=>({...x,type:'video'}))).slice(0,8);}
+  function mediaItems(item){const photos=[...(item.photos||[])];const videos=(item.videos||[]).map(v=>typeof v==='string'?{src:v}:v);return photos.map(x=>({...x,type:'image'})).concat(videos.map(x=>({...x,type:'video'}))).slice(0,8);}
   function openMediaLightbox(src,type,caption){const box=document.getElementById('uy-lightbox');if(!box)return;box.innerHTML=type==='video'?`<button class="lb-close" onclick="closeMediaLightbox()">×</button><video controls autoplay src="${esc(src)}"></video><div class="lb-caption">${esc(caption||'')}</div>`:`<button class="lb-close" onclick="closeMediaLightbox()">×</button><img src="${esc(src)}" alt="${esc(caption||'')}"><div class="lb-caption">${esc(caption||'')}</div>`;box.classList.add('show');document.body.classList.add('lb-open');}
   function closeMediaLightbox(){const box=document.getElementById('uy-lightbox');if(box){box.classList.remove('show');box.innerHTML='';}document.body.classList.remove('lb-open');}
   window.closeMediaLightbox=closeMediaLightbox;

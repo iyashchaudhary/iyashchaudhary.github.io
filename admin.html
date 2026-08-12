@@ -804,7 +804,6 @@
   function editMediaItems(e){
     const out=[];
     (e.photos||[]).forEach(x=>{if(x&&x.src)out.push({src:x.src,type:'image',caption:x.caption||''});});
-    if(e.photo&&e.photo.src&&!out.some(x=>x.src===e.photo.src)) out.unshift({src:e.photo.src,type:'image',caption:e.photo.caption||''});
     (e.videos||[]).forEach(x=>{const v=typeof x==='string'?{src:x}:x;if(v&&v.src)out.push({src:v.src,type:'video',caption:v.caption||''});});
     return out.slice(0,8);
   }
