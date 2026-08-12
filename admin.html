@@ -199,6 +199,7 @@
         <select id="edit-select"></select>
         <div class="actions" style="margin-top:12px;">
           <button class="btn" onclick="loadEntryForEdit()">Load this entry</button>
+          <button class="btn" style="background:#8b0000;border-color:#8b0000;" onclick="deleteEntryForEdit()">🗑️ Delete this entry</button>
         </div>
       </fieldset>
     </div>
@@ -772,6 +773,17 @@
   function filterEditList(){ populateEditSelect(document.getElementById('edit-search').value); }
   function clearEditSearch(){ document.getElementById('edit-search').value = ''; populateEditSelect(); }
   function loadEntryForEdit(){ loadEntryFromData(parseInt(document.getElementById('edit-select').value)); }
+  function deleteEntryForEdit(){
+    const dayNum=parseInt(document.getElementById('edit-select').value);
+    const e=(window.UNFILTERED_ENTRIES||[]).find(x=>x.day===dayNum);
+    if(!e) return alert('No entry selected.');
+    if(!confirm(`Delete Day ${String(e.day).padStart(2,'0')} — ${e.date} permanently from the live journal? A protected backup will be created first.`)) return;
+    currentMode='entry';
+    window._isDeletingExisting=true;
+    window._deleteMode=e;
+    setCmsStatus(`Ready to permanently delete Day ${e.day}. Click Publish to GitHub to confirm the protected deletion.`, 'info');
+    updatePublishButtons();
+  }
   function loadEntryFromData(dayNum){
     const e = (window.UNFILTERED_ENTRIES || []).find(x=>x.day===dayNum);
     if(!e) return alert('Not found');
@@ -877,9 +889,9 @@
     const btn = document.getElementById('btn-publish');
     btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
-      if(!window._isDeletingPort) handleGenerate();
+      if(!window._isDeletingPort && !window._isDeletingExisting) handleGenerate();
       const code = document.getElementById('output').value;
-      let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null;
+      let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null, dayToDelete = null;
       if(currentMode==='section') {
         filename = 'sections-data.js';
         const sec = document.getElementById('sec-select').value;
@@ -888,7 +900,8 @@
         filename = 'portfolio-data.js';
         const pt = document.getElementById('port-select').value;
         arrayName = pt==='journey' ? 'JOURNEY_DATA' : pt==='experience' ? 'EXPERIENCE_DATA' : pt==='skills' ? 'SKILLS_DATA' : `CREDENTIALS_DATA.${document.getElementById('p-c-folio').value}`;
-      } else if(window._isEditingExisting) dayToUpdate = window._editMode.day;
+      } else if(window._isDeletingExisting) dayToDelete = window._deleteMode.day;
+      else if(window._isEditingExisting) dayToUpdate = window._editMode.day;
 
       const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, { headers: { 'Authorization': `token ${token}` } });
       if(!res.ok) throw new Error(`Could not read ${filename} from GitHub (${res.status}). Publish cancelled.`);
@@ -903,7 +916,11 @@
       const originalHeader = headerEnd >= 0 ? content.substring(0, headerEnd).trim() : '/* Auto-updated by admin panel */';
       
       // --- SAFE EDIT: edit the live JavaScript arrays directly, then re-serialize cleanly ---
-      if(dayToUpdate !== null) {
+      if(dayToDelete !== null) {
+        const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToDelete);
+        if(idx === -1) throw new Error('Day not found in entries');
+        UNFILTERED_ENTRIES.splice(idx, 1);
+      } else if(dayToUpdate !== null) {
         const idx = UNFILTERED_ENTRIES.findIndex(x => x.day === dayToUpdate);
         if(idx === -1) throw new Error('Day not found in entries');
         UNFILTERED_ENTRIES[idx] = Object.assign({}, UNFILTERED_ENTRIES[idx], eval('(' + code + ')'));
@@ -963,7 +980,7 @@
       recordPublish({at:new Date().toISOString(), file:filename, backupUrl:backup.url, backupPath:backup.path, commitUrl:publishData.commit?.html_url || ''});
       setCmsStatus(`Published ${filename} safely. Backup created at ${backup.path}.`, 'ok');
       alert("🚀 Published successfully. A protected backup was created before the live update.");
-      window._isEditingPort = false; window._isDeletingPort = false; window._isEditingExisting = false;
+      window._isEditingPort = false; window._isDeletingPort = false; window._isEditingExisting = false; window._isDeletingExisting = false; window._deleteMode = null;
       location.href = location.pathname + '?v=' + Date.now();
     } catch (err) { setCmsStatus(err.message, 'error'); alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
