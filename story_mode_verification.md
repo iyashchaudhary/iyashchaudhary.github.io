@@ -52,3 +52,6 @@ Premium upgrade browser verification: local `index.html` rendered the new Journe
 
 
 Post-fix browser audit: all six Story Replay anchors resolve to existing sections (`#journey`, `#experience`, `#pursuing`, `#credentials`, `#skills`, `#contact`); Journey Studio rendered 4 map items, 4 focus cards, 3 learning items, and 4 proof items. At the 1280px viewport there was no horizontal document overflow. The only overflow candidates were pre-existing decorative light-beam elements, not the new studio.
+
+
+Mobile regression repair verification: the Journey Studio now has `grid-column: 1 / -1`, `width: 100%`, and `min-width: 0`. On the reloaded local page it measured as a full-width grid item (1124px at the desktop test viewport), with no horizontal document overflow and all six replay targets present.
