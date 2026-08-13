@@ -1900,7 +1900,7 @@
       <button class="ai-chip" data-q="Show my credentials">Credentials</button>
       <button class="ai-chip" data-q="What skills do I have?">Skills</button>
       <button class="ai-chip" data-q="What is the weather in Delhi today?">Weather</button>
-      <button class="ai-chip" data-q="Health update of Yash">Journal health</button>
+      <button class="ai-chip" data-q="What public journal entries are available?">Public journal</button>
     </div>
     <div class="ai-input-row">
       <input type="text" id="ai-input" class="ai-input" placeholder="Ask about Yash's journey, skills, work…" autocomplete="off" spellcheck="false" aria-label="Message">
@@ -3569,12 +3569,23 @@
       return {text:`<strong>Personal OS review</strong><br>You have completed ${done} of ${tasks.length || 0} dashboard actions today — <strong>${score}%</strong>. ${score >= 80 ? 'Strong finish. Protect the momentum.' : score >= 40 ? 'A decent start. Choose one small next action.' : 'Keep it simple: complete one meaningful action next.'}<br><small>Open <a href="personal-os.html">Personal OS</a> for goals, trends, health signals and your private local vault.</small>`,nav:null};
     }
 
+    /* ---- Public privacy boundary ---- */
+    function privateDataRefusal(rawMsg){
+      const m = String(rawMsg || '').toLowerCase();
+      const sensitive = /\b(health|wellness|sick|sleep|mood|energy|medical|fitness|workout|gym|habits?|progress|execution|discipline|personal os|dashboard|private vault|vault|unpublished|secret|personal record|health record)\b/.test(m);
+      if(!sensitive) return null;
+      return {text:'<strong>Privacy protected</strong><br>I can’t share Yash’s private health, sleep, mood, energy, habit, progress, dashboard, vault, or unpublished records with public visitors.<br><small>Public portfolio information and intentionally published public content are still available. Yash can review private Personal OS data directly on his own device.</small>',nav:null};
+    }
+
     /* ---- Core answer engine ---- */
     async function answer(rawMsg){
       const msg = rawMsg.toLowerCase();
 
       const smalltalk = smalltalkReply(rawMsg);
       if(smalltalk) return { text: smalltalk, nav:null };
+
+      const privacyRefusal = privateDataRefusal(rawMsg);
+      if(privacyRefusal) return privacyRefusal;
 
       const journal = journalSearch(rawMsg);
       if(journal) return { text: journal, nav:null };
