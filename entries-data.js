@@ -51,7 +51,24 @@ const UNFILTERED_ENTRIES = [
       src: "photos/day02-1786613221147.png",
       caption: ""
     },
-    photos: [],
+    photos: [
+      {
+        src: "media/journal-1786550320369-vebh8.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786550322032-bvms6.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786550324294-iudtt.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786550325632-sfqk3.webp",
+        caption: ""
+      }
+    ],
     discipline: 16,
     videos: [],
     mediaCaption: ""

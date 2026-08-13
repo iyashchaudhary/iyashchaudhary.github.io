@@ -30,3 +30,16 @@ Commit and push the verified changes to the configured GitHub Pages repository a
 - Mobile rail obstruction: avoided by breakpoint.
 - Scroll progress: live and rAF-throttled.
 - Chapter navigation: live active state and anchor links.
+
+
+## Journal media repair audit — 13 August 2026
+
+The latest `entries-data.js` update had replaced Day 02's four scrapbook records with `photos: []`, while the four media files were still present in `media/`. The last-good backup confirmed the exact records and paths. Day 02 now retains the newer full-size thumbnail `photos/day02-1786613221147.png` and restores these scrapbook files: `media/journal-1786550320369-vebh8.webp`, `media/journal-1786550322032-bvms6.webp`, `media/journal-1786550324294-iudtt.webp`, and `media/journal-1786550325632-sfqk3.webp`.
+
+A local browser check of `unfiltered.html` confirmed that the Day 02 thumbnail and all four scrapbook images are present in extracted page content and rendered visually. All 11 referenced journal media paths currently exist locally, and the journal's inline JavaScript passes Node syntax validation. The browser console reported no errors.
+
+
+A direct browser image audit initially showed the four scrapbook images as incomplete while the thumbnail decoded. HTTP checks returned 200 with `image/webp` for all four files. After one viewport scroll, the scrapbook wall was still below the visible viewport, so this is being treated as a lazy-loading/viewport verification issue first; the next check will inspect image bounds and force-load behavior before changing rendering code.
+
+
+After scrolling to the scrapbook wall, the browser rendered all four Day 02 photos. The final direct asset audit reported `broken: []`; all four images were complete with natural widths of 960px, 960px, 1080px, and 873px. The images are intentionally lazy-loaded for performance and decode correctly when the section enters the viewport.
