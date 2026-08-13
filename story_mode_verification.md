@@ -55,3 +55,6 @@ Post-fix browser audit: all six Story Replay anchors resolve to existing section
 
 
 Mobile regression repair verification: the Journey Studio now has `grid-column: 1 / -1`, `width: 100%`, and `min-width: 0`. On the reloaded local page it measured as a full-width grid item (1124px at the desktop test viewport), with no horizontal document overflow and all six replay targets present.
+
+
+Final phone-width verification: a fresh Chromium render at 390x844 loaded the corrected page successfully. The mobile header and hero card are full-width and readable; the temporary screenshot was removed after verification. Final repair commit: `95a6751 Fix mobile journey studio width`.
