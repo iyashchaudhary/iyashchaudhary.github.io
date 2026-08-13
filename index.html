@@ -1272,16 +1272,16 @@
   }
 
   .ai-panel{
-    position:fixed; right:24px; bottom:96px; z-index:81;
-    width:380px; max-width:calc(100vw - 32px); height:min(560px, 74vh);
+    position:fixed; inset:16px; z-index:81;
+    width:auto; max-width:none; height:auto;
     display:flex; flex-direction:column; overflow:hidden;
-    border-radius:22px; border:1px solid color-mix(in srgb, var(--line) 85%, transparent);
+    border-radius:24px; border:1px solid color-mix(in srgb, var(--line) 85%, transparent);
     background:color-mix(in srgb, var(--card) 86%, transparent);
     box-shadow:0 30px 80px -20px rgba(110,17,53,0.4), 0 6px 20px rgba(110,17,53,0.12), inset 0 1px 0 var(--glass-hl);
     backdrop-filter:blur(28px) saturate(180%);
     -webkit-backdrop-filter:blur(28px) saturate(180%);
-    transform:scale(.9) translateY(26px); opacity:0; pointer-events:none;
-    transform-origin:bottom right;
+    transform:scale(.96) translateY(14px); opacity:0; pointer-events:none;
+    transform-origin:center;
   }
   .ai-panel.ai-open{ pointer-events:auto; }
   html[data-theme="dark"] .ai-panel, html[data-theme="evening"] .ai-panel{
@@ -1289,8 +1289,9 @@
     box-shadow:0 30px 80px -16px rgba(0,0,0,0.65), inset 0 1px 0 var(--glass-hl);
   }
   @media (max-width:720px){
-    .ai-panel{ right:14px; left:14px; width:auto; bottom:calc(140px + env(safe-area-inset-bottom,0px)); height:min(58vh, 480px); }
+    .ai-panel{ inset:max(8px, env(safe-area-inset-top,0px)) max(8px, env(safe-area-inset-right,0px)) max(8px, env(safe-area-inset-bottom,0px)) max(8px, env(safe-area-inset-left,0px)); border-radius:20px; }
   }
+  body.ai-panel-lock{overflow:hidden;}
 
   .ai-header{
     display:flex; align-items:center; gap:10px; padding:14px 16px;
@@ -1355,7 +1356,7 @@
   .ai-typing-dot:nth-child(3){ animation-delay:.3s; }
   @keyframes ai-typing-bounce{ 0%,60%,100%{ transform:translateY(0); opacity:.5; } 30%{ transform:translateY(-4px); opacity:1; } }
 
-  .ai-suggestions{ display:flex; flex-wrap:wrap; gap:7px; padding:0 16px 12px; flex:0 0 auto; }
+  .ai-suggestions{ display:flex; flex-wrap:wrap; gap:7px; padding:0 16px 12px; flex:0 0 auto; max-height:58px; overflow:hidden; }
   .ai-chip{
     padding:7px 12px; border-radius:20px; border:1px solid var(--line); background:var(--bg);
     color:var(--text); font-size:12px; font-weight:500; cursor:pointer; white-space:nowrap;
@@ -1895,14 +1896,11 @@
     </div>
     <div class="ai-messages" id="ai-messages"></div>
     <div class="ai-suggestions" id="ai-suggestions">
-      <button class="ai-chip" data-q="Tell me about Yash">Tell me about Yash</button>
-      <button class="ai-chip" data-q="Show my credentials">Show my credentials</button>
-      <button class="ai-chip" data-q="What skills do I have?">What skills do I have?</button>
-      <button class="ai-chip" data-q="Contact information">Contact information</button>
-      <button class="ai-chip" data-q="What is the date and time right now?">Date & time</button>
+      <button class="ai-chip" data-q="Tell me about Yash">About Yash</button>
+      <button class="ai-chip" data-q="Show my credentials">Credentials</button>
+      <button class="ai-chip" data-q="What skills do I have?">Skills</button>
       <button class="ai-chip" data-q="What is the weather in Delhi today?">Weather</button>
-      <button class="ai-chip" data-q="Search my journal for health, routine and study">Journal copilot</button>
-      <button class="ai-chip" data-q="Show me current news about technology">News & updates</button>
+      <button class="ai-chip" data-q="Health update of Yash">Journal health</button>
     </div>
     <div class="ai-input-row">
       <input type="text" id="ai-input" class="ai-input" placeholder="Ask about Yash's journey, skills, work…" autocomplete="off" spellcheck="false" aria-label="Message">
@@ -3289,7 +3287,7 @@
     const clean = s => (s || '').replace(/\s+/g, ' ').trim();
 
     /* ---- Local Journal Copilot: deterministic retrieval without an API key ---- */
-    const JOURNAL_STOP = new Set('the a an and or but for to of in on at is was were be been this that my me i we you he she it with from about what did do today yesterday tell show find search'.split(' '));
+    const JOURNAL_STOP = new Set('the a an and or but for to of in on at is was were be been this that my me i we you he she it with from about what did do today yesterday tell show find search update of yash his her please'.split(' '));
     function journalWords(text){
       return clean(String(text || '').toLowerCase()).replace(/[^a-z0-9%\s-]/g, ' ').split(/\s+/).map(w => w.replace(/(ing|ed|es|s)$/, '')).filter(w => w.length > 2 && !JOURNAL_STOP.has(w));
     }
@@ -3301,32 +3299,49 @@
       guesses.forEach(([needle, label]) => { if(text.includes(needle) && !out.includes(label)) out.push(label); });
       return [...new Set(out)].slice(0, 10);
     }
+    function journalIntent(raw){
+      const lower = String(raw || '').toLowerCase();
+      const day = lower.match(/\bday\s*0?(\d+)\b/);
+      const topicMap = {
+        health: ['health','wellness','sick','better','energy'], study: ['study','studies','academic','padhai','exam','college'],
+        routine: ['routine','schedule','discipline','productivity'], sleep: ['sleep','woke','wake'], fitness: ['fitness','workout','gym'],
+        automation: ['automation','n8n'], website: ['website','portfolio']
+      };
+      const topics = Object.entries(topicMap).filter(([, words]) => words.some(w => lower.includes(w))).map(([key]) => key);
+      const explicitlyJournal = /\b(journal|diary|entry|entries|update|progress|mentioned|wrote|what happened|what did)\b/.test(lower) || topics.length > 0;
+      return {day: day ? Number(day[1]) : null, topics, explicitlyJournal};
+    }
+    function journalFocusSentence(entry, topics){
+      const raw = clean(entry.journal || '');
+      if(!topics.length) return raw.length > 280 ? raw.slice(0, 280) + '…' : raw;
+      const words = topics.flatMap(topic => ({health:['health','better','energy','feeling'],study:['study','academic','college','exam'],routine:['routine','schedule','productive'],sleep:['sleep','woke','wake'],fitness:['fitness','workout','gym'],automation:['automation','n8n'],website:['website','portfolio']}[topic] || [topic]));
+      const sentences = raw.split(/(?<=[.!?])\s+/).filter(Boolean);
+      const matched = sentences.filter(sentence => words.some(word => sentence.toLowerCase().includes(word)));
+      const chosen = (matched.length ? matched.slice(0, 2) : sentences.slice(0, 1)).join(' ');
+      return chosen.length > 320 ? chosen.slice(0, 320) + '…' : chosen;
+    }
     function journalSearch(raw){
       const entries = Array.isArray(window.UNFILTERED_ENTRIES) ? window.UNFILTERED_ENTRIES : [];
       if(!entries.length) return null;
-      const msg = String(raw || '');
-      const lower = msg.toLowerCase();
-      const intent = /\b(journal|diary|entry|entries|day\s*\d|routine|progress|what did|what happened|when did|have i|search my|in my|health|study|college|sleep|workout|automation|website)\b/.test(lower);
-      const query = journalWords(msg);
-      if(!intent && query.length < 1) return null;
-      const ranked = entries.map(e => {
-        const text = journalWords([e.journal || '', journalTags(e).join(' '), (e.photos || []).map(x => x.caption || '').join(' ')].join(' '));
-        const set = new Set(text);
-        let score = 0;
-        query.forEach(w => { if(set.has(w)) score += 2; else if(text.some(t => t.includes(w) || w.includes(t))) score += .7; });
-        query.forEach(w => { if((e.journal || '').toLowerCase().includes(w)) score += 1.5; });
-        const dayMatch = msg.match(/day\s*0?(\d+)/i);
-        if(dayMatch && e.day === Number(dayMatch[1])) score += 12;
+      const intent = journalIntent(raw);
+      if(!intent.explicitlyJournal) return null;
+      const query = journalWords(raw);
+      let candidates = intent.day ? entries.filter(e => e.day === intent.day) : entries.slice();
+      if(intent.day && !candidates.length) return `<strong>Journal copilot</strong><br>I could not find Day ${String(intent.day).padStart(2,'0')} in the local journal.<br><small>Search ran locally; no journal text was sent anywhere.</small>`;
+      const ranked = candidates.map(e => {
+        const tags = journalTags(e);
+        const hay = journalWords([e.journal || '', tags.join(' ')].join(' '));
+        let score = intent.day ? 20 : 0;
+        intent.topics.forEach(topic => { if(tags.includes(topic)) score += 8; });
+        query.forEach(word => { if(hay.includes(word)) score += 1; });
         return {e, score};
-      }).filter(x => x.score > 0).sort((a,b) => b.score - a.score || b.e.day - a.e.day).slice(0, 3);
-      if(!ranked.length) return '<strong>Journal copilot</strong><br>I could not find a matching day in the local journal. Try a topic such as <em>study</em>, <em>health</em>, <em>routine</em>, or ask for <em>Day 01</em>.<br><small>Search ran locally; no journal text was sent anywhere.</small>';
-      const rows = ranked.map(({e}) => {
-        const rawText = clean(e.journal || '');
-        const excerpt = rawText.length > 250 ? rawText.slice(0, 250) + '…' : rawText;
-        const tags = journalTags(e).map(t => '#' + aiEsc(t)).join(' ');
-        return `<div style="margin:9px 0;padding:9px 10px;border-left:2px solid #E2557B;background:rgba(226,85,123,.06)"><strong>Day ${String(e.day).padStart(2,'0')} · ${aiEsc(e.date || '')}</strong><br>${aiEsc(excerpt)}${tags ? `<br><small style="opacity:.75">${tags}</small>` : ''}</div>`;
-      }).join('');
-      return `<strong>Journal copilot</strong><br>Here are the closest local journal memories for “${aiEsc(msg)}”:${rows}<small>Retrieved from Yash’s journal on this device. I only quote matching entries and do not send them to a third-party service.</small>`;
+      }).sort((a,b) => b.score - a.score || b.e.day - a.e.day);
+      const hit = ranked[0];
+      if(!hit || (!intent.day && hit.score < 1)) return '<strong>Journal copilot</strong><br>I do not have a clear matching journal fact for that question. Try asking for a specific day, such as <em>health update of Day 02</em>.<br><small>Search ran locally; no journal text was sent anywhere.</small>';
+      const {e} = hit;
+      const topicText = intent.topics.length ? intent.topics.join(' and ') : 'journal';
+      const answer = journalFocusSentence(e, intent.topics);
+      return `<strong>Journal copilot</strong><br>In <strong>Day ${String(e.day).padStart(2,'0')}</strong> (${aiEsc(e.date || '')}), Yash mentioned ${aiEsc(topicText)}: “${aiEsc(answer)}”<small>One matching day only. Retrieved locally from Yash’s journal.</small>`;
     }
 
     /* ---- Live content readers (always reflect current DOM) ---- */
@@ -3653,13 +3668,14 @@
     }
 
     function applyPanelVisual(v){
-      panel.style.transform = `scale(${(0.9 + 0.1 * v).toFixed(4)}) translateY(${(26 * (1 - v)).toFixed(2)}px)`;
+      panel.style.transform = `scale(${(0.96 + 0.04 * v).toFixed(4)}) translateY(${(14 * (1 - v)).toFixed(2)}px)`;
       panel.style.opacity = v;
     }
     function openPanel(){
       isOpen = true;
       hideNudge();
       panel.classList.add('ai-open');
+      document.body.classList.add('ai-panel-lock');
       panel.setAttribute('aria-hidden','false');
       panel.removeAttribute('inert');
       orb.classList.add('ai-active');
@@ -3675,6 +3691,7 @@
       isOpen = false;
       panel.setAttribute('aria-hidden','true');
       panel.setAttribute('inert','');
+      document.body.classList.remove('ai-panel-lock');
       orb.classList.remove('ai-active');
       orb.setAttribute('aria-expanded','false');
       if(speechSupported) speechSynthesis.cancel();

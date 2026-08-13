@@ -757,72 +757,48 @@
     return out.slice(0,12);
   }
   function allArchiveTags(){ return [...new Set(entries.flatMap(inferredTags))].sort(); }
-  function renderArchive(filterText, tagFilter){
-    const f = (filterText || '').trim().toLowerCase();
-    const tag = (tagFilter || '').trim().toLowerCase();
-    const list = entries.filter(e=>{
-      const tags = inferredTags(e);
-      const hay = ['DAY '+String(e.day).padStart(2,'0'), monthOf(e.date), e.weekday||'', e.journal||'', tags.join(' '), (e.photos||[]).map(x=>x.caption||'').join(' '), e.mediaCaption||'', e.photo && e.photo.caption || ''].join(' ').toLowerCase();
-      return (!f || hay.includes(f)) && (!tag || tags.includes(tag));
-    });
-
-    let body = '<div class="sec-head"><div class="day-num">⊞ All Entries</div><p>Every day in one place — search the full journal or filter it by topic.</p></div>';
-    body += '<div class="archive-toolbar"><input id="archive-q" type="search" placeholder="Search days, topics, captions…" value="' + esc(filterText) + '"><select id="archive-tag" aria-label="Filter by journal tag"><option value="">All topics</option>' + allArchiveTags().map(t=>'<option value="'+esc(t)+'"'+(t===tag?' selected':'')+'>'+esc(t[0].toUpperCase()+t.slice(1))+'</option>').join('') + '</select></div>';
-    body += '<div class="archive-tags"><button class="archive-tag '+(!tag?'active':'')+'" type="button" data-tag="">All</button>' + allArchiveTags().map(t=>'<button class="archive-tag '+(t===tag?'active':'')+'" type="button" data-tag="'+esc(t)+'">#'+esc(t)+'</button>').join('') + '</div>';
-
+  function archiveDayMatch(value, entry){
+    const q = String(value || '').trim().toLowerCase();
+    if(!q) return true;
+    const day = q.match(/\bday\s*0?(\d+)\b/) || q.match(/^0?(\d+)$/);
+    if(day) return entry.day === Number(day[1]);
+    const compact = q.replace(/[/.]/g,'-');
+    if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(compact)) return entry.date === compact.split('-').map((x,i)=>i===1?x.padStart(2,'0'):i===2?x.padStart(2,'0'):x).join('-');
+    const dateText = new Date(entry.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}).toLowerCase();
+    return dateText.includes(q) || String(entry.date || '').includes(q);
+  }
+  function renderArchive(filterText){
+    const f = (filterText || '').trim();
+    const list = entries.filter(e => archiveDayMatch(f, e));
+    let body = '<div class="sec-head"><div class="day-num">⊞ All Entries</div><p>Search only by a journal date or day number.</p></div>';
+    body += '<div class="archive-toolbar"><input id="archive-q" type="search" placeholder="Search by date (YYYY-MM-DD) or Day 01" value="' + esc(filterText) + '"></div>';
     if(!list.length){
-      body += '<div class="empty-state"><div class="big">No days found</div>Nothing matches “' + esc(filterText) + '” yet.</div>';
-      dayContent.innerHTML = body;
-      wireSearch();
-      return;
+      body += '<div class="empty-state"><div class="big">No day found</div>Use a date like <strong>2026-08-12</strong> or a day like <strong>Day 02</strong>.</div>';
+      dayContent.innerHTML = body; wireSearch(); return;
     }
-
-    // group by year → month
     const groups = {};
-    list.forEach(e=>{
-      const d = new Date(e.date);
-      const yk = d.getFullYear();
-      const mk = d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-      (groups[yk] = groups[yk] || {})[mk] = groups[yk][mk] || [];
-      groups[yk][mk].push(e);
-    });
-
+    list.forEach(e=>{ const d=new Date(e.date); const y=d.getFullYear(); const m=d.toLocaleDateString('en-US',{month:'long',year:'numeric'}); (groups[y]=groups[y]||{})[m]=(groups[y][m]||[]).concat(e); });
     Object.keys(groups).sort().forEach(y=>{
       body += '<div class="arch-year">' + y + '</div>';
       Object.keys(groups[y]).forEach(m=>{
         body += '<div class="arch-month">' + m + '</div><div class="arch-grid">';
         groups[y][m].forEach(e=>{
-          const snip = e.journal ? e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean)[0].slice(0,90) : '';
-          const hasMedia = mediaItems(e).length>0;
+          const snip=e.journal?e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean)[0].slice(0,90):'';
+          const hasMedia=mediaItems(e).length>0;
           body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasMedia?'<span class="ad-video">▣</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="entry-tags">'+inferredTags(e).map(t=>'<span class="entry-tag">#'+esc(t)+'</span>').join('')+'</div><div class="ad-actions"><button data-go="'+e.day+'">Open day →</button></div></div>';
         });
         body += '</div>';
       });
     });
-    dayContent.innerHTML = body;
-    wireSearch();
-    dayContent.querySelectorAll('.ad-actions button[data-go]').forEach(b=>{
-      b.addEventListener('click', ()=>{
-        currentDay = parseInt(b.dataset.go,10);
-        setActiveNav('daily');
-        document.getElementById('uy-ribbon').textContent = 'Daily Life';
-        const entry = entries.find(x=>x.day===currentDay);
-        renderDay(entry);
-        topDate.textContent = entry ? monthOf(entry.date) + (entry.weekday?', '+entry.weekday:'') : '— — —';
-        renderStrip();
-      });
-    });
+    dayContent.innerHTML=body; wireSearch();
+    dayContent.querySelectorAll('.ad-actions button[data-go]').forEach(b=>b.addEventListener('click',()=>{currentDay=parseInt(b.dataset.go,10);setActiveNav('daily');document.getElementById('uy-ribbon').textContent='Daily Life';const entry=entries.find(x=>x.day===currentDay);renderDay(entry);topDate.textContent=entry?monthOf(entry.date)+(entry.weekday?', '+entry.weekday:''):'— — —';renderStrip();}));
   }
+
   function wireSearch(){
-    const q = dayContent.querySelector('#archive-q'), tag = dayContent.querySelector('#archive-tag');
-    if(!q) return;
-    const rerender = ()=>renderArchive(q.value, tag?.value||'');
-    q.addEventListener('input', rerender);
-    tag?.addEventListener('change', rerender);
-    dayContent.querySelectorAll('[data-tag]').forEach(b=>b.addEventListener('click', ()=>renderArchive(q.value, b.dataset.tag||'')));
-    q.focus();
+    const q=dayContent.querySelector('#archive-q'); if(!q)return;
+    q.addEventListener('input',()=>renderArchive(q.value)); q.focus();
   }
-  document.getElementById('btn-all').addEventListener('click', ()=> renderArchive('', ''));
+  document.getElementById('btn-all').addEventListener('click',()=>renderArchive(''));
 
   window.editEntryPrompt = function(day) {
     const pass = prompt("Enter passcode to edit:");
