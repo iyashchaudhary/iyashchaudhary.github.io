@@ -95,6 +95,9 @@
     .edit-media-item{position:relative;padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.05)}
     .edit-media-item img,.edit-media-item video{display:block;width:100%;height:130px;object-fit:cover;border-radius:10px;background:#120b16}
     .edit-media-item input{margin-top:8px;width:100%}
+    .edit-thumb-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+    .edit-thumb-wrap img{display:block;max-width:240px;max-height:180px;width:auto;height:auto;object-fit:contain;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:#120b16}
+    .edit-thumb-meta{font:500 .72rem/1.4 'IBM Plex Mono',monospace;color:var(--dim);word-break:break-all}
     .edit-media-remove{margin-top:8px;width:100%;background:#6e1730!important;border-color:#a43a58!important}
     @media(max-width:620px){.edit-media-list{grid-template-columns:repeat(2,minmax(0,1fr))}.edit-media-item img,.edit-media-item video{height:112px}}
 </style>
@@ -188,7 +191,7 @@
         <div class="upload-status" id="f-media-status"></div>
         <div class="media-pick-list" id="f-media-list"></div>
         <label>Short videos</label>
-        <input type="file" id="f-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'entry-video')">
+        <input type="file" id="f-video-file" accept="video/*" multiple onchange="onJournalVideoPicked(this, 'entry-video')">
         <div class="hint">You can add short MP4/WebM videos up to 60 MB each. Total gallery items are capped at 8.</div>
         <div class="upload-status" id="f-video-status"></div>
       </fieldset>
@@ -226,13 +229,28 @@
           <input type="number" id="e-discipline" min="0" max="100" step="1" value="0">
         </fieldset>
         <fieldset>
+          <legend>Entry thumbnail photo</legend>
+          <div class="hint">This is the single full-size photo shown above the journal text. It stays separate from the scrapbook gallery.</div>
+          <div class="edit-thumb-wrap" id="e-thumb-wrap" style="display:none;">
+            <img id="e-thumb-preview" alt="Current entry thumbnail">
+            <div class="edit-thumb-meta" id="e-thumb-meta"></div>
+          </div>
+          <div class="actions" style="margin-top:10px;">
+            <label class="btn" style="display:inline-flex;align-items:center;gap:8px;margin:0;cursor:pointer;">Replace thumbnail photo
+              <input type="file" id="e-thumb-file" accept="image/*" onchange="onEditThumbnailPicked(this)" style="display:none;">
+            </label>
+            <button class="btn" type="button" onclick="removeEditThumbnail()">Remove thumbnail</button>
+          </div>
+          <div class="upload-status" id="e-thumb-status"></div>
+        </fieldset>
+        <fieldset>
           <legend>Scrapbook media</legend>
           <div class="hint">Captions are optional. Remove any item with its own button, or add new photos/videos below.</div>
           <div class="edit-media-list" id="e-media-list"></div>
           <label class="first">Add photos</label>
           <input type="file" id="e-media-images" accept="image/*" multiple onchange="onEditMediaPicked(this, 'image')">
           <label> add short videos</label>
-          <input type="file" id="e-media-videos" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onEditMediaPicked(this, 'video')">
+          <input type="file" id="e-media-videos" accept="video/*" multiple onchange="onEditMediaPicked(this, 'video')">
           <div class="hint">Videos can be up to 60 MB each.</div>
           <div class="upload-status" id="e-media-status"></div>
         </fieldset>
@@ -307,7 +325,7 @@
           <div class="upload-status" id="s-media-status"></div>
           <div class="media-pick-list" id="s-media-list"></div>
           <label>Short videos</label>
-          <input type="file" id="s-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'section-video')">
+          <input type="file" id="s-video-file" accept="video/*" multiple onchange="onJournalVideoPicked(this, 'section-video')">
           <div class="hint">Total photos + videos are capped at 8 for this card.</div>
           <div class="upload-status" id="s-video-status"></div>
         </fieldset>
@@ -646,8 +664,14 @@
   const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': [], 'section-video': [] };
   function fileToDataUrl(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
   function mediaStatus(kind, text, cls=''){ const id = kind.startsWith('entry') ? (kind==='entry-images'?'f-media-status':'f-video-status') : (kind==='section-images'?'s-media-status':'s-video-status'); const el=document.getElementById(id); if(el){el.className='upload-status '+cls;el.textContent=text;} }
-  function mediaList(kind){ return document.getElementById(kind==='entry-images'?'f-media-list':'s-media-list'); }
-  function renderPickedMedia(kind){ const list=mediaList(kind); if(!list)return; list.innerHTML=(uploadedJournalMedia[kind]||[]).map((x,i)=>`<div class="media-pick">${x.data&&x.data.startsWith('data:image')?`<img src="${x.data}" alt="">`:''}<span>${x.name||x.src}</span><input type="text" placeholder="Caption (optional)" value="${esc(x.caption||'')}" data-caption="${i}"><button type="button" class="btn" data-remove-media="${i}">Remove</button></div>`).join(''); list.querySelectorAll('[data-caption]').forEach(el=>el.addEventListener('input',e=>{uploadedJournalMedia[kind][Number(e.target.dataset.caption)].caption=e.target.value;})); list.querySelectorAll('[data-remove-media]').forEach(el=>el.addEventListener('click',e=>{uploadedJournalMedia[kind].splice(Number(e.target.dataset.removeMedia),1);renderPickedMedia(kind);})); }
+  function mediaList(kind){ return document.getElementById(kind.startsWith('entry')?'f-media-list':'s-media-list'); }
+  function renderPickedMedia(kind){
+    const prefix=kind.startsWith('entry')?'entry':'section', list=mediaList(kind); if(!list)return;
+    const all=[...(uploadedJournalMedia[prefix+'-images']||[]).map((x,i)=>({...x,_kind:prefix+'-images',_index:i,_type:'image'})), ...(uploadedJournalMedia[prefix+'-video']||[]).map((x,i)=>({...x,_kind:prefix+'-video',_index:i,_type:'video'}))];
+    list.innerHTML=all.map(x=>`<div class="media-pick">${x._type==='video' && x.data?`<video controls muted preload="metadata" src="${esc(x.data)}" style="width:100%;height:82px;object-fit:cover;border-radius:7px;margin-bottom:5px;"></video>`:x.data&&x.data.startsWith('data:image')?`<img src="${esc(x.data)}" alt="">`:''}<span>${esc(x.name||x.src)}${x._type==='video'?' · video':''}</span><input type="text" placeholder="Caption (optional)" value="${esc(x.caption||'')}" data-caption-kind="${x._kind}" data-caption-index="${x._index}"><button type="button" class="btn" data-remove-kind="${x._kind}" data-remove-index="${x._index}">Remove</button></div>`).join('');
+    list.querySelectorAll('[data-caption-kind]').forEach(el=>el.addEventListener('input',e=>{uploadedJournalMedia[e.target.dataset.captionKind][Number(e.target.dataset.captionIndex)].caption=e.target.value;}));
+    list.querySelectorAll('[data-remove-kind]').forEach(el=>el.addEventListener('click',e=>{uploadedJournalMedia[e.target.dataset.removeKind].splice(Number(e.target.dataset.removeIndex),1);renderPickedMedia(kind);}));
+  }
   function galleryCount(prefix){return uploadedJournalMedia[prefix+'-images'].length+uploadedJournalMedia[prefix+'-video'].length;}
   async function onJournalMediaPicked(input, kind){
     const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return;
@@ -656,7 +680,23 @@
     try{ for(const file of files){ const data=await compressImage(file); const ext=file.type==='image/png'?'png':'webp'; const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); const token=getGithubToken(); if(token){ for(const x of uploadedJournalMedia[kind]) await uploadImageToGitHub(token,x.src,x.data); mediaStatus(kind,'✅ Photos uploaded to GitHub','ok'); } else mediaStatus(kind,'Photos ready. Add the GitHub token before publishing.'); }
     catch(e){ mediaStatus(kind,'❌ '+e.message,'err'); } finally { input.value=''; }
   }
-  async function onJournalVideoPicked(input, kind){ const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return; if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ for(const file of files){ if(file.size>60*1024*1024) throw new Error(`${file.name} is over 60 MB.`); const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; const token=getGithubToken(); if(token) await uploadImageToGitHub(token,filename,data); uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); mediaStatus(kind,getGithubToken()?'✅ Videos uploaded to GitHub':'Videos ready. Add the GitHub token before publishing.','ok'); }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
+  async function onJournalVideoPicked(input, kind){
+    const prefix=kind.startsWith('entry')?'entry':'section', files=[...(input.files||[])], room=Math.max(0,8-galleryCount(prefix));
+    if(!files.length)return; if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;}
+    mediaStatus(kind,'Preparing video preview…');
+    try{
+      for(const file of files){
+        if(!file.type || !file.type.startsWith('video/')) throw new Error(`${file.name} is not a supported video file.`);
+        if(file.size>60*1024*1024) throw new Error(`${file.name} is over 60 MB.`);
+        const data=await fileToDataUrl(file), ext=(file.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4';
+        const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`, token=getGithubToken();
+        if(token){mediaStatus(kind,`Uploading ${file.name}…`);await uploadImageToGitHub(token,filename,data);}
+        uploadedJournalMedia[kind].push({src:filename,name:file.name,data,type:'video',uploaded:!!token});
+      }
+      renderPickedMedia(kind); mediaStatus(kind,getGithubToken()?'✅ Videos uploaded and previewed':'Videos ready. Add the GitHub token before publishing.','ok');
+    }catch(e){mediaStatus(kind,'❌ Video upload failed: '+e.message,'err');}
+    finally{input.value='';}
+  }
   function mediaObjectArray(kind){ return (uploadedJournalMedia[kind]||[]).filter(x=>x&&x.src).map(x=>({src:x.src,caption:x.caption||''})); }
   function journalMediaFields(prefix){ const imageKind=prefix==='entry'?'entry-images':'section-images'; const videoKind=prefix==='entry'?'entry-video':'section-video'; return {photos:mediaObjectArray(imageKind),videos:mediaObjectArray(videoKind)}; }
 
@@ -856,6 +896,21 @@
     }catch(e){status.className='upload-status err';status.textContent='❌ '+e.message;}
     finally{input.value='';}
   }
+  window._editThumbnail={src:'',caption:'',data:'',uploaded:false,removed:false};
+  function renderEditThumbnail(){
+    const s=window._editThumbnail||{}, wrap=document.getElementById('e-thumb-wrap'), img=document.getElementById('e-thumb-preview'), meta=document.getElementById('e-thumb-meta'); if(!wrap||!img)return;
+    const src=s.data||s.src||''; if(src && !s.removed){img.src=src.startsWith('data:')?src:resolveMediaSrc(src); meta.textContent=s.src||'New thumbnail preview'; wrap.style.display='flex';} else {img.removeAttribute('src'); meta.textContent='No thumbnail selected'; wrap.style.display='none';}
+  }
+  async function onEditThumbnailPicked(input){
+    const file=input.files&&input.files[0]; if(!file)return; const status=document.getElementById('e-thumb-status'); status.className='upload-status'; status.textContent='Preparing thumbnail…';
+    try{
+      const data=await compressImage(file), ext=file.type==='image/png'?'png':'webp', filename=`photos/day${String(document.getElementById('e-day').value||'').padStart(2,'0')}-${Date.now()}.${ext}`, token=getGithubToken();
+      if(token){status.textContent='Uploading thumbnail…';await uploadImageToGitHub(token,filename,data);}
+      window._editThumbnail={src:filename,caption:(window._editThumbnail?.caption||''),data,uploaded:!!token,removed:false}; renderEditThumbnail(); status.className='upload-status ok'; status.textContent=token?'✅ Thumbnail uploaded and ready':'Thumbnail ready. Add the GitHub token before publishing.';
+    }catch(e){status.className='upload-status err';status.textContent='❌ Thumbnail upload failed: '+e.message;} finally{input.value='';}
+  }
+  function removeEditThumbnail(){window._editThumbnail={src:'',caption:'',data:'',uploaded:false,removed:true};renderEditThumbnail();const s=document.getElementById('e-thumb-status');if(s){s.className='upload-status';s.textContent='Thumbnail removed from this draft. Click Publish to save the removal.';}}
+
   function loadEntryForEdit(){
     const dayNum=parseInt(document.getElementById('edit-select').value); loadEntryFromData(dayNum);
   }
@@ -864,10 +919,10 @@
     document.getElementById('edit-entry-form').style.display='block';
     document.getElementById('e-day').value=e.day||''; document.getElementById('e-date').value=e.date||'';
     document.getElementById('e-journal').value=e.journal||''; document.getElementById('e-discipline').value=e.discipline??e.dailyDiscipline??0;
-    window._editMode=e; window._isEditingExisting=true; window._editMedia=editMediaItems(e); renderEditMedia();
+    window._editMode=e; window._isEditingExisting=true; window._editMedia=editMediaItems(e); const thumb=e.photo&&typeof e.photo==='object'?e.photo:null; window._editThumbnail={src:thumb?.src||'',caption:thumb?.caption||'',data:'',uploaded:true,removed:!thumb}; renderEditThumbnail(); renderEditMedia();
     currentMode='entry'; setCmsStatus(`Editing Day ${e.day} in this tab. Changes are local until you publish.`, 'info'); updatePublishButtons();
   }
-  function cancelEditEntry(){window._isEditingExisting=false;window._editMode=null;window._editMedia=[];document.getElementById('edit-entry-form').style.display='none';setCmsStatus('Past-entry edit cancelled.','info');}
+  function cancelEditEntry(){window._isEditingExisting=false;window._editMode=null;window._editMedia=[];window._editThumbnail={src:'',caption:'',data:'',uploaded:false,removed:false};document.getElementById('edit-entry-form').style.display='none';setCmsStatus('Past-entry edit cancelled.','info');}
   function deleteEntryForEdit(){
     const dayNum=parseInt(document.getElementById('edit-select').value), e=(window.UNFILTERED_ENTRIES||[]).find(x=>x.day===dayNum); if(!e)return alert('No entry selected.');
     if(!confirm(`Delete Day ${String(e.day).padStart(2,'0')} — ${e.date} permanently? A protected backup will be created first.`))return;
@@ -879,7 +934,7 @@
     const date=document.getElementById('e-date').value||window._editMode.date||'';
     const media=(window._editMedia||[]).filter(m=>m&&m.src).map(m=>({src:m.src,caption:(m.caption||'').trim()}));
     const photos=media.filter(m=>m.type==='image'), videos=media.filter(m=>m.type==='video');
-    const legacyPhoto=window._editMode.photo&&window._editMode.photo.src?{src:window._editMode.photo.src,caption:window._editMode.photo.caption||''}:null;
+    const thumb=window._editThumbnail||{}, legacyPhoto=thumb.removed?null:(thumb.src?{src:thumb.src,caption:thumb.caption||''}:null);
     window._editPayload={day,date,journal:document.getElementById('e-journal').value,discipline:Math.max(0,Math.min(100,parseInt(document.getElementById('e-discipline').value)||0)),photo:legacyPhoto,photos,videos,mediaCaption:''};
     // Keep the existing publish pipeline, but make it consume the in-place editor payload.
     document.getElementById('output').value=JSON.stringify(window._editPayload,null,2);
@@ -1006,12 +1061,29 @@
     const md=data.slice().sort((a,b)=>(a.day||0)-(b.day||0)).map(e=>`# Day ${String(e.day||'').padStart(2,'0')} — ${e.date||''}\n\n${e.journal||''}\n\n**Daily discipline:** ${e.discipline??e.dailyDiscipline??0}%\n\n${Array.isArray(e.tags)&&e.tags.length?'**Tags:** '+e.tags.map(t=>'#'+t).join(' ')+'\n\n':''}---`).join('\n\n');
     downloadText('unfiltered-yash-journal.md',md+'\n','text/markdown');
   }
+  async function uploadPendingJournalAssets(token){
+    const buckets=Object.values(uploadedJournalMedia||{}).flat();
+    for(const asset of buckets){
+      if(asset && asset.data && asset.src && !asset.uploaded){
+        await uploadImageToGitHub(token,asset.src,asset.data);
+        asset.uploaded=true;
+      }
+    }
+    const thumb=window._editThumbnail;
+    if(thumb && thumb.data && thumb.src && !thumb.uploaded && !thumb.removed){
+      await uploadImageToGitHub(token,thumb.src,thumb.data);
+      thumb.uploaded=true;
+    }
+  }
+
   async function publishToGitHub() {
     const token = getGithubToken();
     if(!token) return alert("Enter token");
     const btn = document.getElementById('btn-publish');
     btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
+      setCmsStatus('Checking selected media before publishing…','info');
+      await uploadPendingJournalAssets(token);
       if(!window._isDeletingPort && !window._isDeletingExisting && !window._isEditingExisting) handleGenerate();
       const code = document.getElementById('output').value;
       let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null, dayToDelete = null;
