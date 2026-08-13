@@ -701,6 +701,8 @@
         </div>`;
     }
 
+    const dayTags=inferredTags(entry);
+    if(dayTags.length) body += '<div class="entry-tags" style="justify-content:center;margin:14px 0 2px;">'+dayTags.map(t=>'<span class="entry-tag">#'+esc(t)+'</span>').join('')+'</div>';
     body += executionIndex(entry);
     body += mediaBoard(entry);
     if(entries.length>1) body += consistencyGraph();
@@ -746,21 +748,27 @@
   document.getElementById('btn-write').addEventListener('click', openWriteModal);
 
   // ---------- ALL ENTRIES ARCHIVE + SEARCH ----------
-  function renderArchive(filterText){
+  function inferredTags(e){
+    const explicit = Array.isArray(e.tags) ? e.tags : (typeof e.tags === 'string' ? e.tags.split(',') : []);
+    const text = [e.journal||'', e.mediaCaption||'', (e.photos||[]).map(x=>x.caption||'').join(' ')].join(' ').toLowerCase();
+    const guesses = [['college','college'],['study','study'],['academic','study'],['business law','study'],['acca','acca'],['automation','automation'],['ai','ai'],['website','website'],['fitness','fitness'],['workout','fitness'],['health','health'],['routine','routine'],['sleep','sleep'],['food','food'],['admission','college']];
+    const out = explicit.map(x=>String(x).trim().toLowerCase()).filter(Boolean);
+    guesses.forEach(([needle,label])=>{if(text.includes(needle)&&!out.includes(label))out.push(label);});
+    return out.slice(0,12);
+  }
+  function allArchiveTags(){ return [...new Set(entries.flatMap(inferredTags))].sort(); }
+  function renderArchive(filterText, tagFilter){
     const f = (filterText || '').trim().toLowerCase();
+    const tag = (tagFilter || '').trim().toLowerCase();
     const list = entries.filter(e=>{
-      if(!f) return true;
-      const hay = [
-        'DAY '+String(e.day).padStart(2,'0'), monthOf(e.date), e.weekday||'',
-        e.journal||'',
-        (e.photos||[]).map(x=>x.caption||'').join(' '),
-        e.mediaCaption||'', e.photo && e.photo.caption || ''
-      ].join(' ').toLowerCase();
-      return hay.includes(f);
+      const tags = inferredTags(e);
+      const hay = ['DAY '+String(e.day).padStart(2,'0'), monthOf(e.date), e.weekday||'', e.journal||'', tags.join(' '), (e.photos||[]).map(x=>x.caption||'').join(' '), e.mediaCaption||'', e.photo && e.photo.caption || ''].join(' ').toLowerCase();
+      return (!f || hay.includes(f)) && (!tag || tags.includes(tag));
     });
 
-    let body = '<div class="sec-head"><div class="day-num">⊞ All Entries</div><p>Every day in one place — jump to any day, or search by topic or keyword.</p></div>';
-    body += '<div class="archive-search"><input id="archive-q" type="text" placeholder="Search days… try “college”, “ACCA”, “gym”" value="' + esc(filterText) + '"></div>';
+    let body = '<div class="sec-head"><div class="day-num">⊞ All Entries</div><p>Every day in one place — search the full journal or filter it by topic.</p></div>';
+    body += '<div class="archive-toolbar"><input id="archive-q" type="search" placeholder="Search days, topics, captions…" value="' + esc(filterText) + '"><select id="archive-tag" aria-label="Filter by journal tag"><option value="">All topics</option>' + allArchiveTags().map(t=>'<option value="'+esc(t)+'"'+(t===tag?' selected':'')+'>'+esc(t[0].toUpperCase()+t.slice(1))+'</option>').join('') + '</select></div>';
+    body += '<div class="archive-tags"><button class="archive-tag '+(!tag?'active':'')+'" type="button" data-tag="">All</button>' + allArchiveTags().map(t=>'<button class="archive-tag '+(t===tag?'active':'')+'" type="button" data-tag="'+esc(t)+'">#'+esc(t)+'</button>').join('') + '</div>';
 
     if(!list.length){
       body += '<div class="empty-state"><div class="big">No days found</div>Nothing matches “' + esc(filterText) + '” yet.</div>';
@@ -786,7 +794,7 @@
         groups[y][m].forEach(e=>{
           const snip = e.journal ? e.journal.split(/\n+/).map(s=>s.trim()).filter(Boolean)[0].slice(0,90) : '';
           const hasMedia = mediaItems(e).length>0;
-          body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasMedia?'<span class="ad-video">▣</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="ad-actions"><button data-go="'+e.day+'">Open day →</button></div></div>';
+          body += '<div class="arch-day" style="position:relative;"><button class="btn-edit-entry" style="top:8px;right:8px;width:26px;height:26px;font-size:11px;" title="Edit this entry" onclick="event.stopPropagation();editEntryPrompt('+e.day+')">✏️</button><div class="ad-top"><span class="ad-num">DAY '+String(e.day).padStart(2,'0')+'</span>'+(hasMedia?'<span class="ad-video">▣</span>':'')+'</div><div class="ad-date">'+esc(monthOf(e.date))+(e.weekday?', '+esc(e.weekday):'')+'</div>'+(snip?'<div class="ad-snip">'+esc(snip)+(snip.length>=90?'…':'')+'</div>':'')+'<div class="entry-tags">'+inferredTags(e).map(t=>'<span class="entry-tag">#'+esc(t)+'</span>').join('')+'</div><div class="ad-actions"><button data-go="'+e.day+'">Open day →</button></div></div>';
         });
         body += '</div>';
       });
@@ -806,12 +814,15 @@
     });
   }
   function wireSearch(){
-    const q = dayContent.querySelector('#archive-q');
+    const q = dayContent.querySelector('#archive-q'), tag = dayContent.querySelector('#archive-tag');
     if(!q) return;
-    q.addEventListener('input', ()=> renderArchive(q.value));
+    const rerender = ()=>renderArchive(q.value, tag?.value||'');
+    q.addEventListener('input', rerender);
+    tag?.addEventListener('change', rerender);
+    dayContent.querySelectorAll('[data-tag]').forEach(b=>b.addEventListener('click', ()=>renderArchive(q.value, b.dataset.tag||'')));
     q.focus();
   }
-  document.getElementById('btn-all').addEventListener('click', ()=> renderArchive(''));
+  document.getElementById('btn-all').addEventListener('click', ()=> renderArchive('', ''));
 
   window.editEntryPrompt = function(day) {
     const pass = prompt("Enter passcode to edit:");

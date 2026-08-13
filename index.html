@@ -1886,7 +1886,7 @@
       </div>
       <div class="ai-header-text">
         <div class="ai-header-title">Yash's Assistant</div>
-        <div class="ai-header-status">Online · site knowledge + live tools</div>
+        <div class="ai-header-status">Online · site knowledge + journal copilot + live tools</div>
       </div>
       <button class="ai-header-voice" id="ai-voice-toggle" type="button" aria-label="Toggle voice replies" aria-pressed="false">🔇</button>
       <button class="ai-header-close" id="ai-close" type="button" aria-label="Close assistant">
@@ -1901,6 +1901,7 @@
       <button class="ai-chip" data-q="Contact information">Contact information</button>
       <button class="ai-chip" data-q="What is the date and time right now?">Date & time</button>
       <button class="ai-chip" data-q="What is the weather in Delhi today?">Weather</button>
+      <button class="ai-chip" data-q="Search my journal for health, routine and study">Journal copilot</button>
       <button class="ai-chip" data-q="Show me current news about technology">News & updates</button>
     </div>
     <div class="ai-input-row">
@@ -2110,6 +2111,7 @@
   </div>
 
 <script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
+<script>document.write('<script src="entries-data.js?v='+Date.now()+'\"><\/script>');</script>
 
 <script>
   window.__lenisReady = (typeof Lenis !== 'undefined');
@@ -3286,6 +3288,47 @@
 
     const clean = s => (s || '').replace(/\s+/g, ' ').trim();
 
+    /* ---- Local Journal Copilot: deterministic retrieval without an API key ---- */
+    const JOURNAL_STOP = new Set('the a an and or but for to of in on at is was were be been this that my me i we you he she it with from about what did do today yesterday tell show find search'.split(' '));
+    function journalWords(text){
+      return clean(String(text || '').toLowerCase()).replace(/[^a-z0-9%\s-]/g, ' ').split(/\s+/).map(w => w.replace(/(ing|ed|es|s)$/, '')).filter(w => w.length > 2 && !JOURNAL_STOP.has(w));
+    }
+    function journalTags(entry){
+      const explicit = Array.isArray(entry.tags) ? entry.tags : (typeof entry.tags === 'string' ? entry.tags.split(',') : []);
+      const text = [entry.journal || '', entry.mediaCaption || '', ...(entry.photos || []).map(x => x.caption || '')].join(' ').toLowerCase();
+      const guesses = [['college','college'],['study','study'],['academic','study'],['acca','acca'],['automation','automation'],['ai','ai'],['website','website'],['fitness','fitness'],['workout','fitness'],['health','health'],['routine','routine'],['sleep','sleep'],['food','food']];
+      const out = explicit.map(x => String(x).trim().toLowerCase()).filter(Boolean);
+      guesses.forEach(([needle, label]) => { if(text.includes(needle) && !out.includes(label)) out.push(label); });
+      return [...new Set(out)].slice(0, 10);
+    }
+    function journalSearch(raw){
+      const entries = Array.isArray(window.UNFILTERED_ENTRIES) ? window.UNFILTERED_ENTRIES : [];
+      if(!entries.length) return null;
+      const msg = String(raw || '');
+      const lower = msg.toLowerCase();
+      const intent = /\b(journal|diary|entry|entries|day\s*\d|routine|progress|what did|what happened|when did|have i|search my|in my|health|study|college|sleep|workout|automation|website)\b/.test(lower);
+      const query = journalWords(msg);
+      if(!intent && query.length < 1) return null;
+      const ranked = entries.map(e => {
+        const text = journalWords([e.journal || '', journalTags(e).join(' '), (e.photos || []).map(x => x.caption || '').join(' ')].join(' '));
+        const set = new Set(text);
+        let score = 0;
+        query.forEach(w => { if(set.has(w)) score += 2; else if(text.some(t => t.includes(w) || w.includes(t))) score += .7; });
+        query.forEach(w => { if((e.journal || '').toLowerCase().includes(w)) score += 1.5; });
+        const dayMatch = msg.match(/day\s*0?(\d+)/i);
+        if(dayMatch && e.day === Number(dayMatch[1])) score += 12;
+        return {e, score};
+      }).filter(x => x.score > 0).sort((a,b) => b.score - a.score || b.e.day - a.e.day).slice(0, 3);
+      if(!ranked.length) return '<strong>Journal copilot</strong><br>I could not find a matching day in the local journal. Try a topic such as <em>study</em>, <em>health</em>, <em>routine</em>, or ask for <em>Day 01</em>.<br><small>Search ran locally; no journal text was sent anywhere.</small>';
+      const rows = ranked.map(({e}) => {
+        const rawText = clean(e.journal || '');
+        const excerpt = rawText.length > 250 ? rawText.slice(0, 250) + '…' : rawText;
+        const tags = journalTags(e).map(t => '#' + aiEsc(t)).join(' ');
+        return `<div style="margin:9px 0;padding:9px 10px;border-left:2px solid #E2557B;background:rgba(226,85,123,.06)"><strong>Day ${String(e.day).padStart(2,'0')} · ${aiEsc(e.date || '')}</strong><br>${aiEsc(excerpt)}${tags ? `<br><small style="opacity:.75">${tags}</small>` : ''}</div>`;
+      }).join('');
+      return `<strong>Journal copilot</strong><br>Here are the closest local journal memories for “${aiEsc(msg)}”:${rows}<small>Retrieved from Yash’s journal on this device. I only quote matching entries and do not send them to a third-party service.</small>`;
+    }
+
     /* ---- Live content readers (always reflect current DOM) ---- */
     function aboutText(){
       const lede = clean(document.getElementById('hero-lede')?.textContent);
@@ -3504,6 +3547,9 @@
       const smalltalk = smalltalkReply(rawMsg);
       if(smalltalk) return { text: smalltalk, nav:null };
 
+      const journal = journalSearch(rawMsg);
+      if(journal) return { text: journal, nav:null };
+
       const section = detectSection(msg);
       const nav = section && hasNavIntent(msg);
 
@@ -3621,7 +3667,7 @@
       springTo(panel, 'ai', 1, { preset:'panel', onUpdate: applyPanelVisual });
       if(!greeted){
         greeted = true;
-        setTimeout(()=> addMessage("Hi! I'm Yash's assistant — I know this portfolio and can also check time, weather, facts, news and live web results.", 'bot'), 260);
+        setTimeout(()=> addMessage("Hi! I'm Yash's assistant — I know this portfolio, can search the local journal, and can also check time, weather, facts, news and live web results.", 'bot'), 260);
       }
       setTimeout(()=> inputEl.focus(), 300);
     }

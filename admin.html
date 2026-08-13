@@ -86,6 +86,9 @@
   .cms-history:empty{display:none;}
   .cms-history a{color:var(--pink-soft);}
   .btn.secondary{background:rgba(226,85,123,.08);border-color:rgba(226,85,123,.25);color:var(--pink-soft);}
+  .admin-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;}
+  .admin-tools .btn{font-size:.76rem;padding:9px 12px;}
+  .audit-note{font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.45;}
 
 
     .edit-media-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0 16px}
@@ -172,6 +175,9 @@
         <label class="first">Daily Completion Percentage (%)</label>
         <input type="number" id="f-discipline" min="0" max="100" step="1" value="0" placeholder="e.g. 85">
         <div class="hint">How much of today’s planned work did you complete? Enter a value from 0 to 100.</div>
+        <label>Topics / tags (optional)</label>
+        <input type="text" id="f-tags" placeholder="e.g. college, study, health">
+        <div class="hint">Comma-separated tags make the archive easier to browse. Existing entries also receive safe inferred tags automatically.</div>
       </fieldset>
 
       <fieldset>
@@ -398,6 +404,8 @@
 
     <div class="cms-status" id="cms-status"><strong>CMS safety:</strong> Generate validates your data locally. Publish will create a timestamped GitHub backup before updating the live data file.</div>
     <div class="cms-history" id="publish-history"></div>
+    <div class="admin-tools"><button class="btn secondary" type="button" onclick="exportJournal('json')">⇩ Export JSON</button><button class="btn secondary" type="button" onclick="exportJournal('md')">⇩ Export Markdown</button><button class="btn secondary" type="button" onclick="renderPublishHistory()">↻ Refresh audit</button></div>
+    <div class="audit-note">Publishing remains backup-first. Every successful data publish records a local audit entry and attempts to append a durable <code>publish-audit.json</code> file in the repository. Rollback restores the selected protected backup after creating a fresh backup of the current live file.</div>
     <div class="actions">
       <button class="btn primary" id="btn-generate" onclick="handleGenerate()">Generate Code</button>
       <button class="btn secondary" onclick="runContentCheck()">✓ Check content</button>
@@ -662,6 +670,8 @@
     if(media.videos.length)out+=`    videos: ${JSON.stringify(media.videos)},\n`;
     const discipline=Math.max(0,Math.min(100,parseInt(document.getElementById('f-discipline').value||'0',10)||0));
     out+=`    discipline: ${discipline},\n`;
+    const tags=(document.getElementById('f-tags')?.value||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i);
+    if(tags.length) out+=`    tags: ${JSON.stringify(tags)},\n`;
     const mediaCaption=document.getElementById('f-media-caption')?.value.trim()||'';
     if(mediaCaption) out+=`    mediaCaption: "${esc(mediaCaption)}",\n`;
     out=out.replace(/,\\n$/,'\\n')+`  }`;document.getElementById('output').value=out;document.getElementById('output-wrap').style.display='block';document.getElementById('content-preview').style.display='none';saveDraft();
@@ -931,11 +941,10 @@
     el.style.borderColor = type==='ok' ? 'rgba(126,231,135,.35)' : type==='error' ? 'rgba(226,85,123,.45)' : 'rgba(255,255,255,.12)';
   }
   function renderPublishHistory(){
-    const el = document.getElementById('publish-history');
-    if(!el) return;
+    const el = document.getElementById('publish-history'); if(!el) return;
     try{
       const items = JSON.parse(localStorage.getItem('uy_publish_history') || '[]');
-      el.innerHTML = items.length ? '<b>Recent safe publishes</b><br>' + items.slice(0,6).map(x => `${new Date(x.at).toLocaleString()} · ${x.file} · <a href="${x.backupUrl || '#'}" target="_blank" rel="noopener">backup</a>${x.commitUrl ? ` · <a href="${x.commitUrl}" target="_blank" rel="noopener">commit</a>` : ''}`).join('<br>') : '';
+      el.innerHTML = items.length ? '<b>Recent safe publishes / rollback points</b><br>' + items.slice(0,8).map((x,i) => `${new Date(x.at).toLocaleString()} · ${x.file} · <a href="${x.backupUrl || '#'}" target="_blank" rel="noopener">backup</a>${x.commitUrl ? ` · <a href="${x.commitUrl}" target="_blank" rel="noopener">commit</a>` : ''} · <button class="btn secondary" style="padding:3px 7px;font-size:.65rem;" type="button" onclick="rollbackPublish(${i})">Rollback</button>`).join('<br>') : '';
     }catch(e){ el.textContent = ''; }
   }
   function recordPublish(item){
@@ -958,6 +967,44 @@
     try { return JSON.parse(text); } catch(_) {}
     try { return Function('"use strict"; return ('+text+');')(); }
     catch(e) { throw new Error('Generated entry code is invalid: '+e.message+'. Please click Generate Code again, then publish.'); }
+  }
+  async function githubJson(token, path, options={}){
+    const res=await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`,{headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github+json'},...options});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.message||`GitHub request failed (${res.status})`);
+    return data;
+  }
+  async function appendAuditLog(token, event){
+    try{
+      let current={entries:[]};
+      try{const f=await githubJson(token,'publish-audit.json'); current=JSON.parse(decodeURIComponent(escape(atob((f.content||'').replace(/\s/g,''))))||'{"entries":[]}'); current.sha=f.sha;}catch(_){}
+      current.entries=Array.isArray(current.entries)?current.entries:[]; current.entries.unshift(event); current.entries=current.entries.slice(0,100);
+      const payload={message:`Audit ${event.action} ${event.file}`,content:btoa(unescape(encodeURIComponent(JSON.stringify({entries:current.entries},null,2)+'\n')))}; if(current.sha)payload.sha=current.sha;
+      await githubJson(token,'publish-audit.json',{method:'PUT',headers:{'Authorization':`token ${token}`,'Content-Type':'application/json','Accept':'application/vnd.github+json'},body:JSON.stringify(payload)});
+      return true;
+    }catch(e){ console.warn('Durable audit log unavailable:',e); return false; }
+  }
+  async function rollbackPublish(index){
+    const token=getGithubToken(); if(!token)return alert('Unlock and add the GitHub token first.');
+    const items=JSON.parse(localStorage.getItem('uy_publish_history')||'[]'), item=items[index];
+    if(!item?.backupPath)return alert('No rollback point is available for this publish.');
+    if(!confirm(`Rollback ${item.file} to the protected backup from ${new Date(item.at).toLocaleString()}?`))return;
+    try{
+      setCmsStatus(`Preparing rollback of ${item.file}…`);
+      const current=await githubJson(token,item.file);
+      const backup=await githubJson(token,item.backupPath);
+      await backupGithubFile(token,item.file,current.content,current.sha);
+      const restored=await githubJson(token,item.file,{method:'PUT',headers:{'Authorization':`token ${token}`,'Content-Type':'application/json','Accept':'application/vnd.github+json'},body:JSON.stringify({message:`Rollback ${item.file} to ${item.backupPath}`,content:(backup.content||'').replace(/\s/g,''),sha:current.sha})});
+      await appendAuditLog(token,{at:new Date().toISOString(),action:'rollback',file:item.file,sourceBackup:item.backupPath,commitUrl:restored.commit?.html_url||''});
+      setCmsStatus(`Rollback complete for ${item.file}. A backup of the previous live file was created first.`,'ok'); alert('Rollback complete.'); renderPublishHistory();
+    }catch(e){setCmsStatus('Rollback stopped: '+e.message,'error');alert('Rollback failed: '+e.message);}
+  }
+  function downloadText(filename,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+  function exportJournal(kind){
+    const data=Array.isArray(window.UNFILTERED_ENTRIES)?window.UNFILTERED_ENTRIES:[];
+    if(kind==='json'){downloadText('unfiltered-yash-backup.json',JSON.stringify(data,null,2)+'\n','application/json');return;}
+    const md=data.slice().sort((a,b)=>(a.day||0)-(b.day||0)).map(e=>`# Day ${String(e.day||'').padStart(2,'0')} — ${e.date||''}\n\n${e.journal||''}\n\n**Daily discipline:** ${e.discipline??e.dailyDiscipline??0}%\n\n${Array.isArray(e.tags)&&e.tags.length?'**Tags:** '+e.tags.map(t=>'#'+t).join(' ')+'\n\n':''}---`).join('\n\n');
+    downloadText('unfiltered-yash-journal.md',md+'\n','text/markdown');
   }
   async function publishToGitHub() {
     const token = getGithubToken();
@@ -1054,16 +1101,18 @@
       });
       if(!publishRes.ok){ const detail = await publishRes.json().catch(()=>({})); throw new Error(detail.message || `GitHub publish failed (${publishRes.status})`); }
       const publishData = await publishRes.json();
-      recordPublish({at:new Date().toISOString(), file:filename, backupUrl:backup.url, backupPath:backup.path, commitUrl:publishData.commit?.html_url || ''});
-      setCmsStatus(`Published ${filename} safely. Backup created at ${backup.path}.`, 'ok');
+      const auditEvent={at:new Date().toISOString(),action:'publish',file:filename,backupPath:backup.path,commitUrl:publishData.commit?.html_url || '',mode:currentMode};
+      recordPublish({at:auditEvent.at, file:filename, backupUrl:backup.url, backupPath:backup.path, commitUrl:auditEvent.commitUrl, action:auditEvent.action});
+      const durableAudit=await appendAuditLog(token,auditEvent);
+      setCmsStatus(`Published ${filename} safely. Backup created at ${backup.path}. ${durableAudit?'Audit log updated.':'Local audit saved; durable audit log could not be updated.'}`, 'ok');
       alert("🚀 Published successfully. A protected backup was created before the live update.");
       window._isEditingPort = false; window._isDeletingPort = false; window._isEditingExisting = false; window._isDeletingExisting = false; window._deleteMode = null;
       location.href = location.pathname + '?v=' + Date.now();
     } catch (err) { setCmsStatus(err.message, 'error'); alert("❌ Error: " + err.message); } finally { btn.disabled = false; btn.textContent = "🚀 Publish to GitHub"; }
   }
 
-  function saveDraft(){ localStorage.setItem('uy_draft2', JSON.stringify({ day: document.getElementById('f-day').value, date: document.getElementById('f-date').value, journal: document.getElementById('f-journal').value, discipline: document.getElementById('f-discipline').value, photo: { src: document.getElementById('f-photo-src').value, caption: document.getElementById('f-photo-cap').value } })); document.getElementById('draft-note').textContent = 'Draft saved'; }
-  function loadDraft(){ try { const d = JSON.parse(localStorage.getItem('uy_draft2')); if(d){ document.getElementById('f-day').value = d.day||''; document.getElementById('f-date').value = d.date||''; document.getElementById('f-journal').value = d.journal||''; document.getElementById('f-discipline').value = d.discipline??0; document.getElementById('f-photo-src').value = d.photo?.src||''; document.getElementById('f-photo-cap').value = d.photo?.caption||''; } } catch(e){} }
+  function saveDraft(){ localStorage.setItem('uy_draft2', JSON.stringify({ day: document.getElementById('f-day').value, date: document.getElementById('f-date').value, journal: document.getElementById('f-journal').value, discipline: document.getElementById('f-discipline').value, tags: document.getElementById('f-tags')?.value||'', photo: { src: document.getElementById('f-photo-src').value, caption: document.getElementById('f-photo-cap').value } })); document.getElementById('draft-note').textContent = 'Draft saved'; }
+  function loadDraft(){ try { const d = JSON.parse(localStorage.getItem('uy_draft2')); if(d){ document.getElementById('f-day').value = d.day||''; document.getElementById('f-date').value = d.date||''; document.getElementById('f-journal').value = d.journal||''; document.getElementById('f-discipline').value = d.discipline??0; if(document.getElementById('f-tags')) document.getElementById('f-tags').value=d.tags||''; document.getElementById('f-photo-src').value = d.photo?.src||''; document.getElementById('f-photo-cap').value = d.photo?.caption||''; } } catch(e){} }
   function clearDraft(){ if(confirm("Clear?")){ localStorage.removeItem('uy_draft2'); location.reload(); } }
 </script>
 </body>
