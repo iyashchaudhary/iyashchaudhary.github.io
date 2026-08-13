@@ -183,7 +183,7 @@
         <div class="media-pick-list" id="f-media-list"></div>
         <label>Short videos</label>
         <input type="file" id="f-video-file" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onJournalVideoPicked(this, 'entry-video')">
-        <div class="hint">You can add short MP4/WebM videos. Total gallery items are capped at 8.</div>
+        <div class="hint">You can add short MP4/WebM videos up to 60 MB each. Total gallery items are capped at 8.</div>
         <div class="upload-status" id="f-video-status"></div>
       </fieldset>
     </div>
@@ -227,6 +227,7 @@
           <input type="file" id="e-media-images" accept="image/*" multiple onchange="onEditMediaPicked(this, 'image')">
           <label> add short videos</label>
           <input type="file" id="e-media-videos" accept="video/mp4,video/webm,video/quicktime" multiple onchange="onEditMediaPicked(this, 'video')">
+          <div class="hint">Videos can be up to 60 MB each.</div>
           <div class="upload-status" id="e-media-status"></div>
         </fieldset>
         <div class="actions">
@@ -647,7 +648,7 @@
     try{ for(const file of files){ const data=await compressImage(file); const ext=file.type==='image/png'?'png':'webp'; const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); const token=getGithubToken(); if(token){ for(const x of uploadedJournalMedia[kind]) await uploadImageToGitHub(token,x.src,x.data); mediaStatus(kind,'✅ Photos uploaded to GitHub','ok'); } else mediaStatus(kind,'Photos ready. Add the GitHub token before publishing.'); }
     catch(e){ mediaStatus(kind,'❌ '+e.message,'err'); } finally { input.value=''; }
   }
-  async function onJournalVideoPicked(input, kind){ const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return; if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ for(const file of files){ if(file.size>25*1024*1024) throw new Error(`${file.name} is over 25 MB.`); const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; const token=getGithubToken(); if(token) await uploadImageToGitHub(token,filename,data); uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); mediaStatus(kind,getGithubToken()?'✅ Videos uploaded to GitHub':'Videos ready. Add the GitHub token before publishing.','ok'); }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
+  async function onJournalVideoPicked(input, kind){ const prefix=kind.startsWith('entry')?'entry':'section'; const files=[...(input.files||[])]; const room=Math.max(0,8-galleryCount(prefix)); if(!files.length)return; if(files.length>room){mediaStatus(kind,`Only ${room} more item${room===1?'':'s'} can be added (8 total).`,'err');input.value='';return;} mediaStatus(kind,'Preparing video…'); try{ for(const file of files){ if(file.size>60*1024*1024) throw new Error(`${file.name} is over 60 MB.`); const data=await fileToDataUrl(file); const ext=(file.name.split('.').pop()||'mp4').toLowerCase(); const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`; const token=getGithubToken(); if(token) await uploadImageToGitHub(token,filename,data); uploadedJournalMedia[kind].push({src:filename,name:file.name,data}); } renderPickedMedia(kind); mediaStatus(kind,getGithubToken()?'✅ Videos uploaded to GitHub':'Videos ready. Add the GitHub token before publishing.','ok'); }catch(e){mediaStatus(kind,'❌ '+e.message,'err');}finally{input.value='';} }
   function mediaObjectArray(kind){ return (uploadedJournalMedia[kind]||[]).filter(x=>x&&x.src).map(x=>({src:x.src,caption:x.caption||''})); }
   function journalMediaFields(prefix){ const imageKind=prefix==='entry'?'entry-images':'section-images'; const videoKind=prefix==='entry'?'entry-video':'section-video'; return {photos:mediaObjectArray(imageKind),videos:mediaObjectArray(videoKind)}; }
 
@@ -833,7 +834,7 @@
     const status=document.getElementById('e-media-status'); status.className='upload-status'; status.textContent='Preparing media…';
     try{
       for(const file of files){
-        if(type==='video' && file.size>25*1024*1024) throw new Error(`${file.name} is over 25 MB.`);
+        if(type==='video' && file.size>60*1024*1024) throw new Error(`${file.name} is over 60 MB.`);
         const data=type==='image'?await compressImage(file):await fileToDataUrl(file);
         const ext=type==='image'?(file.type==='image/png'?'png':'webp'):(file.name.split('.').pop()||'mp4').toLowerCase();
         const filename=`media/journal-${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
