@@ -2055,7 +2055,7 @@
     <div class="wrap" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px; align-items:center; width:100%; padding-bottom: 80px;">
       <span class="mono">© 2026 Yash Chaudhary — a Journey kept, not a résumé performed.</span>
       <div style="display:flex; align-items:center; gap:20px;">
-        <a href="unfiltered.html" class="footer-uy">Unfiltered Yash 😼 <span class="mono" style="font-size:10px;opacity:.7;">— the daily journal</span></a>
+        <a href="unfiltered.html" class="footer-uy">Unfiltered Yash 😼 <span class="mono" style="font-size:10px;opacity:.7;">— the daily journal</span></a><a href="personal-os.html" class="footer-uy" style="margin-left:12px">Personal OS <span class="mono" style="font-size:10px;opacity:.7;">— private dashboard</span></a>
       </div>
     </div>
   </footer>
@@ -2109,7 +2109,8 @@
   </div>
 
 <script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
-<script>document.write('<script src="entries-data.js?v='+Date.now()+'\"><\/script>');</script>
+<script>document.write('<script src="entries-data.js?v='+Date.now()+'"><\/script>');</script>
+<script src="personal-os-data.js"></script>
 
 <script>
   window.__lenisReady = (typeof Lenis !== 'undefined');
@@ -3555,6 +3556,19 @@
       return null;
     }
 
+    function personalOsAnswer(rawMsg){
+      const m = String(rawMsg || '').toLowerCase();
+      if(!/\b(personal os|dashboard|weekly review|monthly review|my progress|my habits|my mood|my energy|my sleep)\b/.test(m)) return null;
+      const state = (()=>{ try { return JSON.parse(localStorage.getItem('yash_pos_v1') || '{}'); } catch(e) { return {}; } })();
+      const tasks = Array.isArray(state.tasks) ? state.tasks : [];
+      const done = tasks.filter(t => t && t.done).length;
+      const score = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+      const signals = state.signals && state.signals[new Date().toISOString().slice(0,10)] || {};
+      if(/sleep/.test(m)) return {text:`<strong>Personal OS</strong><br>Today’s sleep signal is ${aiEsc(signals.sleep || 'not logged')}${signals.sleep ? ' hours' : ''}. You can update it in the Personal OS dashboard.<small>Stored locally on this device.</small>`,nav:null};
+      if(/mood|energy/.test(m)) return {text:`<strong>Personal OS</strong><br>Today’s mood is ${aiEsc(signals.mood || 'not logged')}${signals.mood ? '/10' : ''} and energy is ${aiEsc(signals.energy || 'not logged')}${signals.energy ? '/10' : ''}.<small>Stored locally on this device.</small>`,nav:null};
+      return {text:`<strong>Personal OS review</strong><br>You have completed ${done} of ${tasks.length || 0} dashboard actions today — <strong>${score}%</strong>. ${score >= 80 ? 'Strong finish. Protect the momentum.' : score >= 40 ? 'A decent start. Choose one small next action.' : 'Keep it simple: complete one meaningful action next.'}<br><small>Open <a href="personal-os.html">Personal OS</a> for goals, trends, health signals and your private local vault.</small>`,nav:null};
+    }
+
     /* ---- Core answer engine ---- */
     async function answer(rawMsg){
       const msg = rawMsg.toLowerCase();
@@ -3564,6 +3578,9 @@
 
       const journal = journalSearch(rawMsg);
       if(journal) return { text: journal, nav:null };
+
+      const personalOs = personalOsAnswer(rawMsg);
+      if(personalOs) return personalOs;
 
       const section = detectSection(msg);
       const nav = section && hasNavIntent(msg);
