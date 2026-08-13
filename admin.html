@@ -101,6 +101,19 @@
     .edit-media-remove{margin-top:8px;width:100%;background:#6e1730!important;border-color:#a43a58!important}
     @media(max-width:620px){.edit-media-list{grid-template-columns:repeat(2,minmax(0,1fr))}.edit-media-item img,.edit-media-item video{height:112px}}
 </style>
+<script>
+
+/* PREMIUM_PUBLISH_GUARD_V1 */
+function validatePublishPayload(filename, payload){
+  if(!payload || typeof payload !== 'string') throw new Error('Publish stopped: generated content is empty.');
+  try { new Function(payload); } catch(e) { throw new Error('Publish stopped: generated JavaScript is invalid. ' + e.message); }
+  if(filename === 'entries-data.js'){
+    const assets = [...payload.matchAll(/(?:src|poster):\s*["']([^"']+)["']/g)].map(m=>m[1]).filter(x=>x && !x.startsWith('data:') && !/^https?:/i.test(x));
+    if(/photos:\s*\[\s*\]/.test(payload) && /journal-/.test(payload)) throw new Error('Publish stopped: a journal media array appears empty while media assets are present. Check the selected photos before publishing.');
+  }
+}
+
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -1167,6 +1180,7 @@
       try { new Function(newContent); } catch(e) { throw new Error('Generated file has invalid JavaScript (' + e.message + '). Publish cancelled to protect your site.'); }
       // --- Strip the comment header only kept from original file? Keep original header intact: ---
       newContent = originalHeader + '\n' + newContent;
+      validatePublishPayload(filename, newContent);
       const publishRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
         method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Update ${filename}`, content: btoa(unescape(encodeURIComponent(newContent))), sha: fileData.sha })
