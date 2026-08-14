@@ -72,6 +72,35 @@ const UNFILTERED_ENTRIES = [
     discipline: 16,
     videos: [],
     mediaCaption: ""
+  },
+  {
+    day: 4,
+    date: "2026-08-14",
+    weekday: "Friday",
+    journal: "The New College Finally Begins\n\nToday actually felt like the first proper day of this new chapter. I woke up at around 6 AM, which honestly felt like a pretty big win considering how badly my sleep schedule had been going for the last few days. 😂 I started the morning with a proper workout, chilled for a bit, made and had breakfast, and then got ready for the main task of the day — getting all my documents ready for the physical verification at Atma Ram Sanatan Dharm College (ARSD), Delhi University. After getting everything packed and ready, I left for college. The journey itself took almost an hour, but finally reaching ARSD felt different. This is technically my new college now, so before doing anything else, I walked around a little and properly looked at the campus, almost like I was trying to understand, “Okay… so this is where the next few years are going to happen.” 😂 After that I went towards the physical verification area, and bhai… the crowd was insane. There were so many students that even after waiting for around one or two hours, the verification still couldn't happen. Eventually, there was a break, so I decided to head back to my old college, Venky, and meet some of my old friends. I spent the next couple of hours there, talked to everyone, had some food, caught up with people, and because it started raining, we got a little bonus weather experience too. 🌧️ After that I came back to ARSD for the second verification shift, from around 2 to 4 PM. The crowd was still crazy, but I gave it another shot. Unfortunately, it still didn't happen today. At least I got to interact with a few new people and talk to two or three students who were also starting this new college journey, so that was actually pretty nice. I finally decided that the physical verification can happen another day and left. From there, I went to my best friend's flat because it had been quite a while since we had properly met. We chilled there for a bit and I finally got some rest because my legs were completely finished after walking around all day. 😭 Then we randomly planned a trip to Sarojini Market, so me and my best friend went there, walked around, did some shopping, and picked up a few outfits. Honestly, after such a chaotic day, that part was actually a lot of fun. Eventually I headed back home towards South Campus, but thanks to Delhi traffic, the journey took forever and I finally reached home at around 9 PM. By that point, academics and my other targets were basically gone for the day. 😂 I didn't study anything, didn't work on my admission-related tasks, and didn't really complete any of the planned targets. I just had dinner, checked a few messages, scrolled through some reels for a while, and now I'm finally going to sleep about an hour later than planned. My feet are absolutely killing me after all that walking. But honestly, I'm not even that disappointed today. It wasn't an amazing day, but it wasn't a bad day either. It was just… average. Neutral. My rating for today would probably be somewhere in the middle. The important thing is that I finally got a proper feel of the new college, met some new people, saw some old friends, explored a little, went shopping, and actually had fun. Tomorrow is Independence Day 🇮🇳, followed by Sunday, so I've got two days of buffer before Monday. I'm going to use these two days to clean up the backlog from the last couple of days, bring the pending targets back on track, and then from Monday… full speed. No more excuses. Let's see how this new chapter goes. Day 04 done. Good night. 🌙",
+    photo: {
+      src: "photos/day04.png",
+      caption: ""
+    },
+    photos: [
+      {
+        src: "media/journal-1786733404940-ml0gs.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786733405228-ns6nx.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786733405875-trj67.webp",
+        caption: ""
+      },
+      {
+        src: "media/journal-1786733406179-s29h3.webp",
+        caption: ""
+      }
+    ],
+    discipline: 15
   }
 ];
 window.UNFILTERED_ENTRIES = UNFILTERED_ENTRIES;
