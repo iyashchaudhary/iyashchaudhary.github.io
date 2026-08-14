@@ -58,3 +58,8 @@ Mobile regression repair verification: the Journey Studio now has `grid-column: 
 
 
 Final phone-width verification: a fresh Chromium render at 390x844 loaded the corrected page successfully. The mobile header and hero card are full-width and readable; the temporary screenshot was removed after verification. Final repair commit: `95a6751 Fix mobile journey studio width`.
+
+
+Apple-motion verification: local portfolio rendered the new typography and reveal layer without runtime errors. At desktop viewport, Journey Studio stayed full-width and the document had no horizontal overflow. After entering the studio section, the real journey map and learning-vault cards were visible; the reveal layer was active without hiding the underlying content.
+
+Apple-inspired motion release: desktop and 390px mobile renders verified. Spring-safe button transitions, typography hierarchy, reveal choreography, pointer light, reduced-motion support, and delayed-observer safety fallback are active. Final mobile hero heading wraps fully without horizontal clipping.
