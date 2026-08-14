@@ -1806,6 +1806,22 @@ body{font-kerning:normal;text-rendering:optimizeLegibility}
 @media (prefers-reduced-motion:reduce){.apple-reveal{opacity:1;transform:none;transition:none}.hero-glass:after,.journey-studio:after,.section.bento-card:after{display:none}.btn-primary,.btn-ghost,.studio-replay a,.dock-item,.topnav button,.topnav select{transition:none}}
 <!-- APPLE_MOTION_V1_END -->
 </style>
+<style>
+<!-- MOBILE_PERFORMANCE_V1_START -->
+@media (max-width:760px){
+  html{scroll-behavior:auto!important;overscroll-behavior-y:auto!important}
+  body{touch-action:pan-y;overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
+  #tree-bg,.tree-bg{animation:none!important;background-attachment:scroll!important;will-change:auto!important}
+  #tree-bg::after,.tree-bg::after,.tree-bg-glow,.tree-bg-glow-2,.particle-layer{animation:none!important;will-change:auto!important}
+  .scene{transition:none!important;transform:none!important;filter:none!important;opacity:1!important}
+  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.journey-studio,.studio-panel,.consistency-graph{backdrop-filter:blur(6px) saturate(118%)!important;-webkit-backdrop-filter:blur(6px) saturate(118%)!important}
+  .apple-reveal{opacity:1!important;transform:none!important;will-change:auto!important;transition:none!important}
+  .apple-float{will-change:auto!important}
+  img{content-visibility:auto}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.apple-reveal{will-change:auto!important}}
+<!-- MOBILE_PERFORMANCE_V1_END -->
+</style>
 </head>
 <body>
 
