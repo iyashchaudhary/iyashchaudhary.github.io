@@ -564,6 +564,17 @@
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.apple-reveal{will-change:auto!important}}
 <!-- MOBILE_PERFORMANCE_V1_END -->
+
+/* autonomous-polish-css-v1 */
+:root { --autonomous-focus: rgba(255,214,232,.98); }
+html { scroll-padding-top:max(4rem,calc(3.5rem + env(safe-area-inset-top))); text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; }
+body { overflow-x:clip; -webkit-overflow-scrolling:touch; overscroll-behavior-x:none; }
+:where(h1,h2,h3,h4,.day-num,.entry-title,.section-title) { text-wrap:balance; }
+:where(button,a,input,textarea,select) { -webkit-tap-highlight-color:transparent; }
+:where(button,a,input,textarea,select,.media-card,.lt-card,.random-note,.day-chip):focus-visible { outline:2px solid var(--autonomous-focus); outline-offset:3px; }
+:where(.media-card img,.entry-thumbnail img,.random-note img) { display:block; max-width:100%; height:auto; }
+@media (max-width:760px) { :where(.media-collage,.media-board,.lt-grid,.random-grid) { min-width:0; max-width:100%; } .entry-thumbnail { max-width:100%; overflow:hidden; } }
+@media (prefers-reduced-motion:reduce) { :where(*,*::before,*::after) { scroll-behavior:auto!important; animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; } }
 </style>
 </head>
 <body>
@@ -919,6 +930,26 @@
   // init
   renderDay(entries.find(e=>e.day===currentDay));
   renderStrip();
+})();
+</script>
+
+<script>/* autonomous-polish-runtime-v1 */
+(() => {
+  const root = document.documentElement;
+  root.dataset.autonomousPolish = 'ready';
+  Array.from(document.images).forEach((img, index) => { if (!img.decoding) img.decoding = 'async'; if (index > 2 && !img.loading) img.loading = 'lazy'; });
+  const chapters = Array.from(document.querySelectorAll('section[id],.journey-studio[id]'));
+  const links = Array.from(document.querySelectorAll('.story-rail a[href^="#"]'));
+  if ('IntersectionObserver' in window && chapters.length) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
+      if (!visible) return;
+      root.dataset.activeChapter = visible.target.id;
+      links.forEach(link => { const active = link.getAttribute('href') === `#${visible.target.id}`; if (active) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current'); });
+    }, { rootMargin:'-18% 0px -58% 0px', threshold:[0,.2,.55] });
+    chapters.forEach(chapter => observer.observe(chapter));
+  }
+  requestAnimationFrame(() => root.classList.add('autonomous-polish-ready'));
 })();
 </script>
 </body>

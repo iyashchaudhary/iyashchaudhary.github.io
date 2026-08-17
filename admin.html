@@ -458,6 +458,12 @@ function validatePublishPayload(filename, payload){
 
 <style>
 .media-pick-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px}.media-pick{border:1px solid var(--line);border-radius:10px;padding:7px;font-size:.72rem}.media-pick img{width:100%;height:82px;object-fit:cover;border-radius:7px;display:block;margin-bottom:5px}.upload-status{min-height:1.2em}.upload-status.ok{color:#7ee787}.upload-status.err{color:#ff8b8b}
+
+/* autonomous-polish-css-v1 */
+html { scroll-padding-top:max(1.5rem,env(safe-area-inset-top)); text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; }
+body { overflow-x:clip; }
+:where(button,a,input,textarea,select):focus-visible { outline:2px solid #7db7ff; outline-offset:3px; }
+@media (max-width:760px) { body { -webkit-overflow-scrolling:touch; overscroll-behavior-x:none; } :where(input,textarea,select,button) { font-size:16px; } }
 </style>
 <script>document.write('<script src="entries-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>document.write('<script src="sections-data.js?v='+Date.now()+'\"><\/script>');</script>

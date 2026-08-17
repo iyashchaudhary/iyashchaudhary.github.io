@@ -66,3 +66,13 @@ Apple-inspired motion release: desktop and 390px mobile renders verified. Spring
 
 
 Mobile performance audit: added a native-touch, mobile-first performance layer to `index.html` and `unfiltered.html`. At 390x844, the portfolio hero and Unfiltered Yash Day 02 journal render fully and readably; the earlier blank-first-render risk from desktop reveal opacity was removed by making `.apple-reveal` immediately visible on mobile. Mobile background drift, scene transforms, particle animation, heavy blur, and smooth-scroll CSS were disabled or reduced for phones. Structural checks, internal anchors, and git whitespace checks pass. The asset audit found no concrete missing local file paths; its eight reported template placeholders (`${...}`) are dynamic renderer expressions, not missing files.
+
+## Autonomous polish audit — 2026-08-17
+
+- Applied the idempotent autonomous polish layer to `index.html`, `unfiltered.html`, and `admin.html`.
+- Desktop browser render: hero, story rail, Journey Studio entry point, and existing navigation rendered correctly; horizontal overflow was false.
+- Browser runtime audit: `document.documentElement.dataset.autonomousPolish` reported `ready`; active chapter reported `hello`; no horizontal overflow at the 1280px local viewport.
+- One audit-reported broken image was traced to the intentional lightbox placeholder `<img src="">`, not a missing asset. Removed the empty `src` attribute while preserving lightbox runtime behavior.
+- 390px portfolio render: full-width header and hero card, readable wrapped hero heading, visible content, and fixed bottom dock within viewport.
+- 390px journal render: category cards, Day 07 entry controls, thumbnail/media area, and date selector remain readable without narrow-strip collapse.
+- Chromium headless emitted only expected UPower/DBus sandbox warnings; screenshots generated successfully.
