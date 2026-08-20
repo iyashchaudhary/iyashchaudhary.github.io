@@ -182,6 +182,7 @@ def migrate(path: Path) -> bool:
     text = text.replace("</head>", OLD_MONEY_CSS + "\n</head>", 1)
     if path.name == "index.html":
         text = re.sub(r'(<meta\s+name=["\']theme-color["\']\s+content=["\'])#[0-9A-Fa-f]{6}(["\'])', r'\g<1>#0b1d3a\2', text, count=1)
+        text = text.replace("const THEME_COLORS = { morning:'#FFEADA', light:'#F3F6FC', evening:'#190F2E', dark:'#0B0E1A' };", "const THEME_COLORS = { morning:'#F7F5EF', light:'#F7F5EF', evening:'#0B1D3A', dark:'#0B1D3A' };")
     if text == original:
         return False
     path.write_text(text, encoding="utf-8")
