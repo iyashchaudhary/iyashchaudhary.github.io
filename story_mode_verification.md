@@ -86,3 +86,9 @@ The browser audit showed zero horizontal overflow and no concrete broken image U
 ## Performance-first cleanup — final 390px render verification
 
 The final 390px portfolio render shows a full-width readable hero, safely wrapped headline, and fixed dock contained within the viewport. The 390px Unfiltered Yash render shows the Day 07 thumbnail, date controls, and journal content without a narrow-strip collapse or horizontal clipping. Mobile overrides force native scroll behavior, remove costly backdrop blur and decorative transforms, stop animation and transition work, and preserve first-load content visibility. Dynamic template expressions reported by the bounded asset script are renderer placeholders rather than missing concrete files; the optimized Day 07 WebP delivery asset is present and the original PNG remains preserved.
+
+## Saturated visual theme verification — 2026-08-20
+
+Applied an idempotent saturated visual theme to the main portfolio while preserving the performance-first mobile layer. The update adds richer navy/indigo, cyan, and amber color tokens, static radial lighting, controlled image saturation/contrast, stronger card borders and shadows, and higher-contrast CTA treatments without adding animation or new asset dependencies.
+
+Browser audit at 1280px confirmed the visual theme marker, saturated background image/filter, no horizontal overflow, and zero broken image elements. A 390x844 headless render completed successfully at 374,783 bytes. Existing native-scroll and reduced-motion behavior remained in place.
