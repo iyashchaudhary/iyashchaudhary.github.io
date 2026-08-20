@@ -1762,49 +1762,23 @@
   /* STORY_MODE_V1 */
 </style>
 <style>
-
-/* PREMIUM_JOURNEY_STUDIO_V1 */
-.journey-studio{grid-column:1 / -1;min-width:0;width:100%;position:relative;margin:28px 0 34px;padding:clamp(22px,4vw,42px);border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--card) 96%,var(--primary)),color-mix(in srgb,var(--bg) 90%,var(--accent)));overflow:hidden;box-shadow:0 22px 60px -42px rgba(0,0,0,.55)}
-.journey-studio:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 90% 10%,color-mix(in srgb,var(--primary) 17%,transparent),transparent 32%),linear-gradient(115deg,transparent 0 48%,color-mix(in srgb,var(--accent) 5%,transparent) 49% 50%,transparent 51%)}
-.studio-head,.studio-grid,.studio-bottom{position:relative;z-index:1}
-.studio-kicker{margin:0 0 8px;color:var(--primary);font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
-.studio-head h2{margin:0;color:var(--text);font-family:'Fraunces',serif;font-size:clamp(1.7rem,4vw,2.7rem);max-width:760px}
-.studio-head p{max-width:680px;color:var(--text-dim);margin:12px 0 0;line-height:1.7}
-.studio-replay{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
-.studio-replay a{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--text-dim);text-decoration:none;font:600 10px/1 'IBM Plex Mono',monospace;transition:transform .18s ease,border-color .18s ease,color .18s ease}
-.studio-replay a:hover,.studio-replay a:focus-visible{transform:translateY(-2px);border-color:var(--primary);color:var(--primary);outline:none}
-.studio-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:24px}
-.studio-panel{border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--bg) 42%,transparent);padding:18px}
-.studio-panel h3{margin:0 0 13px;color:var(--text);font-size:1.05rem}
-.studio-map{display:grid;gap:10px}
-.studio-map-item{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:10px;border-radius:12px;background:color-mix(in srgb,var(--card) 70%,transparent);border:1px solid transparent}
-.studio-map-item strong{color:var(--text);font-size:.94rem}.studio-map-item span{display:block;color:var(--text-dim);font-size:.78rem;margin-top:3px;line-height:1.45}.studio-node{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--primary) 18%,transparent);color:var(--primary);font:600 10px 'IBM Plex Mono',monospace}
-.studio-focus{display:grid;gap:10px}.studio-focus-card{padding:12px;border-left:2px solid var(--primary);background:color-mix(in srgb,var(--primary) 5%,transparent)}.studio-focus-card b{display:block;color:var(--text);font-size:.86rem}.studio-focus-card span{display:block;color:var(--text-dim);font-size:.76rem;margin-top:3px;line-height:1.45}
-.studio-progress{margin-top:16px}.studio-progress-head{display:flex;justify-content:space-between;gap:12px;color:var(--text-dim);font:600 10px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em}.studio-progress-track{height:8px;border-radius:99px;background:color-mix(in srgb,var(--line) 80%,transparent);overflow:hidden;margin-top:9px}.studio-progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:inherit;transition:width .6s cubic-bezier(.23,1,.32,1)}
-.studio-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.studio-list{display:grid;gap:9px}.studio-list-item{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--card) 76%,transparent)}.studio-list-item b{display:block;color:var(--text);font-size:.86rem}.studio-list-item span{display:block;color:var(--text-dim);font-size:.75rem;line-height:1.45;margin-top:3px}.studio-proof-link{color:var(--primary);text-decoration:none;font-size:.72rem;display:inline-block;margin-top:7px}
-.studio-leave{margin-top:16px;padding:15px;border-radius:15px;border:1px dashed color-mix(in srgb,var(--primary) 45%,var(--line));color:var(--text-dim);font-size:.84rem;line-height:1.6}.studio-leave strong{color:var(--text)}
-@media (max-width:760px){.journey-studio{grid-column:1 / -1;width:100%;}.studio-grid,.studio-bottom{grid-template-columns:1fr}.studio-replay{gap:7px}.studio-replay a{font-size:9px;padding:7px 9px}}
-@media (prefers-reduced-motion:reduce){.studio-replay a,.studio-progress-fill{transition:none}}
-
-</style>
-<style>
 <!-- APPLE_MOTION_V1_START -->
 :root{--apple-ease:cubic-bezier(.22,1,.36,1);--apple-spring:cubic-bezier(.16,1.22,.3,1)}
 body{font-kerning:normal;text-rendering:optimizeLegibility}
-.hero h1,.studio-head h2,.section h2{letter-spacing:-.045em;text-wrap:balance}
+.hero h1,.section h2{letter-spacing:-.045em;text-wrap:balance}
 .hero h1{font-size:clamp(2.8rem,7vw,5.8rem);line-height:.96}
 .section h2{font-size:clamp(1.9rem,4.2vw,3.4rem);line-height:1.02}
-.hero-glass,.journey-studio,.section.bento-card{isolation:isolate}
-.hero-glass:after,.journey-studio:after,.section.bento-card:after{content:"";position:absolute;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at var(--apple-x,50%) var(--apple-y,30%),rgba(255,255,255,.32),transparent 21%);opacity:0;transition:opacity .35s var(--apple-ease)}
-.hero-glass:hover:after,.journey-studio:hover:after,.section.bento-card:hover:after{opacity:1}
-.btn-primary,.btn-ghost,.studio-replay a,.dock-item,.topnav button,.topnav select{transition:transform .18s var(--apple-spring),box-shadow .22s var(--apple-ease),background-color .22s var(--apple-ease),border-color .22s var(--apple-ease)}
-.btn-primary:active,.btn-ghost:active,.studio-replay a:active,.dock-item:active,.topnav button:active{transform:scale(.96)}
+.hero-glass,.section.bento-card{isolation:isolate}
+.hero-glass:after:after,.section.bento-card:after{content:"";position:absolute;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at var(--apple-x,50%) var(--apple-y,30%),rgba(255,255,255,.32),transparent 21%);opacity:0;transition:opacity .35s var(--apple-ease)}
+.hero-glass:hover:after:hover:after,.section.bento-card:hover:after{opacity:1}
+.btn-primary,.btn-ghost,.dock-item,.topnav button,.topnav select{transition:transform .18s var(--apple-spring),box-shadow .22s var(--apple-ease),background-color .22s var(--apple-ease),border-color .22s var(--apple-ease)}
+.btn-primary:active,.btn-ghost:active:active,.dock-item:active,.topnav button:active{transform:scale(.96)}
 .apple-reveal{opacity:0;transform:translate3d(0,24px,0) scale(.985);transition:opacity .72s var(--apple-ease),transform .72s var(--apple-spring);will-change:transform,opacity}
 .apple-reveal.is-visible{opacity:1;transform:none}
 .apple-reveal:nth-child(2){transition-delay:50ms}.apple-reveal:nth-child(3){transition-delay:100ms}.apple-reveal:nth-child(4){transition-delay:150ms}
-@media (min-width:761px){.hero-glass,.journey-studio,.section.bento-card{transform-origin:50% 20%}.apple-float{transition:transform .28s var(--apple-spring);will-change:transform}}
-@media (max-width:760px){.hero h1{font-size:clamp(2.15rem,11vw,3.45rem);letter-spacing:-.055em;max-width:100%;overflow-wrap:anywhere;word-break:normal}.hero-glass,.journey-studio,.section.bento-card{overflow:hidden}.apple-reveal{transform:translate3d(0,16px,0) scale(.99);transition-duration:.52s}}
-@media (prefers-reduced-motion:reduce){.apple-reveal{opacity:1;transform:none;transition:none}.hero-glass:after,.journey-studio:after,.section.bento-card:after{display:none}.btn-primary,.btn-ghost,.studio-replay a,.dock-item,.topnav button,.topnav select{transition:none}}
+@media (min-width:761px){.hero-glass,.section.bento-card{transform-origin:50% 20%}.apple-float{transition:transform .28s var(--apple-spring);will-change:transform}}
+@media (max-width:760px){.hero h1{font-size:clamp(2.15rem,11vw,3.45rem);letter-spacing:-.055em;max-width:100%;overflow-wrap:anywhere;word-break:normal}.hero-glass,.section.bento-card{overflow:hidden}.apple-reveal{transform:translate3d(0,16px,0) scale(.99);transition-duration:.52s}}
+@media (prefers-reduced-motion:reduce){.apple-reveal{opacity:1;transform:none;transition:none}.hero-glass:after:after,.section.bento-card:after{display:none}.btn-primary,.btn-ghost,.dock-item,.topnav button,.topnav select{transition:none}}
 <!-- APPLE_MOTION_V1_END -->
 </style>
 <style>
@@ -1815,7 +1789,7 @@ body{font-kerning:normal;text-rendering:optimizeLegibility}
   #tree-bg,.tree-bg{animation:none!important;background-attachment:scroll!important;will-change:auto!important}
   #tree-bg::after,.tree-bg::after,.tree-bg-glow,.tree-bg-glow-2,.particle-layer{animation:none!important;will-change:auto!important}
   .scene{transition:none!important;transform:none!important;filter:none!important;opacity:1!important}
-  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.journey-studio,.studio-panel,.consistency-graph{backdrop-filter:blur(6px) saturate(118%)!important;-webkit-backdrop-filter:blur(6px) saturate(118%)!important}
+  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.consistency-graph{backdrop-filter:blur(6px) saturate(118%)!important;-webkit-backdrop-filter:blur(6px) saturate(118%)!important}
   .apple-reveal{opacity:1!important;transform:none!important;will-change:auto!important;transition:none!important}
   .apple-float{will-change:auto!important}
   img{content-visibility:auto}
@@ -1827,14 +1801,13 @@ body{font-kerning:normal;text-rendering:optimizeLegibility}
 :root { --autonomous-spring: cubic-bezier(.22,1,.36,1); --autonomous-focus: rgba(137,190,255,.96); }
 html { scroll-padding-top: max(5rem, calc(4rem + env(safe-area-inset-top))); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 body { overflow-x: clip; }
-:where(h1,h2,h3,h4,.hero-bigtext,.story-kicker,.studio-kicker) { text-wrap: balance; }
+:where(h1,h2,h3,h4,.hero-bigtext,.story-kicker) { text-wrap: balance; }
 :where(button,a,input,textarea,select) { -webkit-tap-highlight-color: transparent; }
-:where(button,a,input,textarea,select,.bento-card,.glass-card,.studio-map-item,.studio-focus-card,.skill-card,.story-rail a,.dock-item):focus-visible { outline: 2px solid var(--autonomous-focus); outline-offset: 4px; }
+:where(button,a,input,textarea,select,.bento-card,.glass-card,.skill-card,.story-rail a,.dock-item):focus-visible { outline: 2px solid var(--autonomous-focus); outline-offset: 4px; }
 :where(button,.dock-item,.story-rail a,.play-journey-btn):active { transform: scale(.97); }
-@media (hover:hover) and (pointer:fine) { :where(.bento-card,.glass-card,.studio-map-item,.studio-focus-card,.skill-card):hover { transform: translateY(-3px); } :where(.dock-item,.story-rail a,.play-journey-btn):hover { transform: translateY(-2px); } }
+@media (hover:hover) and (pointer:fine) { :where(.bento-card,.glass-card,.skill-card):hover { transform: translateY(-3px); } :where(.dock-item,.story-rail a,.play-journey-btn):hover { transform: translateY(-2px); } }
 .hero-heading,.hero-bigtext { max-width: 100%; overflow-wrap: anywhere; }
-.journey-studio { grid-column: 1 / -1; width: 100%; min-width: 0; }
-@media (max-width:760px) { html { scroll-padding-top: max(4.5rem, calc(3.75rem + env(safe-area-inset-top))); } body { -webkit-overflow-scrolling: touch; overscroll-behavior-x: none; } .journey-studio,.studio-grid,.studio-map,.studio-focus,.studio-bottom { width:100%; min-width:0; max-width:100%; } .studio-grid { grid-template-columns:minmax(0,1fr)!important; } .hero-heading,.hero-bigtext { font-size:clamp(2.25rem,13vw,4.8rem); line-height:.98; letter-spacing:-.045em; } .dock-wrap { padding-bottom:max(.55rem,env(safe-area-inset-bottom)); } }
+  @media (max-width:760px) { html { scroll-padding-top: max(4.5rem, calc(3.75rem + env(safe-area-inset-top))); } body { -webkit-overflow-scrolling: touch; overscroll-behavior-x: none; } .hero-heading,.hero-bigtext { font-size:clamp(2.25rem,13vw,4.8rem); line-height:.98; letter-spacing:-.045em; } .dock-wrap { padding-bottom:max(.55rem,env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion:reduce) { :where(*,*::before,*::after) { scroll-behavior:auto!important; animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; } }
 </style>
 
@@ -1846,7 +1819,7 @@ html{scroll-behavior:auto!important}
   body{background-attachment:scroll!important;touch-action:pan-y;-webkit-overflow-scrolling:touch}
   #fireflies,#petal-field,.firefly,.petal,.trail-petal{display:none!important}
   .hero-scene,.hero-scene::before,.hero-scene::after{animation:none!important;transform:none!important}
-  :where(.glass,.hero-glass,.section.bento-card,.journey-studio,.studio-panel,.folio){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  :where(.glass,.hero-glass,.section.bento-card,.folio){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   :where(*,*::before,*::after){will-change:auto!important}
   .apple-float{animation:none!important;transform:none!important}
 }
@@ -1861,7 +1834,7 @@ html{scroll-behavior:auto!important}
   body{background-attachment:scroll!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
   #fireflies,.firefly,#petal-field,.petal,.trail-petal,.confetti-container{display:none!important;}
   .hero-scene,.hero-scene::before,.hero-scene::after,[data-story-depth]{animation:none!important;transform:none!important;filter:none!important;opacity:1!important;will-change:auto!important;}
-  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.journey-studio,.studio-panel,.folio,.skill-card,.pursuing-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.folio,.skill-card,.pursuing-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;will-change:auto!important;}
 }
 </style>
@@ -1901,36 +1874,33 @@ html{scroll-behavior:auto!important}
   html[data-theme="light"] .tree-bg-scrim,html[data-theme="morning"] .tree-bg-scrim{background:linear-gradient(180deg,rgba(7,26,51,.08),rgba(7,26,51,.44) 64%,rgba(4,15,31,.88)) !important;}
 
   .topnav{border:1px solid rgba(7,26,51,.16) !important;background:#ffffff !important;box-shadow:0 14px 34px -24px rgba(7,26,51,.42),0 1px 0 #fff inset !important;}
-  .topnav .brand,.hero h1,.section h2,.studio-head h2{color:var(--text) !important;}
+  .topnav .brand,.hero h1,.section h2{color:var(--text) !important;}
   .topnav button,.topnav select,.cmdk-trigger-btn,.lang-toggle,.theme-select,.admin-trigger{border-color:rgba(7,26,51,.18) !important;background:#ffffff !important;color:#071a33 !important;}
   .hero-glass{border:1px solid rgba(7,26,51,.18) !important;background:#ffffff !important;box-shadow:0 32px 72px -30px rgba(7,26,51,.42),0 1px 0 #fff inset !important;}
   .hero-glass::before{background:linear-gradient(110deg,transparent 0%,rgba(255,255,255,.72) 42%,transparent 72%) !important;opacity:.22 !important;}
-  .hero .eyebrow,.section-kicker,.studio-kicker,.chapter-label{color:#8b6b35 !important;}
-  .hero .lede,.section p,.studio-head p{color:var(--text-dim);}
+  .hero .eyebrow,.section-kicker,.chapter-label{color:#8b6b35 !important;}
+  .hero .lede,.section p{color:var(--text-dim);}
   .btn-primary,.cta-row a.primary,.play-journey-btn{background:#071a33 !important;color:#ffffff !important;border-color:#071a33 !important;box-shadow:0 14px 28px -18px rgba(7,26,51,.78) !important;}
   .btn-ghost{background:#ffffff !important;border-color:rgba(7,26,51,.22) !important;color:#071a33 !important;}
   .btn-primary:hover,.cta-row a.primary:hover,.play-journey-btn:hover{background:#102d50 !important;box-shadow:0 18px 34px -18px rgba(7,26,51,.72),0 0 0 1px rgba(173,139,85,.48) inset !important;}
 
-  .stat-card,.bento-card,.journey-studio,.studio-panel,.card,.skill-card,.folio,.pursuing-card{border-color:rgba(7,26,51,.16) !important;background:#ffffff !important;box-shadow:0 18px 44px -26px var(--glass-shadow),0 1px 0 #fff inset !important;}
+  .stat-card,.bento-card,.card,.skill-card,.folio,.pursuing-card{border-color:rgba(7,26,51,.16) !important;background:#ffffff !important;box-shadow:0 18px 44px -26px var(--glass-shadow),0 1px 0 #fff inset !important;}
   .stat-card .num{color:#071a33 !important;-webkit-text-fill-color:#071a33 !important;}
   .stat-card .label,.dock-item,.story-rail a{color:#506078;}
   .dock{border-color:rgba(7,26,51,.16) !important;background:#ffffff !important;box-shadow:0 20px 44px -22px rgba(7,26,51,.34),0 1px 0 #fff inset !important;}
   .dock-item.dock-active,.dock-item:hover,.story-rail a:hover,.story-rail a.active{color:#8b6b35 !important;}
   .ai-orb{background:#071a33 !important;border-color:#071a33 !important;box-shadow:0 16px 34px -16px rgba(7,26,51,.62),0 0 0 2px rgba(173,139,85,.68) inset !important;}
   .ai-orb svg{color:#ffffff !important;}.ai-panel{border-color:rgba(7,26,51,.18) !important;background:#ffffff !important;box-shadow:0 28px 62px -24px rgba(7,26,51,.36),0 1px 0 #fff inset !important;}
-  .learning-strip,.studio-panel,.studio-list-item,.studio-map-item{border-color:rgba(7,26,51,.14) !important;}
+  .learning-strip{border-color:rgba(7,26,51,.14) !important;}
   .learning-strip{background:#f4f1e9 !important;}
-  .studio-node{background:#071a33 !important;color:#ffffff !important;}
-  .studio-focus-card{border-left-color:#ad8b55 !important;background:#f4f1e9 !important;}
-  .studio-progress-fill{background:#071a33 !important;}
 
   /* Apple-inspired motion: depth is deliberate on desktop and compact on touch devices. */
-  .hero-glass,.journey-studio,.section.bento-card,.folio,.skill-card,.pursuing-card{transform-style:preserve-3d;}
+  .hero-glass,.section.bento-card,.folio,.skill-card,.pursuing-card{transform-style:preserve-3d;}
   .oldmoney-motion-ready .oldmoney-reveal{opacity:0;transform:translate3d(0,26px,0) scale(.975) rotateX(1.2deg);}
   .oldmoney-motion-ready .oldmoney-reveal.oldmoney-visible{opacity:1;transform:none;}
   .oldmoney-reveal{transition:opacity .56s cubic-bezier(.23,1,.32,1),transform .56s cubic-bezier(.16,1.12,.3,1) !important;transition-delay:var(--oldmoney-delay,0ms);}
-  :where(.btn-primary,.btn-ghost,.play-journey-btn,.studio-replay a,.dock-item,.topnav button,.topnav select){transition:transform .16s cubic-bezier(.16,1.12,.3,1),box-shadow .24s cubic-bezier(.23,1,.32,1),background-color .22s ease,border-color .22s ease !important;}
-  :where(.btn-primary,.btn-ghost,.play-journey-btn,.studio-replay a,.dock-item,.topnav button,.topnav select):active{transform:scale(.965) translateY(1px) !important;}
+  :where(.btn-primary,.btn-ghost,.play-journey-btn,.dock-item,.topnav button,.topnav select){transition:transform .16s cubic-bezier(.16,1.12,.3,1),box-shadow .24s cubic-bezier(.23,1,.32,1),background-color .22s ease,border-color .22s ease !important;}
+  :where(.btn-primary,.btn-ghost,.play-journey-btn,.dock-item,.topnav button,.topnav select):active{transform:scale(.965) translateY(1px) !important;}
   @media (hover:hover) and (pointer:fine){
     .oldmoney-depth{will-change:transform;transition:transform .32s cubic-bezier(.16,1.12,.3,1),box-shadow .32s cubic-bezier(.23,1,.32,1),border-color .22s ease !important;}
     .oldmoney-depth:hover{transform:perspective(1100px) translate3d(0,-8px,0) rotateX(1deg) rotateY(.35deg) !important;box-shadow:0 28px 58px -28px rgba(7,26,51,.38),0 1px 0 #fff inset !important;border-color:rgba(173,139,85,.48) !important;}
@@ -1948,7 +1918,7 @@ html{scroll-behavior:auto!important}
   }
   @media (prefers-reduced-motion:reduce){
     .oldmoney-motion-ready .oldmoney-reveal,.oldmoney-motion-ready .oldmoney-reveal.oldmoney-visible{opacity:1;transform:none;}
-    .oldmoney-reveal,:where(.btn-primary,.btn-ghost,.play-journey-btn,.studio-replay a,.dock-item,.topnav button,.topnav select){transition:none !important;}
+    .oldmoney-reveal,:where(.btn-primary,.btn-ghost,.play-journey-btn,.dock-item,.topnav button,.topnav select){transition:none !important;}
   }
 </style>
 <script>
@@ -1959,8 +1929,8 @@ html{scroll-behavior:auto!important}
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const compact = window.matchMedia && window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     const selector = compact
-      ? '.hero-glass,.journey-studio,.section.bento-card'
-      : '.hero-glass,.journey-studio,.journey-studio .studio-panel,.section.bento-card,.folio,.skill-card,.pursuing-card';
+      ? '.hero-glass,.section.bento-card'
+      : '.hero-glass,.section.bento-card,.folio,.skill-card,.pursuing-card';
     const targets = [...document.querySelectorAll(selector)];
     if (!targets.length) return;
     targets.forEach((el, i) => {
@@ -2250,26 +2220,6 @@ html{scroll-behavior:auto!important}
   <div class="bento-grid">
 
   <!-- ===================== JOURNEY ===================== -->
-
-<section class="journey-studio scene" id="journey-studio" data-scene="journey-studio" aria-labelledby="studio-title">
-  <div class="studio-head">
-    <p class="studio-kicker">A guided starting point</p>
-    <h2 id="studio-title">This is not a finished portfolio. It is a public record of becoming better.</h2>
-    <p>Start here for the short version of Yash's real journey. Every card below is generated from the same journal, experience, learning, and proof data already used across the site.</p>
-    <nav class="studio-replay" aria-label="Story replay">
-      <a href="#journey">01 Journey</a><a href="#experience">02 Experience</a><a href="#pursuing">03 Learning</a><a href="#credentials">04 Proof</a><a href="#skills">05 Skills</a><a href="#contact">06 Connect</a>
-    </nav>
-  </div>
-  <div class="studio-grid">
-    <section class="studio-panel" aria-labelledby="map-title"><h3 id="map-title">Journey map</h3><div class="studio-map" id="studio-map"></div></section>
-    <section class="studio-panel" aria-labelledby="focus-title"><h3 id="focus-title">Current direction</h3><div class="studio-focus" id="studio-focus"></div><div class="studio-progress"><div class="studio-progress-head"><span>Documented momentum</span><span id="studio-progress-label">—</span></div><div class="studio-progress-track" role="progressbar" aria-label="Average documented discipline" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="studio-progress-fill" id="studio-progress-fill"></div></div></div></section>
-  </div>
-  <div class="studio-bottom">
-    <section class="studio-panel" aria-labelledby="learning-vault-title"><h3 id="learning-vault-title">Learning vault</h3><div class="studio-list" id="studio-learning"></div></section>
-    <section class="studio-panel" aria-labelledby="proof-wall-title"><h3 id="proof-wall-title">Proof wall</h3><div class="studio-list" id="studio-proof"></div></section>
-  </div>
-  <div class="studio-leave"><strong>Before you leave:</strong> <span id="studio-leave-copy">The latest work is documented in the journal. Come back as the record grows.</span></div>
-</section>
 
 <section class="section bento-card bento-span-7 scene" id="journey" data-scene="journey">
     <div class="wrap">
@@ -4515,42 +4465,11 @@ html{scroll-behavior:auto!important}
   })();
 </script>
 <script>
-
-/* PREMIUM_JOURNEY_STUDIO_SCRIPT_V1 */
-(() => {
-  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const map = document.getElementById('studio-map');
-  const focus = document.getElementById('studio-focus');
-  const learning = document.getElementById('studio-learning');
-  const proof = document.getElementById('studio-proof');
-  if (!map || !focus || !learning || !proof) return;
-  const journey = Array.isArray(window.JOURNEY_DATA) ? window.JOURNEY_DATA : [];
-  const focusData = window.FOCUS_DATA?.items || [];
-  const learned = Array.isArray(window.THINGS_LEARNED) ? window.THINGS_LEARNED : [];
-  const built = Array.isArray(window.THINGS_BUILT) ? window.THINGS_BUILT : [];
-  const creds = Object.values(window.CREDENTIALS_DATA || {}).flat().filter(Boolean);
-  map.innerHTML = journey.slice(0, 6).map((x, i) => `<div class="studio-map-item"><div class="studio-node">${String(i+1).padStart(2,'0')}</div><div><strong>${esc(x.title || 'Journey chapter')}</strong><span>${esc(x.date || x.paragraphs?.[0]?.slice(0,105) || 'Documented chapter')}</span></div></div>`).join('') || '<div class="studio-list-item"><span>The map will grow with the next real chapter.</span></div>';
-  focus.innerHTML = focusData.slice(0, 4).map(x => `<div class="studio-focus-card"><b>${esc(x.label)} · ${esc(x.value)}</b><span>${esc(x.desc)}</span></div>`).join('') || '<div class="studio-list-item"><span>Current focus will appear when it is documented.</span></div>';
-  learning.innerHTML = learned.concat((window.SKILLS_DATA || []).filter(x => /AI|automation|Excel|Finance/i.test(`${x.title} ${x.desc}`)).slice(0, 3)).slice(0, 4).map(x => `<div class="studio-list-item"><b>${esc(x.course || x.title)}</b><span>${esc(x.usedFor || x.desc || 'Learning in progress')}</span></div>`).join('') || '<div class="studio-list-item"><span>No learning record added yet.</span></div>';
-  proof.innerHTML = creds.concat(built).slice(0, 5).map(x => `<div class="studio-list-item"><b>${esc(x.title || 'Proof item')}</b><span>${esc(x.issuer || x.outcome || x.learned || x.date || '')}</span>${x.verifyUrl ? `<a class="studio-proof-link" href="${esc(x.verifyUrl)}" target="_blank" rel="noopener">View verification ↗</a>` : ''}</div>`).join('') || '<div class="studio-list-item"><span>Proof wall will grow with verified work.</span></div>';
-  const entries = Array.isArray(window.UNFILTERED_ENTRIES) ? window.UNFILTERED_ENTRIES : [];
-  const avg = entries.length ? Math.round(entries.reduce((sum, e) => sum + Number(e.discipline || 0), 0) / entries.length) : 0;
-  const fill = document.getElementById('studio-progress-fill'); const label = document.getElementById('studio-progress-label'); const bar = fill?.parentElement?.parentElement;
-  if (fill) fill.style.width = `${Math.max(0, Math.min(100, avg))}%`;
-  if (label) label.textContent = entries.length ? `${avg}% average across ${entries.length} documented day${entries.length === 1 ? '' : 's'}` : 'No days documented yet';
-  if (bar) bar.setAttribute('aria-valuenow', String(avg));
-  const latest = entries.slice().sort((a,b) => String(b.date).localeCompare(String(a.date)))[0];
-  const leave = document.getElementById('studio-leave-copy');
-  if (leave && latest) leave.textContent = `Latest documented chapter: Day ${esc(latest.day)} · ${esc(latest.date)}. The record is still being built.`;
-})();
-
-</script>
-<script>
 <!-- APPLE_MOTION_V1_START -->
 (function(){
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const lite=window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
-  const revealTargets=[...document.querySelectorAll('.hero-glass,.journey-studio,.journey-studio .studio-panel,.section.bento-card,.folio,.skill-card,.pursuing-card')];
+  const revealTargets=[...document.querySelectorAll('.hero-glass,.section.bento-card,.folio,.skill-card,.pursuing-card')];
   revealTargets.forEach((el,i)=>{el.classList.add('apple-reveal');if(i%4===0)el.classList.add('apple-float');});
   if(reduce || lite){revealTargets.forEach(el=>el.classList.add('is-visible'));return;}
   const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');io.unobserve(entry.target);}}),{threshold:.12,rootMargin:'0px 0px -8%'});
@@ -4559,7 +4478,7 @@ html{scroll-behavior:auto!important}
   setTimeout(()=>revealTargets.forEach(el=>el.classList.add('is-visible')),900);
   if(window.innerWidth<761)return;
   let raf=0,px=0,py=0;
-  const cards=[...document.querySelectorAll('.hero-glass,.journey-studio,.section.bento-card')];
+  const cards=[...document.querySelectorAll('.hero-glass,.section.bento-card')];
   function paint(){raf=0;cards.forEach(card=>{const r=card.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;const x=Math.max(0,Math.min(1,(px-r.left)/Math.max(1,r.width)));const y=Math.max(0,Math.min(1,(py-r.top)/Math.max(1,r.height)));card.style.setProperty('--apple-x',(x*100).toFixed(1)+'%');card.style.setProperty('--apple-y',(y*100).toFixed(1)+'%');});}
   addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;if(!raf)raf=requestAnimationFrame(paint)},{passive:true});
 })();
@@ -4572,7 +4491,7 @@ html{scroll-behavior:auto!important}
   const lite = window.matchMedia && window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
   root.dataset.autonomousPolish = 'ready';
   Array.from(document.images).forEach((img, index) => { if (!img.decoding) img.decoding = 'async'; if (index > 2 && !img.loading) img.loading = 'lazy'; });
-  const chapters = Array.from(document.querySelectorAll('section[id],.journey-studio[id]'));
+  const chapters = Array.from(document.querySelectorAll('section[id][id]'));
   const links = Array.from(document.querySelectorAll('.story-rail a[href^="#"]'));
   if (!lite && 'IntersectionObserver' in window && chapters.length) {
     const observer = new IntersectionObserver((entries) => {

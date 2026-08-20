@@ -25,9 +25,14 @@ for name in ('index.html', 'admin.html'):
 index = Path('index.html').read_text()
 admin = Path('admin.html').read_text()
 checks = {
-    'journey studio markup': 'id="journey-studio"' in index,
-    'journey studio css': 'PREMIUM_JOURNEY_STUDIO_V1' in index,
-    'journey studio script': 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' in index,
+    'guided starting point removed': 'id="journey-studio"' not in index and 'A guided starting point' not in index,
+    'studio renderer removed': 'PREMIUM_JOURNEY_STUDIO_V1' not in index and 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' not in index,
+    'journey section retained': 'id="journey"' in index,
+    'experience section retained': 'id="experience"' in index,
+    'learning section retained': 'id="pursuing"' in index,
+    'proof section retained': 'id="credentials"' in index,
+    'skills section retained': 'id="skills"' in index,
+    'contact section retained': 'id="contact"' in index,
     'entries data import': 'entries-data.js?v=journey-studio' in index or 'entries-data.js?v=' in index,
     'publish guard': 'PREMIUM_PUBLISH_GUARD_V1' in admin,
     'guard after serialization': "validatePublishPayload(filename, newContent);" in admin,
