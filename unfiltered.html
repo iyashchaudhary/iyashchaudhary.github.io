@@ -576,6 +576,34 @@ body { overflow-x:clip; -webkit-overflow-scrolling:touch; overscroll-behavior-x:
 @media (max-width:760px) { :where(.media-collage,.media-board,.lt-grid,.random-grid) { min-width:0; max-width:100%; } .entry-thumbnail { max-width:100%; overflow:hidden; } }
 @media (prefers-reduced-motion:reduce) { :where(*,*::before,*::after) { scroll-behavior:auto!important; animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; } }
 </style>
+
+<style id="performance-cleanup-v1">
+/* PERFORMANCE_CLEANUP_V1 */
+html{scroll-behavior:auto!important}
+@media (max-width:760px), (pointer:coarse){
+  html{scroll-behavior:auto!important;overscroll-behavior-y:auto!important}
+  body{background-attachment:scroll!important;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+  #fireflies,#petal-field,.firefly,.petal,.trail-petal{display:none!important}
+  .hero-scene,.hero-scene::before,.hero-scene::after{animation:none!important;transform:none!important}
+  :where(.glass,.hero-glass,.section.bento-card,.journey-studio,.studio-panel,.folio){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  :where(*,*::before,*::after){will-change:auto!important}
+  .apple-float{animation:none!important;transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  :where(*,*::before,*::after){scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+<style id="performance-cleanup-v2">
+/* Performance-first mobile mode: native scroll, no decorative compositor work. */
+@media (max-width:760px), (pointer:coarse){
+  html{scroll-behavior:auto!important;}
+  body{background-attachment:scroll!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
+  #tree-bg,.tree-bg,.tree-bg-glow,.tree-bg-glow-2,.particle-layer{animation:none!important;transform:none!important;will-change:auto!important;}
+  .hero-scene,.hero-scene::before,.hero-scene::after,.petal,.firefly,.confetti-container{display:none!important;}
+  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.journey-studio,.studio-panel,.folio,.random-note,.lt-card,.execution-index,.consistency-graph{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;will-change:auto!important;}
+}
+</style>
 </head>
 <body>
 <div id="uy-lightbox" class="uy-lightbox" aria-modal="true" role="dialog" onclick="if(event.target===this)closeMediaLightbox()"></div>

@@ -76,3 +76,13 @@ Mobile performance audit: added a native-touch, mobile-first performance layer t
 - 390px portfolio render: full-width header and hero card, readable wrapped hero heading, visible content, and fixed bottom dock within viewport.
 - 390px journal render: category cards, Day 07 entry controls, thumbnail/media area, and date selector remain readable without narrow-strip collapse.
 - Chromium headless emitted only expected UPower/DBus sandbox warnings; screenshots generated successfully.
+
+## Performance-first cleanup — 2026-08-20
+
+The cleanup removes mobile decorative timers and story-depth work, keeps native scrolling (`scroll-behavior: auto`, body `touch-action: pan-y`), reduces costly visual effects, and serves the optimized hero and Day 07 WebP delivery assets. The initial 390px screenshot captured the headline mid-typewriter; a settled 390px render after 3.5 seconds showed the full `Hello. I'm Yash.` headline, readable supporting copy, full-width hero card, and the fixed dock within the viewport. The remaining browser image anomaly was an intentionally empty lightbox placeholder; it was replaced with a 1x1 transparent data URI so it creates no network request while remaining functional when opened.
+
+The browser audit showed zero horizontal overflow and no concrete broken image URLs on the portfolio; offscreen gallery images were lazy and not yet decoded in the first viewport. The Day 07 thumbnail now uses `photos/day07.webp`, while the original PNG remains available as a fallback source asset.
+
+## Performance-first cleanup — final 390px render verification
+
+The final 390px portfolio render shows a full-width readable hero, safely wrapped headline, and fixed dock contained within the viewport. The 390px Unfiltered Yash render shows the Day 07 thumbnail, date controls, and journal content without a narrow-strip collapse or horizontal clipping. Mobile overrides force native scroll behavior, remove costly backdrop blur and decorative transforms, stop animation and transition work, and preserve first-load content visibility. Dynamic template expressions reported by the bounded asset script are renderer placeholders rather than missing concrete files; the optimized Day 07 WebP delivery asset is present and the original PNG remains preserved.

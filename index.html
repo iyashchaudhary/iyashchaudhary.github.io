@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link id="portfolio-hero-preload" rel="preload" as="image" href="assets/portfolio-scenic-blue-hero.webp" fetchpriority="high">
 <meta charset="UTF-8">
 <script>
 (function(){
@@ -1704,14 +1705,14 @@
   /* Scenic reference atmosphere: real landscape depth behind the glass portfolio UI */
   .tree-bg{
     background-color:#173d78 !important;
-    background-image:linear-gradient(180deg,rgba(8,34,82,.34),rgba(53,135,220,.12) 46%,rgba(8,28,67,.36)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(8,34,82,.34),rgba(53,135,220,.12) 46%,rgba(8,28,67,.36)),url('assets/portfolio-scenic-blue-hero.webp') !important;
     background-size:cover,cover !important;
     background-position:center,center !important;
     background-repeat:no-repeat !important;
   }
   .tree-bg::after{
     content:"";position:absolute;inset:-3%;pointer-events:none;z-index:0;
-    background:url('assets/portfolio-scenic-blue-hero.jpg') center/cover no-repeat;
+    background:url('assets/portfolio-scenic-blue-hero.webp') center/cover no-repeat;
     opacity:.23;transform:translate3d(-1.2%,-.6%,0) scale(1.05);
     animation:portfolio-scenic-drift 34s ease-in-out infinite alternate;
     will-change:transform;mix-blend-mode:screen;
@@ -1722,13 +1723,13 @@
     100%{transform:translate3d(1.4%,-.4%,0) scale(1.06);}
   }
   html[data-theme="dark"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(3,13,35,.66),rgba(15,55,112,.34) 48%,rgba(2,10,26,.72)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(3,13,35,.66),rgba(15,55,112,.34) 48%,rgba(2,10,26,.72)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   html[data-theme="evening"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(13,27,70,.52),rgba(30,92,170,.24) 48%,rgba(8,18,50,.58)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(13,27,70,.52),rgba(30,92,170,.24) 48%,rgba(8,18,50,.58)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   html[data-theme="morning"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(217,239,255,.22),rgba(112,181,237,.08) 48%,rgba(31,83,151,.24)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(217,239,255,.22),rgba(112,181,237,.08) 48%,rgba(31,83,151,.24)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   @media (max-width:720px){
     .tree-bg{background-position:center top,center top !important;}
@@ -1835,6 +1836,34 @@ body { overflow-x: clip; }
 .journey-studio { grid-column: 1 / -1; width: 100%; min-width: 0; }
 @media (max-width:760px) { html { scroll-padding-top: max(4.5rem, calc(3.75rem + env(safe-area-inset-top))); } body { -webkit-overflow-scrolling: touch; overscroll-behavior-x: none; } .journey-studio,.studio-grid,.studio-map,.studio-focus,.studio-bottom { width:100%; min-width:0; max-width:100%; } .studio-grid { grid-template-columns:minmax(0,1fr)!important; } .hero-heading,.hero-bigtext { font-size:clamp(2.25rem,13vw,4.8rem); line-height:.98; letter-spacing:-.045em; } .dock-wrap { padding-bottom:max(.55rem,env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion:reduce) { :where(*,*::before,*::after) { scroll-behavior:auto!important; animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; } }
+</style>
+
+<style id="performance-cleanup-v1">
+/* PERFORMANCE_CLEANUP_V1 */
+html{scroll-behavior:auto!important}
+@media (max-width:760px), (pointer:coarse){
+  html{scroll-behavior:auto!important;overscroll-behavior-y:auto!important}
+  body{background-attachment:scroll!important;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+  #fireflies,#petal-field,.firefly,.petal,.trail-petal{display:none!important}
+  .hero-scene,.hero-scene::before,.hero-scene::after{animation:none!important;transform:none!important}
+  :where(.glass,.hero-glass,.section.bento-card,.journey-studio,.studio-panel,.folio){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  :where(*,*::before,*::after){will-change:auto!important}
+  .apple-float{animation:none!important;transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  :where(*,*::before,*::after){scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+<style id="performance-cleanup-v2">
+/* Performance-first mobile mode: native scroll, no decorative compositor work. */
+@media (max-width:760px), (pointer:coarse){
+  html{scroll-behavior:auto!important;}
+  body{background-attachment:scroll!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
+  #fireflies,.firefly,#petal-field,.petal,.trail-petal,.confetti-container{display:none!important;}
+  .hero-scene,.hero-scene::before,.hero-scene::after,[data-story-depth]{animation:none!important;transform:none!important;filter:none!important;opacity:1!important;will-change:auto!important;}
+  .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.journey-studio,.studio-panel,.folio,.skill-card,.pursuing-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;will-change:auto!important;}
+}
 </style>
 </head>
 <body>
@@ -2225,7 +2254,7 @@ body { overflow-x: clip; }
   <div id="lightbox">
     <button id="lightbox-close" aria-label="Close" onclick="closeLightbox()">&times;</button>
     <button id="lightbox-prev" aria-label="Previous" onclick="stepLightbox(-1)">&#8249;</button>
-    <img id="lightbox-img" alt="" decoding="async">
+    <img id="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" decoding="async" width="1" height="1">
     <button id="lightbox-next" aria-label="Next" onclick="stepLightbox(1)">&#8250;</button>
   </div>
 
@@ -2255,7 +2284,7 @@ body { overflow-x: clip; }
   // ---------- DYNAMIC RENDERING ----------
   (function(){
     const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    
+
     // Journey
     const timeline = document.getElementById('timeline');
     if(timeline && window.JOURNEY_DATA) {
@@ -2265,7 +2294,7 @@ body { overflow-x: clip; }
       window.JOURNEY_DATA.forEach((item, idx) => {
         let gallery = '';
         if(item.images && item.images.length) {
-          gallery = `<div class="tl-gallery">` + item.images.map((img, i) => 
+          gallery = `<div class="tl-gallery">` + item.images.map((img, i) =>
             `<button onclick="openLightbox(${i})"><img src="${img.src}" alt="${esc(img.alt)}" loading="lazy" decoding="async"></button>`
           ).join('') + `</div>`;
         }
@@ -2350,7 +2379,7 @@ body { overflow-x: clip; }
             ${c.skills ? `<div class="card-skills">${c.skills.map(s => `<span>${esc(s)}</span>`).join('')}</div>` : ''}
             ${c.verifyUrl ? `<a href="${c.verifyUrl}" target="_blank" rel="noopener" class="card-verify">Verify Certificate ↗</a>` : ''}
           </article>`).join('');
-        
+
         return `
           <div class="folio reveal" id="folio-${f.id}">
             <button class="accordion-head" onclick="toggleFolio(this)">
@@ -4168,7 +4197,7 @@ body { overflow-x: clip; }
 (function(){
   // Drifting fireflies / light motes among the blossoms.
   const layer = document.getElementById('fireflies');
-  if(!layer) return;
+  if(!layer || window.matchMedia('(max-width:760px), (pointer:coarse)').matches) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const count = window.innerWidth < 720 ? 10 : 18;
   for(let i = 0; i < count; i++){
@@ -4218,7 +4247,7 @@ body { overflow-x: clip; }
 
 (function(){
   const field = document.getElementById('petal-field');
-  if(!field) return;
+  if(!field || window.matchMedia('(max-width:760px), (pointer:coarse)').matches) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PETAL_IMAGES = ['petal-1.png','petal-2.png','petal-3.png'];
   const isMobile = window.innerWidth < 720;
@@ -4310,6 +4339,7 @@ body { overflow-x: clip; }
   /* STORY_MODE_SCRIPT_V1 */
   (() => {
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lite = window.matchMedia && window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     const links = [...document.querySelectorAll('[data-story-link]')];
     const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
     const root = document.documentElement;
@@ -4326,6 +4356,7 @@ body { overflow-x: clip; }
         el.style.setProperty('--story-y', `${y.toFixed(2)}px`);
       });
     };
+    if (lite) { root.style.setProperty('--story-progress', '0%'); return; }
     let ticking = false;
     window.addEventListener('scroll', () => { if (!ticking) { window.requestAnimationFrame(() => { update(); ticking = false; }); ticking = true; } }, {passive:true});
     links.forEach(link => link.addEventListener('click', () => { links.forEach(x => x.classList.remove('active')); link.classList.add('active'); }));
@@ -4368,9 +4399,10 @@ body { overflow-x: clip; }
 <!-- APPLE_MOTION_V1_START -->
 (function(){
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite=window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
   const revealTargets=[...document.querySelectorAll('.hero-glass,.journey-studio,.journey-studio .studio-panel,.section.bento-card,.folio,.skill-card,.pursuing-card')];
   revealTargets.forEach((el,i)=>{el.classList.add('apple-reveal');if(i%4===0)el.classList.add('apple-float');});
-  if(reduce){revealTargets.forEach(el=>el.classList.add('is-visible'));return;}
+  if(reduce || lite){revealTargets.forEach(el=>el.classList.add('is-visible'));return;}
   const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');io.unobserve(entry.target);}}),{threshold:.12,rootMargin:'0px 0px -8%'});
   revealTargets.forEach(el=>io.observe(el));
   // Safety net for slow mobile browsers: content must never stay hidden if IO is delayed.
@@ -4387,11 +4419,12 @@ body { overflow-x: clip; }
 <script>/* autonomous-polish-runtime-v1 */
 (() => {
   const root = document.documentElement;
+  const lite = window.matchMedia && window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
   root.dataset.autonomousPolish = 'ready';
   Array.from(document.images).forEach((img, index) => { if (!img.decoding) img.decoding = 'async'; if (index > 2 && !img.loading) img.loading = 'lazy'; });
   const chapters = Array.from(document.querySelectorAll('section[id],.journey-studio[id]'));
   const links = Array.from(document.querySelectorAll('.story-rail a[href^="#"]'));
-  if ('IntersectionObserver' in window && chapters.length) {
+  if (!lite && 'IntersectionObserver' in window && chapters.length) {
     const observer = new IntersectionObserver((entries) => {
       const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
       if (!visible) return;
@@ -4400,7 +4433,7 @@ body { overflow-x: clip; }
     }, { rootMargin:'-18% 0px -58% 0px', threshold:[0,.2,.55] });
     chapters.forEach(chapter => observer.observe(chapter));
   }
-  requestAnimationFrame(() => root.classList.add('autonomous-polish-ready'));
+  if (!lite) requestAnimationFrame(() => root.classList.add('autonomous-polish-ready'));
 })();
 </script>
 </body>
