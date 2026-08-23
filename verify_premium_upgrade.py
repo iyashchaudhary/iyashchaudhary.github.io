@@ -25,8 +25,10 @@ for name in ('index.html', 'admin.html'):
 index = Path('index.html').read_text()
 admin = Path('admin.html').read_text()
 checks = {
-    'guided starting point restored': 'id="journey-studio"' in index and 'A guided starting point' in index,
-    'studio renderer restored': 'PREMIUM_JOURNEY_STUDIO_V1' in index and 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' in index,
+    'guided starting point removed': 'id="journey-studio"' not in index and 'A guided starting point' not in index,
+    'studio renderer removed': 'PREMIUM_JOURNEY_STUDIO_V1' not in index and 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' not in index,
+    'day night theme options': index.count('<option value="light">Day Mode</option>') == 1 and index.count('<option value="dark">Night Mode</option>') == 1 and not any(f'<option value="{x}"' in index for x in ('auto','morning','evening')),
+    'premium apple motion retained': 'APPLE_MOTION_V1_START' in index and 'APPLE_MOTION_V1_END' in index,
     'journey section retained': 'id="journey"' in index,
     'experience section retained': 'id="experience"' in index,
     'learning section retained': 'id="pursuing"' in index,
