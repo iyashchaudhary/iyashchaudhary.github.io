@@ -25,8 +25,8 @@ for name in ('index.html', 'admin.html'):
 index = Path('index.html').read_text()
 admin = Path('admin.html').read_text()
 checks = {
-    'guided starting point removed': 'id="journey-studio"' not in index and 'A guided starting point' not in index,
-    'studio renderer removed': 'PREMIUM_JOURNEY_STUDIO_V1' not in index and 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' not in index,
+    'guided starting point restored': 'id="journey-studio"' in index and 'A guided starting point' in index,
+    'studio renderer restored': 'PREMIUM_JOURNEY_STUDIO_V1' in index and 'PREMIUM_JOURNEY_STUDIO_SCRIPT_V1' in index,
     'journey section retained': 'id="journey"' in index,
     'experience section retained': 'id="experience"' in index,
     'learning section retained': 'id="pursuing"' in index,
