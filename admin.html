@@ -1058,7 +1058,7 @@ body { overflow-x:clip; }
   function parseEntriesSource(raw){
     try {
       const scope={};
-      const value=Function('window', String(raw)+'\\nreturn window.UNFILTERED_ENTRIES;')(scope);
+      const value=Function('window', String(raw)+'\nreturn window.UNFILTERED_ENTRIES;')(scope);
       if(!Array.isArray(value)) throw new Error('UNFILTERED_ENTRIES is not an array');
       return value;
     } catch(e) {
