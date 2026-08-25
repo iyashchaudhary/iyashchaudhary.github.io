@@ -1704,14 +1704,14 @@
   /* Scenic reference atmosphere: real landscape depth behind the glass portfolio UI */
   .tree-bg{
     background-color:#173d78 !important;
-    background-image:linear-gradient(180deg,rgba(8,34,82,.34),rgba(53,135,220,.12) 46%,rgba(8,28,67,.36)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(8,34,82,.34),rgba(53,135,220,.12) 46%,rgba(8,28,67,.36)),url('assets/portfolio-scenic-blue-hero.webp') !important;
     background-size:cover,cover !important;
     background-position:center,center !important;
     background-repeat:no-repeat !important;
   }
   .tree-bg::after{
     content:"";position:absolute;inset:-3%;pointer-events:none;z-index:0;
-    background:url('assets/portfolio-scenic-blue-hero.jpg') center/cover no-repeat;
+    background:url('assets/portfolio-scenic-blue-hero.webp') center/cover no-repeat;
     opacity:.23;transform:translate3d(-1.2%,-.6%,0) scale(1.05);
     animation:portfolio-scenic-drift 34s ease-in-out infinite alternate;
     will-change:transform;mix-blend-mode:screen;
@@ -1722,13 +1722,13 @@
     100%{transform:translate3d(1.4%,-.4%,0) scale(1.06);}
   }
   html[data-theme="dark"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(3,13,35,.66),rgba(15,55,112,.34) 48%,rgba(2,10,26,.72)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(3,13,35,.66),rgba(15,55,112,.34) 48%,rgba(2,10,26,.72)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   html[data-theme="evening"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(13,27,70,.52),rgba(30,92,170,.24) 48%,rgba(8,18,50,.58)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(13,27,70,.52),rgba(30,92,170,.24) 48%,rgba(8,18,50,.58)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   html[data-theme="morning"] .tree-bg{
-    background-image:linear-gradient(180deg,rgba(217,239,255,.22),rgba(112,181,237,.08) 48%,rgba(31,83,151,.24)),url('assets/portfolio-scenic-blue-hero.jpg') !important;
+    background-image:linear-gradient(180deg,rgba(217,239,255,.22),rgba(112,181,237,.08) 48%,rgba(31,83,151,.24)),url('assets/portfolio-scenic-blue-hero.webp') !important;
   }
   @media (max-width:720px){
     .tree-bg{background-position:center top,center top !important;}
@@ -1827,6 +1827,22 @@ body { overflow-x: clip; }
   html[data-theme="dark"] .tree-bg-scrim{background:linear-gradient(180deg,rgba(5,10,20,.12),rgba(5,10,20,.58) 64%,rgba(3,7,14,.94))!important;}
   @media (max-width:760px){html[data-theme="dark"] .topnav{background:rgba(8,15,27,.94)!important;}html[data-theme="dark"] .hero-glass,html[data-theme="dark"] .section.bento-card{backdrop-filter:blur(12px) saturate(112%)!important;-webkit-backdrop-filter:blur(12px) saturate(112%)!important;}}
   @media (prefers-reduced-motion:reduce){html[data-theme="dark"] *,html[data-theme="dark"] *::before,html[data-theme="dark"] *::after{transition:none!important;animation-duration:.001ms!important;}}
+</style>
+<style id="mobile-smooth-v2">
+  @media (max-width:760px), (pointer:coarse){
+    html{scroll-behavior:auto!important;overscroll-behavior-y:auto!important;}
+    body{touch-action:pan-y!important;overscroll-behavior-y:auto!important;-webkit-overflow-scrolling:touch!important;}
+    #particle-universe,#mesh-bg,#light-engine,#cursor-glow,#fireflies,#petal-field{display:none!important;}
+    #tree-bg{animation:none!important;background-attachment:scroll!important;will-change:auto!important;}
+    #tree-bg::after,.tree-bg-glow,.tree-bg-glow-2{display:none!important;animation:none!important;will-change:auto!important;}
+    .hero-glass,.glass-card,.section.bento-card,.topnav,.dock,.folio,.skill-card,.pursuing-card,.ai-panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+    html[data-theme="light"] .hero-glass,html[data-theme="light"] .section.bento-card,html[data-theme="light"] .topnav,html[data-theme="light"] .dock{background:rgba(247,251,255,.94)!important;}
+    html[data-theme="dark"] .hero-glass,html[data-theme="dark"] .section.bento-card,html[data-theme="dark"] .topnav,html[data-theme="dark"] .dock{background:rgba(10,20,36,.94)!important;}
+    .apple-reveal{will-change:auto!important;transition:opacity .36s var(--apple-ease),transform .36s var(--apple-spring)!important;}
+    .apple-float{will-change:auto!important;}
+    :where(img){content-visibility:auto;}
+  }
+  @media (prefers-reduced-motion:reduce){.apple-reveal{opacity:1!important;transform:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
@@ -2737,7 +2753,7 @@ body { overflow-x: clip; }
      approaches the viewport. Cheap: one IntersectionObserver per beam, no per-frame scroll math. */
   (function(){
     const beams = document.querySelectorAll('.light-beam[data-target]');
-    if(!beams.length) return;
+    if(!beams.length || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760) return;
     function positionBeams(){
       beams.forEach(beam=>{
         const target = document.getElementById(beam.getAttribute('data-target'));
@@ -3861,7 +3877,7 @@ body { overflow-x: clip; }
      - Fully skipped under prefers-reduced-motion.
   ============================================================ */
   (function(){
-    if(prefersReducedGlobal) return;
+    if(prefersReducedGlobal || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760) return;
     const scenes = Array.from(document.querySelectorAll('.scene'));
     if(!scenes.length) return;
 
@@ -4112,7 +4128,8 @@ body { overflow-x: clip; }
   const layer = document.getElementById('fireflies');
   if(!layer) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const count = window.innerWidth < 720 ? 10 : 18;
+  if(window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 720) return;
+  const count = 18;
   for(let i = 0; i < count; i++){
     const f = document.createElement('div');
     f.className = 'firefly';
@@ -4160,7 +4177,7 @@ body { overflow-x: clip; }
 
 (function(){
   const field = document.getElementById('petal-field');
-  if(!field) return;
+  if(!field || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 720) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PETAL_IMAGES = ['petal-1.png','petal-2.png','petal-3.png'];
   const isMobile = window.innerWidth < 720;
@@ -4255,6 +4272,7 @@ body { overflow-x: clip; }
     const links = [...document.querySelectorAll('[data-story-link]')];
     const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
     const root = document.documentElement;
+    const lite = window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760;
     const update = () => {
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       root.style.setProperty('--story-progress', `${Math.min(100, Math.max(0, window.scrollY / max * 100))}%`);
@@ -4262,14 +4280,14 @@ body { overflow-x: clip; }
       let current = sections[0];
       sections.forEach(section => { if (section.getBoundingClientRect().top <= window.innerHeight * .42) current = section; });
       links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current.id}`));
-      if (!reduce && window.innerWidth > 600) document.querySelectorAll('[data-story-depth]').forEach(el => {
+      if (!reduce && !lite && window.innerWidth > 600) document.querySelectorAll('[data-story-depth]').forEach(el => {
         const r = el.getBoundingClientRect();
         const y = Math.max(-12, Math.min(12, (window.innerHeight * .5 - (r.top + r.height * .5)) * .018));
         el.style.setProperty('--story-y', `${y.toFixed(2)}px`);
       });
     };
     let ticking = false;
-    window.addEventListener('scroll', () => { if (!ticking) { window.requestAnimationFrame(() => { update(); ticking = false; }); ticking = true; } }, {passive:true});
+    if(!lite) window.addEventListener('scroll', () => { if (!ticking) { window.requestAnimationFrame(() => { update(); ticking = false; }); ticking = true; } }, {passive:true});
     links.forEach(link => link.addEventListener('click', () => { links.forEach(x => x.classList.remove('active')); link.classList.add('active'); }));
     document.querySelectorAll('.hero-glass,.section.bento-card').forEach(el => el.setAttribute('data-story-depth',''));
     update();
