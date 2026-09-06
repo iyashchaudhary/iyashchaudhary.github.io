@@ -141,10 +141,10 @@ function validatePublishPayload(filename, payload){
     </div>
 
     <div class="tabs" id="mode-tabs">
-      <button class="tab active" data-mode="entry">✏️ Daily Entry</button>
-      <button class="tab" data-mode="edit">🖊️ Edit Past Entry</button>
-      <button class="tab" data-mode="section">📌 Post to Section</button>
-      <button class="tab" data-mode="portfolio">💼 Portfolio Manager</button>
+      <button type="button" class="tab active" data-mode="entry">✏️ Daily Entry</button>
+      <button type="button" class="tab" data-mode="edit">🖊️ Edit Past Entry</button>
+      <button type="button" class="tab" data-mode="section">📌 Post to Section</button>
+      <button type="button" class="tab" data-mode="portfolio">💼 Portfolio Manager</button>
     </div>
 
     <!-- ========== DAILY ENTRY ========== -->
@@ -685,10 +685,11 @@ body { overflow-x:clip; }
   }
 
   function handleGenerate(){
-    if(!runContentCheck()) return;
+    if(!runContentCheck()) return false;
     if(currentMode==='entry') generateEntry();
     else if(currentMode==='section') generateSection();
     else if(currentMode==='portfolio') generatePortfolio();
+    return !!document.getElementById('output')?.value.trim();
   }
 
   const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': [], 'section-video': [] };
@@ -1126,8 +1127,17 @@ body { overflow-x:clip; }
     try {
       setCmsStatus('Checking selected media before publishing…','info');
       await uploadPendingJournalAssets(token);
-      if(!window._isDeletingPort && !window._isDeletingExisting && !window._isEditingExisting) handleGenerate();
-      const code = document.getElementById('output').value;
+      if(!window._isDeletingPort && !window._isDeletingExisting && !window._isEditingExisting){
+        // Mobile browsers can preserve a stale internal mode after tab/draft navigation.
+        // If the Daily Entry fields are visibly filled, always treat Publish as a new entry.
+        const entryFields = document.getElementById('entry-fields');
+        const hasDailyEntry = entryFields && getComputedStyle(entryFields).display !== 'none' &&
+          document.getElementById('f-date')?.value && document.getElementById('f-journal')?.value.trim();
+        if(hasDailyEntry) currentMode = 'entry';
+        if(!handleGenerate()) throw new Error('Please enter a date and journal note before publishing.');
+      }
+      const code = document.getElementById('output').value.trim();
+      if(!code) throw new Error('Please generate a valid entry before publishing.');
       let filename = 'entries-data.js', arrayName = 'UNFILTERED_ENTRIES', dayToUpdate = null, dayToDelete = null;
       if(currentMode==='section') {
         filename = 'sections-data.js';
