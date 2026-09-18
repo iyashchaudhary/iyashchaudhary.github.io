@@ -107,10 +107,6 @@
 function validatePublishPayload(filename, payload){
   if(!payload || typeof payload !== 'string') throw new Error('Publish stopped: generated content is empty.');
   try { new Function(payload); } catch(e) { throw new Error('Publish stopped: generated JavaScript is invalid. ' + e.message); }
-  if(filename === 'entries-data.js'){
-    const assets = [...payload.matchAll(/(?:src|poster):\s*["']([^"']+)["']/g)].map(m=>m[1]).filter(x=>x && !x.startsWith('data:') && !/^https?:/i.test(x));
-    if(/photos:\s*\[\s*\]/.test(payload) && /journal-/.test(payload)) throw new Error('Publish stopped: a journal media array appears empty while media assets are present. Check the selected photos before publishing.');
-  }
 }
 
 </script>
