@@ -969,7 +969,7 @@ body { overflow-x:clip; }
     if(!confirm(`Delete Day ${String(e.day).padStart(2,'0')} — ${e.date} permanently? A protected backup will be created first.`))return;
     currentMode='entry';window._isDeletingExisting=true;window._deleteMode=e;setCmsStatus(`Ready to delete Day ${e.day}. Click Publish to GitHub to confirm.`,'info');updatePublishButtons();
   }
-  function prepareEditPublish(){
+  function buildEditPayload(){
     if(!window._editMode)return alert('Load an entry first.');
     const day=Math.max(1,parseInt(document.getElementById('e-day').value)||window._editMode.day);
     const date=document.getElementById('e-date').value||window._editMode.date||'';
@@ -977,8 +977,12 @@ body { overflow-x:clip; }
     const photos=media.filter(m=>m.type==='image'), videos=media.filter(m=>m.type==='video');
     const thumb=window._editThumbnail||{}, legacyPhoto=thumb.removed?null:(thumb.src?{src:thumb.src,caption:thumb.caption||''}:null);
     window._editPayload={day,date,journal:document.getElementById('e-journal').value,discipline:Math.max(0,Math.min(100,parseInt(document.getElementById('e-discipline').value)||0)),photo:legacyPhoto,photos,videos,mediaCaption:''};
-    // Keep the existing publish pipeline, but make it consume the in-place editor payload.
     document.getElementById('output').value=JSON.stringify(window._editPayload,null,2);
+    return window._editPayload;
+  }
+  function prepareEditPublish(){
+    buildEditPayload();
+    // Keep the existing publish pipeline, but make it consume the in-place editor payload.
     window._isEditingExisting=true; currentMode='entry'; publishToGitHub();
   }
   function saveEditDraft(){
@@ -1133,6 +1137,9 @@ body { overflow-x:clip; }
     const btn = document.getElementById('btn-publish');
     btn.disabled = true; btn.textContent = "⏳ Publishing...";
     try {
+      // The bottom Publish button is also available while editing. Build the
+      // in-place edit payload automatically so it never reads a blank output.
+      if(window._isEditingExisting && window._editMode && !document.getElementById('output').value.trim()) buildEditPayload();
       setCmsStatus('Checking selected media before publishing…','info');
       await uploadPendingJournalAssets(token);
       if(!window._isDeletingPort && !window._isDeletingExisting && !window._isEditingExisting){
