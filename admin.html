@@ -686,10 +686,11 @@ body { overflow-x:clip; }
 
   function handleGenerate(){
     if(!runContentCheck()) return false;
-    if(currentMode==='entry') generateEntry();
+    let generated='';
+    if(currentMode==='entry') generated=generateEntry() || '';
     else if(currentMode==='section') generateSection();
     else if(currentMode==='portfolio') generatePortfolio();
-    return !!document.getElementById('output')?.value.trim();
+    return !!(generated || document.getElementById('output')?.value.trim());
   }
 
   const uploadedJournalMedia = { 'entry-images': [], 'section-images': [], 'entry-video': [], 'section-video': [] };
@@ -747,7 +748,14 @@ body { overflow-x:clip; }
     if(tags.length) out+=`    tags: ${JSON.stringify(tags)},\n`;
     const mediaCaption=document.getElementById('f-media-caption')?.value.trim()||'';
     if(mediaCaption) out+=`    mediaCaption: "${esc(mediaCaption)}",\n`;
-    out=out.replace(/,\\n$/,'\\n')+`  }`;document.getElementById('output').value=out;document.getElementById('output-wrap').style.display='block';document.getElementById('content-preview').style.display='none';saveDraft();
+    out=out.replace(/,\\n$/,'\\n')+`  }`;
+    const output=document.getElementById('output');
+    if(!output) throw new Error('Entry output area is unavailable. Refresh the admin page and try again.');
+    output.value=out;
+    document.getElementById('output-wrap').style.display='block';
+    document.getElementById('content-preview').style.display='none';
+    saveDraft();
+    return out;
   }
 
   function onSecTypeChange(){
