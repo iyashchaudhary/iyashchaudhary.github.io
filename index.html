@@ -1763,6 +1763,26 @@
   @media (prefers-reduced-motion:reduce){.story-depth{transform:none!important;transition:none}body::before{box-shadow:none}}
 
   /* STORY_MODE_V1 */
+
+  /* INTEGRATION_MAP_V1 — vanilla equivalent of the supplied React integration card */
+  .integration-section .wrap{position:relative}
+  .integration-map{position:relative;width:min(100%,564px);height:410px;margin:24px auto 8px;color:var(--text);isolation:isolate}
+  .integration-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:var(--line);z-index:0}
+  .integration-track{stroke:var(--line);stroke-width:1.25;opacity:.85}
+  .integration-flow{stroke:url(#integration-flow);stroke-width:2;stroke-dasharray:40 160;animation:integration-flow 4s linear infinite}
+  .integration-flow:nth-of-type(4n+2){animation-delay:.35s}.integration-flow:nth-of-type(4n+3){animation-delay:.7s}.integration-flow:nth-of-type(4n+4){animation-delay:1.05s}.integration-flow:nth-of-type(4n+5){animation-delay:1.4s}.integration-flow:nth-of-type(4n+6){animation-delay:1.75s}
+  @keyframes integration-flow{to{stroke-dashoffset:-200}}
+  .integration-core,.integration-node{position:absolute;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 16px 40px -26px rgba(7,25,61,.6),inset 0 1px 0 rgba(255,255,255,.42);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:2}
+  .integration-core{left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);border-radius:22px;flex-direction:column;gap:0;border-color:color-mix(in srgb,var(--primary) 42%,var(--line));animation:integration-pulse 3s ease-in-out infinite}
+  .integration-core span{font:800 2rem/1 'Fraunces',serif;color:var(--primary)}.integration-core small{font:700 8px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--text-dim)}
+  @keyframes integration-pulse{0%,100%{box-shadow:0 16px 40px -26px rgba(7,25,61,.6),0 0 0 0 color-mix(in srgb,var(--primary) 18%,transparent)}50%{box-shadow:0 16px 40px -26px rgba(7,25,61,.6),0 0 0 10px transparent}}
+  .integration-node{width:92px;min-height:58px;padding:8px 10px;border-radius:15px;flex-direction:column;gap:2px;text-align:center;transition:transform .3s var(--apple-spring),border-color .25s ease,background .25s ease}
+  .integration-node:hover{transform:translateY(-5px) scale(1.04);border-color:color-mix(in srgb,var(--primary) 48%,var(--line));background:color-mix(in srgb,var(--card) 98%,var(--primary) 2%)}
+  .integration-node b{font-size:1.08rem;line-height:1;color:var(--primary)}.integration-node span{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.11em}.integration-node small{font:600 10px/1 'IBM Plex Mono',monospace;color:var(--text)}
+  .integration-figma{left:8%;top:12%}.integration-claude{left:64%;top:7%}.integration-shadcn{left:17%;top:35%}.integration-react{right:4%;top:35%}.integration-motion{left:calc(50% - 46px);bottom:0}.integration-tailwind{right:8%;bottom:5%}
+  .integration-caption{display:flex;justify-content:space-between;gap:14px;margin:10px auto 0;max-width:564px;color:var(--text-dim);font-size:.78rem}.integration-caption .mono{color:var(--primary);font-size:.65rem;letter-spacing:.12em}
+  @media (max-width:720px){.integration-map{height:300px;margin-top:18px}.integration-node{width:74px;min-height:50px;padding:6px;border-radius:12px}.integration-node span{font-size:8px}.integration-node small{font-size:8px}.integration-core{width:62px;height:62px;border-radius:18px}.integration-core span{font-size:1.55rem}.integration-figma{left:0;top:10%}.integration-claude{left:auto;right:2%;top:5%}.integration-shadcn{left:3%;top:38%}.integration-react{right:0;top:38%}.integration-motion{left:calc(50% - 37px);bottom:0}.integration-tailwind{right:3%;bottom:1%}.integration-caption{font-size:.68rem}.integration-caption .mono{font-size:.58rem}}
+  @media (prefers-reduced-motion:reduce){.integration-flow,.integration-core{animation:none}.integration-node{transition:none}}
 </style>
 <style>
 <!-- APPLE_MOTION_V1_START -->
@@ -1944,6 +1964,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <a href="#pursuing" data-story-link><span>Learning</span></a>
     <a href="#credentials" data-story-link><span>Proof</span></a>
     <a href="#skills" data-story-link><span>Skills</span></a>
+    <a href="#integration" data-story-link><span>Stack</span></a>
     <a href="#contact" data-story-link><span>Connect</span></a>
   </aside>
   <!-- STORY_RAIL_V1 -->
@@ -2176,10 +2197,38 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     </div>
   </section>
 
+
+  <!-- ===================== INTEGRATION MAP ===================== -->
+  <section class="section bento-card bento-span-5 scene integration-section" id="integration" data-scene="integration">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num">07</span><h2>Stack in Motion</h2></div>
+      <p class="sec-desc reveal">The tools and systems I connect while turning ideas into useful, polished work.</p>
+      <div class="integration-map reveal" aria-label="Animated map of Yash's connected tools">
+        <svg class="integration-lines" viewBox="0 0 564 410" fill="none" aria-hidden="true">
+          <defs><linearGradient id="integration-flow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="transparent"/><stop offset=".5" stop-color="var(--primary)" stop-opacity=".75"/><stop offset="1" stop-color="transparent"/></linearGradient></defs>
+          <path class="integration-track" d="M270 205V105Q270 90 255 90H110"/><path class="integration-flow" d="M270 205V105Q270 90 255 90H110"/>
+          <path class="integration-track" d="M294 205V85Q294 70 309 70H360"/><path class="integration-flow" d="M294 205V85Q294 70 309 70H360"/>
+          <path class="integration-track" d="M250 205H160"/><path class="integration-flow" d="M250 205H160"/>
+          <path class="integration-track" d="M314 205H480"/><path class="integration-flow" d="M314 205H480"/>
+          <path class="integration-track" d="M282 205V360"/><path class="integration-flow" d="M282 205V360"/>
+          <path class="integration-track" d="M314 215V325Q314 340 329 340H460"/><path class="integration-flow" d="M314 215V325Q314 340 329 340H460"/>
+        </svg>
+        <div class="integration-core"><span>Y</span><small>YASH</small></div>
+        <div class="integration-node integration-figma"><b>F</b><span>Design</span><small>Figma</small></div>
+        <div class="integration-node integration-claude"><b>✦</b><span>Think</span><small>Claude</small></div>
+        <div class="integration-node integration-shadcn"><b>⌁</b><span>Build</span><small>shadcn</small></div>
+        <div class="integration-node integration-react"><b>⚛</b><span>Ship</span><small>React</small></div>
+        <div class="integration-node integration-motion"><b>◈</b><span>Move</span><small>Motion</small></div>
+        <div class="integration-node integration-tailwind"><b>≈</b><span>Polish</span><small>Tailwind</small></div>
+      </div>
+      <div class="integration-caption"><span class="mono">CONNECTED WORKFLOW</span><span>Idea → system → experience</span></div>
+    </div>
+  </section>
+
   <!-- ===================== CONTACT ===================== -->
   <section class="section bento-card bento-span-5 scene" id="contact" data-scene="contact">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">07</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">08</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
       <p class="sec-desc reveal">The best ways to reach me or see more of my work.</p>
       <div class="contact-row reveal">
         <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="contact-pill">LinkedIn ↗</a>
