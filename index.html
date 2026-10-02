@@ -1780,6 +1780,15 @@
   .build-caption{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:33px auto 0;color:var(--text-dim);font-size:.73rem;text-align:center}.build-caption strong{color:var(--primary);font-weight:700}
   @media (max-width:720px){.yash-build-loop{margin-top:22px}.yash-build-loop::before{left:50%;right:auto;top:58px;bottom:58px;width:1px;height:auto;background:linear-gradient(180deg,transparent,var(--line),var(--primary),var(--line),transparent)}.build-core{width:min(100%,220px);padding:17px 18px;margin-bottom:20px}.build-lanes{grid-template-columns:1fr;gap:10px;padding:0 10px}.build-lane{min-height:0;padding:14px}.build-lane:nth-child(2),.build-lane:nth-child(2):hover{transform:none}.build-lane h4{margin-top:10px}.build-caption{margin-top:20px}}
   @media (prefers-reduced-motion:reduce){.build-core::after{animation:none}.build-lane,.build-lane:hover{transition:none;transform:none!important}}
+
+  /* YASH_SONAR_FIELD_V1 — original navy / sky-blue palette, idle when no ring is alive */
+  .yash-build-loop{overflow:hidden;isolation:isolate}
+  .yash-sonar-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;color:var(--primary);opacity:.78}
+  .yash-build-loop>.build-core,.yash-build-loop>.build-lanes{position:relative;z-index:2}
+  .yash-build-loop>.build-core{background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .yash-build-loop>.build-lanes .build-lane{background:color-mix(in srgb,var(--card) 86%,transparent)}
+  @media (max-width:760px),(pointer:coarse){.yash-sonar-canvas{opacity:.5}.yash-build-loop{min-height:0}}
+  @media (prefers-reduced-motion:reduce){.yash-sonar-canvas{display:none}}
 </style>
 <style>
 <!-- APPLE_MOTION_V1_START -->
@@ -2201,6 +2210,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       <div class="sec-head reveal"><span class="sec-num">07</span><h2>What I’m Building Around</h2></div>
       <p class="sec-desc reveal">Not a list of random tools — the real lanes running through my life right now.</p>
       <div class="yash-build-loop reveal" aria-label="Yash's current build loop">
+        <canvas class="yash-sonar-canvas" id="yash-sonar-canvas" aria-hidden="true"></canvas>
         <div class="build-core">
           <span class="eyebrow">THE CURRENT CHAPTER</span>
           <h3>Learn it. Use it. Build with it.</h3>
@@ -4459,5 +4469,30 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 })();
 </script>
 <!-- PEAK_PREMIUM_RUNTIME_V1_END -->
+
+<script id="yash-sonar-runtime-v1">
+(() => {
+  const host = document.querySelector('.yash-build-loop');
+  const canvas = document.getElementById('yash-sonar-canvas');
+  if (!host || !canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const coarse = window.matchMedia('(pointer: coarse)');
+  let w=1,h=1,dpr=1,raf=0,timer=0,visible=true,lastPing=0,color='#246BDB';
+  const rings=[];
+  const opts={spacing:24,speed:190,width:72,base:.2,max:4};
+  const readColor=()=>{color=getComputedStyle(canvas).color || '#246BDB';};
+  const add=(x,y,born=performance.now())=>{rings.push({x,y,born});while(rings.length>opts.max)rings.shift();wake();};
+  const resize=()=>{const r=host.getBoundingClientRect();w=Math.max(1,r.width);h=Math.max(1,r.height);dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);readColor();draw(performance.now());};
+  const draw=(now)=>{ctx.clearRect(0,0,w,h);if(reduce.matches){rings.length=0;}const life=(Math.hypot(w,h)+opts.width)/opts.speed;const live=rings.filter(r=>(now-r.born)/1000<life);rings.splice(0,rings.length,...live);ctx.fillStyle=color;const cols=Math.ceil(w/opts.spacing)+1,rows=Math.ceil(h/opts.spacing)+1,ox=(w-(cols-1)*opts.spacing)/2,oy=(h-(rows-1)*opts.spacing)/2;ctx.globalAlpha=opts.base;ctx.beginPath();for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){const x=ox+i*opts.spacing,y=oy+j*opts.spacing;let hot=0;for(const r of live){const age=(now-r.born)/1000,rad=age*opts.speed,fade=1-age/life,dist=Math.abs(Math.hypot(x-r.x,y-r.y)-rad);if(dist<opts.width)hot=Math.max(hot,(1-dist/opts.width)**2*(3-2*(1-dist/opts.width))*fade);}if(!hot){ctx.moveTo(x+1,y);ctx.arc(x,y,1,0,Math.PI*2);}else{ctx.globalAlpha=opts.base+(1-opts.base)*hot;ctx.beginPath();ctx.arc(x,y,1+2.1*hot,0,Math.PI*2);ctx.fill();ctx.globalAlpha=opts.base;}}ctx.fill();ctx.globalAlpha=1;};
+  const tick=(now)=>{raf=0;if(!visible||document.hidden)return;const interval=coarse.matches?0:4200;if(interval&&now-lastPing>interval){add(w*(.25+Math.random()*.5),h*(.25+Math.random()*.5),now);lastPing=now;}draw(now);if(rings.length)raf=requestAnimationFrame(tick);else if(interval){clearTimeout(timer);timer=setTimeout(()=>wake(),interval);}};
+  const wake=()=>{clearTimeout(timer);if(!raf&&!document.hidden)raf=requestAnimationFrame(tick);};
+  const ping=e=>{if(reduce.matches)return;const r=host.getBoundingClientRect();add(e.clientX-r.left,e.clientY-r.top);};
+  const ro=new ResizeObserver(resize);const io=new IntersectionObserver(([e])=>{visible=!!e?.isIntersecting;if(visible)wake();},{threshold:0});
+  host.addEventListener('pointerdown',ping,{passive:true});document.addEventListener('visibilitychange',wake);reduce.addEventListener('change',wake);ro.observe(host);io.observe(host);resize();
+  if(!reduce.matches){lastPing=performance.now();add(w*.68,h*.34,performance.now()-520);}
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);clearTimeout(timer);});
+})();
+</script>
 </body>
 </html>
