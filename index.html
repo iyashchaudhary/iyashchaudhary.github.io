@@ -1782,10 +1782,14 @@
   @media (prefers-reduced-motion:reduce){.build-core::after{animation:none}.build-lane,.build-lane:hover{transition:none;transform:none!important}}
 
 
-  /* SITE_SONAR_FIELD_V2 — global, theme-aware, low-cost atmosphere */
-  .site-sonar-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;color:var(--primary);opacity:.28;mix-blend-mode:multiply}
-  html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{opacity:.22;mix-blend-mode:screen}
-  @media (max-width:760px),(pointer:coarse){.site-sonar-canvas{opacity:.14;mix-blend-mode:multiply}}
+  /* SITE_SONAR_FIELD_V3 — cached base grid; only active rings animate */
+  .site-sonar-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;color:var(--primary);opacity:.24;mix-blend-mode:multiply}
+  html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{opacity:.2;mix-blend-mode:screen}
+  html[data-focus="true"] .site-sonar-canvas,html[data-focus="true"] #particle-universe,html[data-focus="true"] #light-engine{display:none!important}
+  html[data-focus="true"] .tree-bg-glow,html[data-focus="true"] .tree-bg-glow-2{animation:none!important;opacity:.08!important}
+  .focus-mode-btn{display:inline-flex;align-items:center;gap:6px}
+  .focus-mode-btn[aria-pressed="true"]{color:var(--primary)!important;border-color:color-mix(in srgb,var(--primary) 55%,var(--line))!important;background:color-mix(in srgb,var(--primary) 10%,var(--card))!important}
+  @media (max-width:760px),(pointer:coarse){.site-sonar-canvas{opacity:.1;mix-blend-mode:multiply}.focus-mode-btn span{display:none}}
   html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{mix-blend-mode:screen}
   @media (prefers-reduced-motion:reduce){.site-sonar-canvas{display:none}}
 </style>
@@ -1954,6 +1958,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         <option value="en">EN</option>
         <option value="hi">हिं</option>
       </select>
+      <button class="theme-select focus-mode-btn" id="focus-mode-btn" type="button" aria-pressed="false" aria-label="Toggle Focus Mode">◌ <span>Focus</span></button>
       <select class="theme-select" id="theme-select" aria-label="Theme">
         <option value="light">Day Mode</option>
         <option value="dark">Night Mode</option>
@@ -4470,24 +4475,28 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 </script>
 <!-- PEAK_PREMIUM_RUNTIME_V1_END -->
 
-<script id="site-sonar-runtime-v2">
+<script id="site-sonar-runtime-v3">
 (() => {
-  const canvas=document.getElementById('site-sonar-canvas');
-  if(!canvas||!canvas.getContext)return;
-  const ctx=canvas.getContext('2d'), reduce=matchMedia('(prefers-reduced-motion: reduce)'), coarse=matchMedia('(pointer: coarse)');
-  let w=1,h=1,dpr=1,raf=0,timer=0,lastPing=0,visible=true,color='#246BDB';
-  const rings=[], o={spacing:30,speed:205,width:82,base:.22,max:5};
+  const canvas=document.getElementById('site-sonar-canvas'); if(!canvas||!canvas.getContext)return;
+  const ctx=canvas.getContext('2d'), base=document.createElement('canvas'), bctx=base.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)'), coarse=matchMedia('(pointer: coarse)');
+  let w=1,h=1,dpr=1,raf=0,timer=0,lastPing=0,visible=true,color='#246BDB',spacing=34;
+  const rings=[], o={speed:205,width:78,base:.18,max:3};
   const readColor=()=>{color=getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()||'#246BDB';canvas.style.color=color;};
+  const makeBase=()=>{base.width=Math.round(w*dpr);base.height=Math.round(h*dpr);bctx.setTransform(dpr,0,0,dpr,0,0);bctx.clearRect(0,0,w,h);bctx.fillStyle=color;bctx.globalAlpha=o.base;bctx.beginPath();const cols=Math.ceil(w/spacing)+1,rows=Math.ceil(h/spacing)+1,ox=(w-(cols-1)*spacing)/2,oy=(h-(rows-1)*spacing)/2;for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){const x=ox+i*spacing,y=oy+j*spacing;bctx.moveTo(x+1,y);bctx.arc(x,y,1,0,Math.PI*2);}bctx.fill();bctx.globalAlpha=1;};
   const add=(x,y,born=performance.now())=>{rings.push({x,y,born});while(rings.length>o.max)rings.shift();wake();};
-  const resize=()=>{w=Math.max(1,innerWidth);h=Math.max(1,innerHeight);dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);readColor();draw(performance.now());};
-  const draw=(now)=>{ctx.clearRect(0,0,w,h);if(reduce.matches){rings.length=0;return;}const life=(Math.hypot(w,h)+o.width)/o.speed,live=rings.filter(r=>(now-r.born)/1000<life);rings.splice(0,rings.length,...live);ctx.fillStyle=color;const cols=Math.ceil(w/o.spacing)+1,rows=Math.ceil(h/o.spacing)+1,ox=(w-(cols-1)*o.spacing)/2,oy=(h-(rows-1)*o.spacing)/2;ctx.globalAlpha=o.base;ctx.beginPath();for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){const x=ox+i*o.spacing,y=oy+j*o.spacing;let hot=0;for(const r of live){const age=(now-r.born)/1000,rad=age*o.speed,fade=1-age/life,dist=Math.abs(Math.hypot(x-r.x,y-r.y)-rad);if(dist<o.width){const t=1-dist/o.width;hot=Math.max(hot,t*t*(3-2*t)*fade);}}if(!hot){ctx.moveTo(x+1,y);ctx.arc(x,y,1,0,Math.PI*2);}else{ctx.globalAlpha=o.base+(1-o.base)*hot;ctx.beginPath();ctx.arc(x,y,1+2.4*hot,0,Math.PI*2);ctx.fill();ctx.globalAlpha=o.base;}}ctx.fill();ctx.globalAlpha=1;};
-  const tick=now=>{raf=0;if(!visible||document.hidden)return;const interval=coarse.matches?0:5200;if(interval&&now-lastPing>interval){add(w*(.18+Math.random()*.64),h*(.18+Math.random()*.64),now);lastPing=now;}draw(now);if(rings.length)raf=requestAnimationFrame(tick);else if(interval){clearTimeout(timer);timer=setTimeout(wake,interval);}};
+  const resize=()=>{w=Math.max(1,innerWidth);h=Math.max(1,innerHeight);dpr=Math.min(devicePixelRatio||1,2);spacing=coarse.matches?46:34;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);readColor();makeBase();draw(performance.now());};
+  const draw=(now)=>{ctx.clearRect(0,0,w,h);if(reduce.matches)return;ctx.drawImage(base,0,0,w,h);const life=(Math.hypot(w,h)+o.width)/o.speed,live=rings.filter(r=>(now-r.born)/1000<life);rings.splice(0,rings.length,...live);for(const r of live){const age=(now-r.born)/1000,rad=age*o.speed,fade=1-age/life;const minX=Math.max(0,Math.floor((r.x-rad-o.width)/spacing)*spacing),maxX=Math.min(w,Math.ceil((r.x+rad+o.width)/spacing)*spacing),minY=Math.max(0,Math.floor((r.y-rad-o.width)/spacing)*spacing),maxY=Math.min(h,Math.ceil((r.y+rad+o.width)/spacing)*spacing);ctx.fillStyle=color;for(let x=minX;x<=maxX;x+=spacing)for(let y=minY;y<=maxY;y+=spacing){const dist=Math.abs(Math.hypot(x-r.x,y-r.y)-rad);if(dist>=o.width)continue;const t=1-dist/o.width,hot=t*t*(3-2*t)*fade;ctx.globalAlpha=.18+.82*hot;ctx.beginPath();ctx.arc(x,y,1+2.2*hot,0,Math.PI*2);ctx.fill();}}ctx.globalAlpha=1;};
+  const tick=now=>{raf=0;if(!visible||document.hidden)return;const interval=coarse.matches?0:6500;if(interval&&now-lastPing>interval){add(w*(.2+Math.random()*.6),h*(.2+Math.random()*.6),now);lastPing=now;}draw(now);if(rings.length)raf=requestAnimationFrame(tick);else if(interval){clearTimeout(timer);timer=setTimeout(wake,interval);}};
   const wake=()=>{clearTimeout(timer);if(!raf&&!document.hidden&&visible)raf=requestAnimationFrame(tick);};
-  const ping=e=>{if(reduce.matches)return;add(e.clientX,e.clientY);};
-  const mo=new MutationObserver(readColor);mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','style','class']});
+  const ping=e=>{if(reduce.matches||coarse.matches||e.pointerType==='touch')return;add(e.clientX,e.clientY);};
+  const mo=new MutationObserver(()=>{readColor();makeBase();});mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','style','class']});
   addEventListener('resize',resize,{passive:true});addEventListener('pointerdown',ping,{passive:true});addEventListener('visibilitychange',()=>{visible=!document.hidden;if(visible)wake();});
-  resize(); if(!reduce.matches){lastPing=performance.now();add(w*.62,h*.36,performance.now()-650);}
+  resize();if(!reduce.matches&&!coarse.matches){lastPing=performance.now();add(w*.62,h*.36,performance.now()-650);}
   addEventListener('pagehide',()=>{cancelAnimationFrame(raf);clearTimeout(timer);mo.disconnect();},{once:true});
+
+  const focus=document.getElementById('focus-mode-btn'), root=document.documentElement;
+  if(focus){const key='yash-focus-mode';const set=on=>{root.dataset.focus=on?'true':'false';focus.setAttribute('aria-pressed',String(on));focus.title=on?'Exit Focus Mode':'Enable Focus Mode';try{localStorage.setItem(key,on?'1':'0')}catch(_){}};let initial=false;try{initial=localStorage.getItem(key)==='1'}catch(_){}set(initial);focus.addEventListener('click',()=>set(root.dataset.focus!=='true'));}
 })();
 </script>
 </body>
