@@ -57,7 +57,7 @@ if 'A real timeline of choices' not in html:
 pursuing_marker = '<div class="pursuing-grid" id="pursuing-grid">'
 learning = '''<div class="learning-strip reveal" aria-label="Currently learning and building">
         <div><span class="chapter-label">Currently learning</span><h3>Building the next version of myself.</h3><p>These are real directions I am actively exploring—not finished claims. Progress belongs in the journal; this is the honest snapshot.</p></div>
-        <div class="learning-list" aria-label="Current learning areas"><span>ACCA direction</span><span>AI automation</span><span>Video editing</span><span>Social media marketing</span><span>Personal systems</span></div>
+        <div class="learning-list" aria-label="Current learning areas"><span>finance studies direction</span><span>AI automation</span><span>Video editing</span><span>Social media marketing</span><span>Personal systems</span></div>
       </div>
 
       ''' + pursuing_marker

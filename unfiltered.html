@@ -1007,7 +1007,7 @@ html{scroll-behavior:auto!important}
   function inferredTags(e){
     const explicit = Array.isArray(e.tags) ? e.tags : (typeof e.tags === 'string' ? e.tags.split(',') : []);
     const text = [e.journal||'', e.mediaCaption||'', (e.photos||[]).map(x=>x.caption||'').join(' ')].join(' ').toLowerCase();
-    const guesses = [['college','college'],['study','study'],['academic','study'],['business law','study'],['acca','acca'],['automation','automation'],['ai','ai'],['website','website'],['fitness','fitness'],['workout','fitness'],['health','health'],['routine','routine'],['sleep','sleep'],['food','food'],['admission','college']];
+    const guesses = [['college','college'],['study','study'],['academic','study'],['business law','study'],['automation','automation'],['ai','ai'],['website','website'],['fitness','fitness'],['workout','fitness'],['health','health'],['routine','routine'],['sleep','sleep'],['food','food'],['admission','college']];
     const out = explicit.map(x=>String(x).trim().toLowerCase()).filter(Boolean);
     guesses.forEach(([needle,label])=>{if(text.includes(needle)&&!out.includes(label))out.push(label);});
     return out.slice(0,12);

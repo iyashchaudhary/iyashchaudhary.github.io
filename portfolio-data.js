@@ -54,7 +54,7 @@ const JOURNEY_DATA = [
     date: "Jul 2026 – 2029",
     paragraphs: [
       "Secured a B.Com (Hons) seat at ARSD — the exact course I'd been trying to reach since the beginning. The parallel B.Com (Hons) from DU SOL was withdrawn once this was confirmed, since two degrees can't run at once within DU.",
-      "This is where the real build starts: stacking ACCA around the degree, without letting either suffer."
+      "This is where the real build starts: building finance and automation skills around the degree."
     ]
   },
   {
@@ -106,11 +106,6 @@ const FOCUS_DATA = {
       desc: "Full focus on a strong first-year academic record."
     },
     {
-      label: "ACCA",
-      value: "Applied Knowledge",
-      desc: "All 13 papers, no exemptions, starting from the ground up."
-    },
-    {
       label: "Client Work",
       value: "Ongoing",
       desc: "Video editing and design work continuing alongside the degree."
@@ -125,13 +120,7 @@ const FOCUS_DATA = {
 window.FOCUS_DATA = FOCUS_DATA;
 
 // ---------- PURSUING ----------
-const PURSUING_DATA = [
-  {
-    title: "ACCA",
-    tag: "All 13 Papers · No Exemptions",
-    desc: "Starting from Applied Knowledge level, working through Applied Skills and Strategic Professional across the full degree timeline."
-  }
-];
+const PURSUING_DATA = [];
 window.PURSUING_DATA = PURSUING_DATA;
 
 // ---------- CREDENTIALS ----------
@@ -184,8 +173,8 @@ window.CREDENTIALS_DATA = CREDENTIALS_DATA;
 const SKILLS_DATA = [
   {
     title: "Finance",
-    level: "ACCA Foundation",
-    desc: "Core accounting and financial reporting fundamentals, building toward the full ACCA qualification."
+    level: "Finance Fundamentals",
+    desc: "Core accounting and financial reporting fundamentals, built through coursework and practical projects."
   },
   {
     title: "Excel",

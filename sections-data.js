@@ -33,7 +33,7 @@ const THINGS_LEARNED = [
       "Journal vs ledger",
       "Basic trial balance"
     ],
-    usedFor: "ACCA foundation + understanding my own freelance invoices",
+    usedFor: "Finance fundamentals + understanding my own freelance invoices",
     proofUrl: ""
   }
 ];

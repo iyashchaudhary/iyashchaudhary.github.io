@@ -2,7 +2,7 @@
 
 The local preview loaded successfully at `http://127.0.0.1:4173/index.html`. The page rendered the new **Chapter 01 · Meet Yash** kicker, fixed chapter rail with seven anchors, existing floating dock, and the current real portfolio content without missing sections.
 
-The extracted page content confirms the intended narrative order: **Meet Yash, The Journey, Experience, Learning, Proof, Skills, Connect**. The honest learning strip is present and uses active directions only: ACCA direction, AI automation, video editing, social media marketing, and personal systems.
+The extracted page content confirms the intended narrative order: **Meet Yash, The Journey, Experience, Learning, Proof, Skills, Connect**. The honest learning strip is present and uses active directions only: finance studies direction, AI automation, video editing, social media marketing, and personal systems.
 
 Runtime inspection reported seven story links, a document scroll height of 4,971px at a 1,100px viewport height, active chapter `The Journey`, and a live CSS progress value of approximately 28.4%. The existing body overflow mode is `clip visible`, indicating the page's existing smooth-scroll controller is active; the story progress handler remains passive and uses `requestAnimationFrame` throttling.
 
