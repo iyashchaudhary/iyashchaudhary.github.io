@@ -1792,6 +1792,14 @@
   @media (max-width:760px),(pointer:coarse){.site-sonar-canvas{opacity:.1;mix-blend-mode:multiply}.focus-mode-btn span{display:none}}
   html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{mix-blend-mode:screen}
   @media (prefers-reduced-motion:reduce){.site-sonar-canvas{display:none}}
+  /* ACCA_ROADMAP_V1 — current qualification map, separate from Yash's completion status */
+  .acca-roadmap{position:relative;overflow:hidden;margin-top:24px;padding:clamp(20px,4vw,34px);border:1px solid color-mix(in srgb,var(--primary) 26%,var(--line));border-radius:28px;background:linear-gradient(135deg,color-mix(in srgb,var(--card) 96%,var(--primary) 4%),color-mix(in srgb,var(--bg) 92%,var(--accent) 8%));box-shadow:0 22px 60px -34px rgba(8,35,78,.5),inset 0 1px 0 var(--glass-hl)}
+  .acca-roadmap::before{content:"ACCA";position:absolute;right:-18px;top:-34px;font:900 clamp(5rem,18vw,11rem)/1 Fraunces,serif;color:color-mix(in srgb,var(--primary) 7%,transparent);pointer-events:none}
+  .acca-top,.acca-levels,.acca-bottom{position:relative;z-index:1}
+  .acca-top{display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap}.acca-kicker{color:var(--primary);font:700 .72rem/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase}.acca-top h3{margin:10px 0 7px;font:700 clamp(1.45rem,3vw,2.15rem)/1.05 Fraunces,serif;color:var(--text)}.acca-top p{max-width:680px;margin:0;color:var(--text-dim);font-size:.92rem}.acca-status{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}.acca-status span,.acca-paper{border:1px solid color-mix(in srgb,var(--primary) 24%,var(--line));border-radius:999px;padding:7px 10px;color:var(--primary);font-size:.68rem;font-weight:700;white-space:nowrap;background:color-mix(in srgb,var(--card) 78%,transparent)}
+  .acca-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.acca-level{padding:18px;border:1px solid var(--line);border-radius:20px;background:color-mix(in srgb,var(--card) 84%,transparent);transition:transform .25s var(--apple-ease),border-color .25s ease,box-shadow .25s ease}.acca-level:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 46%,var(--line));box-shadow:0 16px 30px -24px rgba(10,55,125,.7)}.acca-level-no{color:var(--primary);font:700 .68rem 'IBM Plex Mono',monospace}.acca-level h4{margin:10px 0 6px;font:700 1.12rem/1.1 Fraunces,serif;color:var(--text)}.acca-level p{margin:0 0 13px;color:var(--text-dim);font-size:.78rem;line-height:1.5}.acca-papers{display:flex;flex-wrap:wrap;gap:6px}.acca-paper{padding:5px 8px;font-size:.62rem;color:var(--text-dim);font-weight:600}.acca-bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.acca-detail{padding:17px 18px;border:1px solid var(--line);border-radius:20px;background:color-mix(in srgb,var(--card) 80%,transparent)}.acca-detail h4{margin:0 0 6px;color:var(--text);font:700 1rem Fraunces,serif}.acca-detail p{margin:0;color:var(--text-dim);font-size:.78rem;line-height:1.55}.acca-detail strong{color:var(--primary)}.acca-source{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;color:var(--text-dim);font-size:.68rem}.acca-source a{color:var(--primary);font-weight:700}.acca-disclaimer{opacity:.8}
+  @media (max-width:760px){.acca-top{display:block}.acca-status{justify-content:flex-start;margin-top:16px}.acca-levels,.acca-bottom{grid-template-columns:1fr}.acca-level:hover{transform:none}.acca-roadmap{border-radius:22px;padding:19px}.acca-source{align-items:flex-start;flex-direction:column}}
+  @media (prefers-reduced-motion:reduce){.acca-level{transition:none}.acca-level:hover{transform:none}}
 </style>
 <style>
 <!-- APPLE_MOTION_V1_START -->
@@ -1948,6 +1956,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       <a href="#journey" data-nav data-en="Journey" data-hi="सफर" style="display:none;">Journey</a>
       <a href="#experience" data-nav data-en="Experience" data-hi="अनुभव" style="display:none;">Experience</a>
       <a href="#focus" data-nav data-en="Focus" data-hi="फोकस" style="display:none;">Focus</a>
+      <a href="#acca" data-nav data-en="ACCA Roadmap" data-hi="ACCA रोडमैप" style="display:none;">ACCA Roadmap</a>
       <a href="#credentials" data-nav data-en="Credentials" data-hi="प्रमाणपत्र" style="display:none;">Credentials</a>
       <a href="#skills" data-nav data-en="Skills" data-hi="कौशल" style="display:none;">Skills</a>
       <a href="#contact" data-nav data-en="Contact" data-hi="संपर्क" style="display:none;">Contact</a>
@@ -1974,6 +1983,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <a href="#journey" data-story-link><span>The Journey</span></a>
     <a href="#experience" data-story-link><span>Experience</span></a>
     <a href="#pursuing" data-story-link><span>Learning</span></a>
+    <a href="#acca" data-story-link><span>ACCA</span></a>
     <a href="#credentials" data-story-link><span>Proof</span></a>
     <a href="#skills" data-story-link><span>Skills</span></a>
     <a href="#integration" data-story-link><span>Build</span></a>
@@ -2186,10 +2196,37 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     </div>
   </section>
 
+  <!-- ===================== ACCA ROADMAP ===================== -->
+  <section class="section bento-card bento-span-12 scene" id="acca" data-scene="acca">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="ACCA Roadmap" data-hi="ACCA रोडमैप">ACCA Roadmap</h2></div>
+      <p class="sec-desc reveal">The professional qualification I am building alongside B.Com (Hons) — explained clearly, without pretending any paper is completed before it is.</p>
+      <div class="acca-roadmap reveal" aria-label="ACCA qualification roadmap">
+        <div class="acca-top">
+          <div>
+            <span class="acca-kicker">YASH'S CURRENT ROUTE</span>
+            <h3>Finance fundamentals → strategic professional</h3>
+            <p>My plan is to start from Applied Knowledge, with no exemptions, and work through the full qualification alongside my degree.</p>
+          </div>
+          <div class="acca-status"><span>Starting level: Applied Knowledge</span><span>13 exams · no exemptions</span></div>
+        </div>
+        <div class="acca-levels">
+          <article class="acca-level"><span class="acca-level-no">01 / FOUNDATION</span><h4>Applied Knowledge</h4><p>Builds the core understanding of business, management accounting and financial accounting.</p><div class="acca-papers"><span class="acca-paper">BT · Business &amp; Technology</span><span class="acca-paper">MA · Management Accounting</span><span class="acca-paper">FA · Financial Accounting</span></div></article>
+          <article class="acca-level"><span class="acca-level-no">02 / PRACTICAL SKILLS</span><h4>Applied Skills</h4><p>Turns the foundation into practical finance, reporting, tax, audit and management skills.</p><div class="acca-papers"><span class="acca-paper">LW</span><span class="acca-paper">PM</span><span class="acca-paper">TX</span><span class="acca-paper">FR</span><span class="acca-paper">AA</span><span class="acca-paper">FM</span></div></article>
+          <article class="acca-level"><span class="acca-level-no">03 / STRATEGY</span><h4>Strategic Professional</h4><p>Develops leadership, judgement and specialisation for higher-responsibility finance work.</p><div class="acca-papers"><span class="acca-paper">SBL</span><span class="acca-paper">SBR</span><span class="acca-paper">Choose 2 options</span></div></article>
+        </div>
+        <div class="acca-bottom">
+          <article class="acca-detail"><h4>Ethics &amp; Professional Skills</h4><p>A required module built around professional judgement, ethics, communication and realistic business situations. It is one of the three parts of the route to membership.</p></article>
+          <article class="acca-detail"><h4>Practical Experience Requirement</h4><p>To become an ACCA member, the official route requires at least <strong>36 months of relevant experience</strong> and <strong>9 performance objectives</strong>, signed off by a practical experience supervisor.</p></article>
+        </div>
+        <div class="acca-source"><span class="acca-disclaimer">Qualification map checked against ACCA's official structure. Yash's completion status will be updated only after real milestones.</span><a href="https://www.accaglobal.com/gb/en/student/getting-started/acca-qualification-structure.html" target="_blank" rel="noopener">View official ACCA structure ↗</a></div>
+      </div>
+    </div>
+  </section>
   <!-- ===================== CREDENTIALS ===================== -->
   <section class="section bento-card bento-span-12 scene" id="credentials" data-scene="credentials">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
       <p class="sec-desc reveal">Tap a folio to open it. Each one holds real, verifiable work — new entries get added here as they're completed.</p>
 
       <div id="credentials-container">
@@ -2201,7 +2238,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== SKILLS ===================== -->
   <section class="section bento-card bento-span-7 scene" id="skills" data-scene="skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">07</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
       <p class="sec-desc reveal">What I actually work with, day to day.</p>
       <div class="skills-grid" id="skills-container">
         <!-- skills rendered by JS -->
@@ -2213,7 +2250,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== YASH BUILD LOOP ===================== -->
   <section class="section bento-card bento-span-5 scene" id="integration" data-scene="integration">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">07</span><h2>What I’m Building Around</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">08</span><h2>What I’m Building Around</h2></div>
       <p class="sec-desc reveal">Not a list of random tools — the real lanes running through my life right now.</p>
       <div class="yash-build-loop reveal" aria-label="Yash's current build loop">
         <div class="build-core">
@@ -2249,7 +2286,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CONTACT ===================== -->
   <section class="section bento-card bento-span-5 scene" id="contact" data-scene="contact">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">08</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">09</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
       <p class="sec-desc reveal">The best ways to reach me or see more of my work.</p>
       <div class="contact-row reveal">
         <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="contact-pill">LinkedIn ↗</a>
