@@ -1800,6 +1800,16 @@
   @media (max-width:760px),(pointer:coarse){.site-sonar-canvas{opacity:.1;mix-blend-mode:multiply}.focus-mode-btn span{display:none}}
   html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{mix-blend-mode:screen}
   @media (prefers-reduced-motion:reduce){.site-sonar-canvas{display:none}}
+
+  /* YASH_OS_V1 — lightweight live-state surfaces */
+  .yash-os-shell{position:relative;overflow:hidden;padding:clamp(20px,3vw,30px);border:1px solid color-mix(in srgb,var(--primary) 25%,var(--line));border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--card) 94%,var(--primary) 6%),color-mix(in srgb,var(--bg) 92%,var(--accent) 8%));box-shadow:0 20px 50px -36px rgba(15,55,125,.55),inset 0 1px 0 var(--glass-hl)}
+  .yash-os-shell::after{content:"";position:absolute;right:-8%;top:-80%;width:42%;height:220%;background:linear-gradient(115deg,transparent 35%,var(--glass-hl-soft) 50%,transparent 65%);transform:rotate(12deg);pointer-events:none;opacity:.45}
+  .yash-os-head,.yash-os-grid{position:relative;z-index:1}.yash-os-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px}.yash-os-kicker{color:var(--primary);font:700 .7rem/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase}.yash-os-head h3{margin:8px 0 5px;font:700 clamp(1.5rem,3vw,2.1rem)/1 Fraunces,serif;color:var(--text)}.yash-os-head p{margin:0;color:var(--text-dim);font-size:.83rem}.yash-os-status{display:inline-flex;align-items:center;gap:8px;border:1px solid color-mix(in srgb,#3ddc84 34%,var(--line));border-radius:999px;padding:8px 11px;color:var(--text);font-size:.7rem;font-weight:700;background:color-mix(in srgb,#3ddc84 9%,var(--card));white-space:nowrap}.yash-os-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 4px color-mix(in srgb,#3ddc84 16%,transparent)}
+  .yash-os-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.yash-os-item{min-height:118px;padding:15px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 78%,transparent);transition:transform .25s var(--apple-ease),border-color .25s ease,box-shadow .25s ease}.yash-os-item:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 46%,var(--line));box-shadow:0 16px 30px -24px rgba(10,55,125,.7)}.yash-os-label,.currently-label{color:var(--text-dim);font:700 .63rem/1.2 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.yash-os-value{margin-top:16px;color:var(--text);font:650 1rem/1.2 Fraunces,serif}.yash-os-state{display:inline-block;margin-top:11px;color:var(--primary);font-size:.64rem;text-transform:capitalize}.yash-os-state::before{content:"•";margin-right:5px}
+  .currently-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.currently-item{padding:17px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 76%,transparent);transition:transform .25s var(--apple-ease),border-color .25s ease}.currently-item:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--primary) 42%,var(--line))}.currently-value{margin-top:10px;color:var(--text);font:650 1.02rem/1.22 Fraunces,serif}
+  .journey-years{display:flex;gap:7px;flex-wrap:wrap;margin:22px 0 20px;padding:5px;border:1px solid var(--line);border-radius:15px;background:color-mix(in srgb,var(--card) 72%,transparent)}.journey-year{flex:1 1 72px;border:0;border-radius:10px;padding:10px 8px;background:transparent;color:var(--text-dim);font:700 .72rem 'IBM Plex Mono',monospace;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease}.journey-year:hover{color:var(--text);transform:translateY(-1px)}.journey-year.is-active{background:var(--primary);color:#fff;box-shadow:0 7px 16px -8px var(--primary)}.journey-year-panel{min-height:130px;margin-bottom:20px;padding:16px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 72%,transparent);animation:journey-year-in .35s var(--apple-ease)}@keyframes journey-year-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.journey-year-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}.journey-year-heading h3{margin:0;color:var(--text);font:700 1.2rem Fraunces,serif}.journey-year-heading span{color:var(--text-dim);font-size:.68rem}.journey-year-entry{padding:10px 0;border-top:1px solid var(--line)}.journey-year-entry:first-child{border-top:0;padding-top:0}.journey-year-entry strong{color:var(--primary);font-size:.68rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}.journey-year-entry h4{margin:5px 0 3px;color:var(--text);font:650 1rem Fraunces,serif}.journey-year-entry p{margin:0;color:var(--text-dim);font-size:.78rem;line-height:1.5}.journey-empty{display:flex;align-items:center;min-height:86px;color:var(--text-dim);font-size:.82rem}.journey-empty::before{content:"";width:7px;height:7px;margin-right:9px;border:1px solid var(--primary);border-radius:50%}
+  @media (max-width:980px){.yash-os-grid{grid-template-columns:repeat(3,1fr)}}@media (max-width:600px){.yash-os-grid{grid-template-columns:repeat(2,1fr)}.yash-os-item{min-height:104px;padding:13px}.yash-os-value{margin-top:12px;font-size:.94rem}.currently-grid{grid-template-columns:1fr}.journey-years{overflow-x:auto;flex-wrap:nowrap}.journey-year{flex:0 0 72px}.yash-os-shell{border-radius:20px}.yash-os-item:hover,.currently-item:hover{transform:none}}
+  @media (prefers-reduced-motion:reduce){.yash-os-item,.currently-item,.journey-year{transition:none}.journey-year-panel{animation:none}}
 </style>
 <style>
 <!-- APPLE_MOTION_V1_START -->
@@ -1952,6 +1962,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <div class="brand">Yash Chaudhary</div>
     <div class="navlinks" id="navlinks">
       <a href="#hello" data-nav data-en="Hello" data-hi="नमस्ते" style="display:none;">Hello</a>
+      <a href="#yash-os" data-nav data-en="YASH OS" data-hi="YASH OS" style="display:none;">YASH OS</a>
+      <a href="#currently" data-nav data-en="Currently" data-hi="अभी" style="display:none;">Currently</a>
       <a href="#journey" data-nav data-en="Journey" data-hi="सफर" style="display:none;">Journey</a>
       <a href="#experience" data-nav data-en="Experience" data-hi="अनुभव" style="display:none;">Experience</a>
       <a href="#focus" data-nav data-en="Focus" data-hi="फोकस" style="display:none;">Focus</a>
@@ -1978,6 +1990,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
 <aside class="story-rail" id="story-rail" aria-label="Story chapters">
     <a href="#hello" data-story-link><span>Meet Yash</span></a>
+    <a href="#yash-os" data-story-link><span>Current State</span></a>
+    <a href="#currently" data-story-link><span>Currently</span></a>
     <a href="#journey" data-story-link><span>The Journey</span></a>
     <a href="#experience" data-story-link><span>Experience</span></a>
     <a href="#credentials" data-story-link><span>Proof</span></a>
@@ -2136,12 +2150,29 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
   <div class="bento-grid">
 
+  <!-- ===================== YASH OS / CURRENT STATE ===================== -->
+  <section class="section bento-card bento-span-12 scene" id="yash-os" data-scene="yash-os">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num">01</span><h2>YASH OS</h2></div>
+      <div class="yash-os-shell reveal" id="yash-os-container"><!-- rendered from YASH_OS_DATA --></div>
+    </div>
+  </section>
+
+  <!-- ===================== CURRENTLY ===================== -->
+  <section class="section bento-card bento-span-5 scene" id="currently" data-scene="currently">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num">02</span><h2>Currently</h2></div>
+      <p class="sec-desc reveal">A small live snapshot of the things moving through this chapter.</p>
+      <div class="currently-grid reveal" id="currently-container"><!-- rendered from CURRENTLY_DATA --></div>
+    </div>
+  </section>
+
   <!-- ===================== JOURNEY ===================== -->
 
 <section class="section bento-card bento-span-7 scene" id="journey" data-scene="journey">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="sec-num">01</span><h2>Journey</h2>
+        <span class="sec-num">03</span><h2>Journey</h2>
         <button class="play-journey-btn" id="play-journey-btn" type="button" aria-label="Play journey — auto-scroll through the timeline">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           <span>Play Journey</span>
@@ -2149,6 +2180,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       </div>
       <p class="sec-desc reveal">College didn't go in a straight line — and that's worth showing, not hiding. Tap any entry to read the full story.</p>
       <p class="story-note reveal">A real timeline of choices, changes and the direction I am building toward.</p>
+      <div class="journey-years reveal" id="journey-years" role="tablist" aria-label="Journey years"></div>
+      <div class="journey-year-panel reveal" id="journey-year-panel" role="tabpanel" aria-live="polite"></div>
 
       <div class="timeline" id="timeline">
         <div class="timeline-track"></div>
@@ -2161,7 +2194,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== EXPERIENCE ===================== -->
   <section class="section bento-card bento-span-5 scene" id="experience" data-scene="experience">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">02</span><h2 data-en="Experience" data-hi="अनुभव">Experience</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">04</span><h2 data-en="Experience" data-hi="अनुभव">Experience</h2></div>
       <p class="sec-desc reveal" data-en="Society and freelance roles, mostly during my time at Sri Venkateswara College." data-hi="ज्यादातर श्री वेंकटेश्वर कॉलेज के दौरान की सोसाइटी और फ्रीलांस भूमिकाएं।">Society and freelance roles, mostly during my time at Sri Venkateswara College.</p>
 
       <div class="exp-track" id="experience-track">
@@ -2173,7 +2206,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CURRENT FOCUS (glass card) ===================== -->
   <section class="section bento-card bento-span-5 scene" id="focus" data-scene="focus">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">03</span><h2 data-en="Current Focus" data-hi="वर्तमान फोकस">Current Focus</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="Current Focus" data-hi="वर्तमान फोकस">Current Focus</h2></div>
 
       <div class="glass-card reveal" id="focus-container">
         <!-- focus content rendered by JS -->
@@ -2184,7 +2217,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CREDENTIALS ===================== -->
   <section class="section bento-card bento-span-12 scene" id="credentials" data-scene="credentials">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
       <p class="sec-desc reveal">Tap a folio to open it. Each one holds real, verifiable work — new entries get added here as they're completed.</p>
 
       <div id="credentials-container">
@@ -2196,7 +2229,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== SKILLS ===================== -->
   <section class="section bento-card bento-span-7 scene" id="skills" data-scene="skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">07</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
       <p class="sec-desc reveal">What I actually work with, day to day.</p>
       <div class="skills-grid" id="skills-container">
         <!-- skills rendered by JS -->
@@ -2208,7 +2241,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== YASH BUILD LOOP ===================== -->
   <section class="section bento-card bento-span-5 scene" id="integration" data-scene="integration">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">07</span><h2>What I’m Building Around</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">08</span><h2>What I’m Building Around</h2></div>
       <p class="sec-desc reveal">Not a list of random tools — the real lanes running through my life right now.</p>
       <div class="yash-build-loop reveal" aria-label="Yash's current build loop">
         <div class="build-core">
@@ -2244,7 +2277,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CONTACT ===================== -->
   <section class="section bento-card bento-span-5 scene" id="contact" data-scene="contact">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">08</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">09</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
       <p class="sec-desc reveal">The best ways to reach me or see more of my work.</p>
       <div class="contact-row reveal">
         <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="contact-pill">LinkedIn ↗</a>
@@ -2327,6 +2360,36 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   // ---------- DYNAMIC RENDERING ----------
   (function(){
     const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    // YASH OS / Current State
+    const osContainer = document.getElementById('yash-os-container');
+    if(osContainer && window.YASH_OS_DATA){
+      const data=window.YASH_OS_DATA;
+      osContainer.innerHTML = `<div class="yash-os-head"><div><span class="yash-os-kicker">PERSONAL OPERATING SYSTEM</span><h3>${esc(data.title)}</h3><p>${esc(data.subtitle)}</p></div><span class="yash-os-status">${esc(data.status)}</span></div><div class="yash-os-grid">${(data.items||[]).map(item=>`<article class="yash-os-item"><div class="yash-os-label">${esc(item.label)}</div><div class="yash-os-value">${esc(item.value)}</div><span class="yash-os-state">${esc(item.state||'active')}</span></article>`).join('')}</div>`;
+    }
+
+    // Currently snapshot
+    const currentlyContainer = document.getElementById('currently-container');
+    if(currentlyContainer && window.CURRENTLY_DATA){
+      currentlyContainer.innerHTML = window.CURRENTLY_DATA.map(item=>`<article class="currently-item"><div class="currently-label">${esc(item.label)}</div><div class="currently-value">${esc(item.value)}</div></article>`).join('');
+    }
+
+    // Interactive Journey year index
+    const yearTabs = document.getElementById('journey-years');
+    const yearPanel = document.getElementById('journey-year-panel');
+    if(yearTabs && yearPanel && Array.isArray(window.JOURNEY_YEAR_DATA)){
+      const renderYear = year => {
+        const record = window.JOURNEY_YEAR_DATA.find(item=>item.year===year) || window.JOURNEY_YEAR_DATA[0];
+        yearTabs.querySelectorAll('.journey-year').forEach(btn=>{
+          const active=btn.dataset.year===record.year; btn.classList.toggle('is-active',active); btn.setAttribute('aria-selected',String(active));
+        });
+        const entries=Array.isArray(record.entries)?record.entries:[];
+        yearPanel.innerHTML = `<div class="journey-year-heading"><h3>${esc(record.year)}</h3><span>${entries.length ? `${entries.length} chapter${entries.length===1?'':'s'}` : 'No entries yet'}</span></div>` + (entries.length ? entries.map(entry=>`<article class="journey-year-entry"><strong>${esc(entry.category)}</strong><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></article>`).join('') : '<div class="journey-empty">More chapters coming.</div>');
+      };
+      yearTabs.innerHTML = window.JOURNEY_YEAR_DATA.map((item,index)=>`<button class="journey-year${index===2?' is-active':''}" type="button" role="tab" data-year="${esc(item.year)}" aria-selected="${index===2?'true':'false'}">${esc(item.year)}</button>`).join('');
+      yearTabs.querySelectorAll('.journey-year').forEach(btn=>btn.addEventListener('click',()=>renderYear(btn.dataset.year)));
+      renderYear(window.JOURNEY_YEAR_DATA[2]?.year || window.JOURNEY_YEAR_DATA[0]?.year);
+    }
 
     // Journey
     const timeline = document.getElementById('timeline');
@@ -3576,6 +3639,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
     const SECTION_KEYWORDS = {
       hello:      ['home','hero','intro','welcome'],
+      yashOs:     ['yash os','current state','operating system'],
+      currently:  ['currently','live snapshot'],
       journey:    ['journey','timeline','college','education','cuet','university'],
       experience: ['experience','history of work','background'],
       focus:      ['focus','currently doing','right now','currently working','working on'],
@@ -3711,6 +3776,14 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         const info = contactInfo();
         return { text: info ? `You can reach Yash here:<br><br>${info}` : "That information isn't available on Yash's website yet.", nav: 'contact' };
       }
+      if(section === 'yashOs' || msg.includes('current state') || msg.includes('yash os')){
+        const text = sectionSummary('yash-os');
+        return { text: text || "That information isn't available on Yash's website yet.", nav: 'yash-os' };
+      }
+      if(section === 'currently' || msg.includes('currently')){
+        const text = sectionSummary('currently');
+        return { text: text || "That information isn't available on Yash's website yet.", nav: 'currently' };
+      }
       if(section === 'journey' || msg.includes('journey') || msg.includes('timeline') || msg.includes('cuet') || msg.includes('college') || msg.includes('education') || msg.includes('studying')){
         const list = timelineSummary();
         return { text: list ? `Yash's journey so far:<br><br>${list}` : "That information isn't available on Yash's website yet.", nav: 'journey' };
@@ -3750,7 +3823,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     /* ---- UI helpers ---- */
     function scrollToBottom(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
 
-    const exploreLabels = {hello:'Explore About Yash',journey:'Explore Journey',experience:'Explore Experience',focus:'Explore Current Focus',credentials:'View Credentials',skills:'Explore Skills',contact:'View Contact'};
+    const exploreLabels = {hello:'Explore About Yash',yashOs:'Open YASH OS',currently:'View Currently',journey:'Explore Journey',experience:'Explore Experience',focus:'Explore Current Focus',credentials:'View Credentials',skills:'Explore Skills',contact:'View Contact'};
     function addMessage(text, who, nav=null){
       const row = document.createElement('div');
       row.className = 'ai-msg ai-msg-' + who + (who === 'bot' ? ' ai-msg-streaming' : '');

@@ -67,6 +67,50 @@ const JOURNEY_DATA = [
 ];
 window.JOURNEY_DATA = JOURNEY_DATA;
 
+// ---------- YASH OS / CURRENT STATE ----------
+// Edit values here; the visual components do not need to change.
+const YASH_OS_DATA = {
+  title: "YASH OS",
+  subtitle: "A live snapshot of the current chapter.",
+  status: "Currently building",
+  items: [
+    { label: "Education", value: "B.Com (Hons.)", state: "active" },
+    { label: "Current Focus", value: "Finance × Consulting", state: "active" },
+    { label: "Exploring", value: "AI & Automation", state: "exploring" },
+    { label: "Building", value: "Personal projects / future projects", state: "building" },
+    { label: "Current Goal", value: "Build consistently and ship useful work", state: "editable" }
+  ]
+};
+window.YASH_OS_DATA = YASH_OS_DATA;
+
+// ---------- CURRENTLY ----------
+// Keep this small snapshot current as life changes.
+const CURRENTLY_DATA = [
+  { label: "Studying", value: "B.Com (Hons.)" },
+  { label: "Exploring", value: "Finance & Consulting" },
+  { label: "Building", value: "AI / Automation / Personal Projects" },
+  { label: "Learning", value: "n8n, AI workflows and practical finance" }
+];
+window.CURRENTLY_DATA = CURRENTLY_DATA;
+
+// ---------- JOURNEY YEAR INDEX ----------
+// Empty years intentionally stay empty; the UI shows “More chapters coming.”
+const JOURNEY_YEAR_DATA = [
+  { year: "2024", entries: [] },
+  { year: "2025", entries: [
+    { category: "Education", title: "B.A. Economics", text: "Started B.A. Economics at Sri Venkateswara College after CUET 2025." },
+    { category: "Societies", title: "Design & content work", text: "Worked with Connecting Dreams Foundation SVC, ASCEND (E-Cell) and TEDxSVC." }
+  ] },
+  { year: "2026", entries: [
+    { category: "Milestone", title: "Retook CUET by choice", text: "Went back into CUET preparation while continuing the academic year." },
+    { category: "Education", title: "B.Com (Hons.) at ARSD", text: "Secured the B.Com (Hons.) seat at Atma Ram Sanatan Dharma College, DU." },
+    { category: "Current chapter", title: "A new journey begins", text: "Started a new college chapter and began building around commerce, finance, creative work and automation." }
+  ] },
+  { year: "2027", entries: [] },
+  { year: "Future", entries: [] }
+];
+window.JOURNEY_YEAR_DATA = JOURNEY_YEAR_DATA;
+
 // ---------- EXPERIENCE ----------
 const EXPERIENCE_DATA = [
   {
