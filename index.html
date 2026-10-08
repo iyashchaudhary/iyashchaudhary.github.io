@@ -1262,6 +1262,14 @@
     100%{ transform:scale(1.35); opacity:0; }
   }
   .ai-orb svg{ width:26px; height:26px; color:#fff; position:relative; z-index:1; transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+  .ai-orb-label{display:none;color:#fff;font-size:12px;font-weight:750;letter-spacing:.01em;position:relative;z-index:1;white-space:nowrap}
+  .ai-orb:hover .ai-orb-label{display:inline}
+  .ai-msg-streaming .ai-bubble{animation:ai-stream-in .45s cubic-bezier(.16,1,.3,1),ai-bubble-sheen 1.8s ease-out both}
+  @keyframes ai-stream-in{from{opacity:.35;transform:translateY(5px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+  @keyframes ai-bubble-sheen{0%{box-shadow:inset 0 0 0 rgba(61,139,255,0)}35%{box-shadow:inset 90px 0 32px -52px var(--ai-blue-soft)}100%{box-shadow:none}}
+  .ai-explore{display:inline-flex;align-items:center;gap:5px;margin:8px 0 0 35px;padding:6px 9px;border:1px solid color-mix(in srgb,var(--ai-blue) 30%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--ai-blue-soft) 55%,var(--card));color:var(--ai-blue);font-size:10.5px;font-weight:700;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+  .ai-explore:hover{transform:translateY(-1px);background:var(--ai-blue-soft);border-color:var(--ai-blue)}
+
   .ai-orb.ai-active svg{ transform:rotate(90deg) scale(0.9); }
   .ai-orb .ai-orb-dot{
     position:absolute; top:8px; right:8px; width:9px; height:9px; border-radius:50%;
@@ -1269,14 +1277,15 @@
   }
   @media (max-width:720px){
     .ai-orb{ right:14px; bottom:calc(84px + env(safe-area-inset-bottom,0px)); width:50px; height:50px; }
+    .ai-orb-label{display:none!important}.ai-explore{margin-left:35px}
   }
   @media (prefers-reduced-motion:reduce){
     .ai-orb::before, .ai-orb::after{ animation:none; opacity:0; }
   }
 
   .ai-panel{
-    position:fixed; inset:16px; z-index:81;
-    width:auto; max-width:none; height:auto;
+    position:fixed; right:24px; bottom:96px; z-index:81;
+    width:min(430px,calc(100vw - 48px)); max-width:none; height:min(660px,calc(100vh - 128px));
     display:flex; flex-direction:column; overflow:hidden;
     border-radius:24px; border:1px solid color-mix(in srgb, var(--line) 85%, transparent);
     background:color-mix(in srgb, var(--card) 86%, transparent);
@@ -1292,7 +1301,7 @@
     box-shadow:0 30px 80px -16px rgba(0,0,0,0.65), inset 0 1px 0 var(--glass-hl);
   }
   @media (max-width:720px){
-    .ai-panel{ inset:max(8px, env(safe-area-inset-top,0px)) max(8px, env(safe-area-inset-right,0px)) max(8px, env(safe-area-inset-bottom,0px)) max(8px, env(safe-area-inset-left,0px)); border-radius:20px; }
+    .ai-panel{ inset:max(8px, env(safe-area-inset-top,0px)) max(8px, env(safe-area-inset-right,0px)) max(8px, env(safe-area-inset-bottom,0px)) max(8px, env(safe-area-inset-left,0px)); width:auto; height:auto; border-radius:20px; }
   }
   body.ai-panel-lock{overflow:hidden;}
 
@@ -1950,7 +1959,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       <a href="#skills" data-nav data-en="Skills" data-hi="कौशल" style="display:none;">Skills</a>
       <a href="#contact" data-nav data-en="Contact" data-hi="संपर्क" style="display:none;">Contact</a>
       <button class="cmdk-trigger-btn" id="cmdk-trigger" type="button" aria-label="Open command palette">
-        <span>Search</span><kbd class="cmdk-hint-desktop" style="background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px;">Ctrl K</kbd>
+        <span>Search</span><kbd class="cmdk-hint-desktop" style="background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px;">⌘K / Ctrl K</kbd>
       </button>
       <select class="lang-toggle" id="lang-toggle" aria-label="Language">
         <option value="en">EN</option>
@@ -2016,7 +2025,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       </a>
       <button class="dock-item dock-cmdk" id="dock-cmdk" type="button" aria-label="Open command palette">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <span class="dock-tooltip">Search<span class="cmdk-hint-desktop"> (Ctrl K)</span></span>
+        <span class="dock-tooltip">Search<span class="cmdk-hint-desktop"> (⌘K / Ctrl K)</span></span>
       </button>
     </nav>
   </div>
@@ -2040,7 +2049,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
   <!-- ===================== PREMIUM AI ASSISTANT ===================== -->
   <div class="ai-nudge" id="ai-nudge" role="status" aria-hidden="true"></div>
-  <button class="ai-orb" id="ai-orb" type="button" aria-label="Open AI assistant" aria-expanded="false">
+  <button class="ai-orb" id="ai-orb" type="button" aria-label="Open Ask Yash assistant" aria-expanded="false">
     <span class="ai-orb-dot" aria-hidden="true"></span>
     <svg id="ai-orb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>
@@ -2048,14 +2057,14 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     </svg>
   </button>
 
-  <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="AI assistant" aria-hidden="true" inert>
+  <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Ask Yash AI assistant" aria-hidden="true" inert>
     <div class="ai-header">
       <div class="ai-header-avatar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg>
       </div>
       <div class="ai-header-text">
-        <div class="ai-header-title">Yash's Assistant</div>
-        <div class="ai-header-status">Online · site knowledge + journal copilot + live tools</div>
+        <div class="ai-header-title">Ask Yash</div>
+        <div class="ai-header-status">Portfolio intelligence · public site knowledge</div>
       </div>
       <button class="ai-header-voice" id="ai-voice-toggle" type="button" aria-label="Toggle voice replies" aria-pressed="false">🔇</button>
       <button class="ai-header-close" id="ai-close" type="button" aria-label="Close assistant">
@@ -2064,14 +2073,15 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     </div>
     <div class="ai-messages" id="ai-messages"></div>
     <div class="ai-suggestions" id="ai-suggestions">
-      <button class="ai-chip" data-q="Tell me about Yash">About Yash</button>
-      <button class="ai-chip" data-q="Show my credentials">Credentials</button>
-      <button class="ai-chip" data-q="What skills do I have?">Skills</button>
-      <button class="ai-chip" data-q="What is the weather in Delhi today?">Weather</button>
-      <button class="ai-chip" data-q="What public journal entries are available?">Public journal</button>
+      <button class="ai-chip" data-q="Who is Yash?">Who is Yash?</button>
+      <button class="ai-chip" data-q="What is Yash currently working on?">Current work</button>
+      <button class="ai-chip" data-q="What are his strongest skills?">Strongest skills</button>
+      <button class="ai-chip" data-q="Tell me about his experience.">Experience</button>
+      <button class="ai-chip" data-q="What is Yash studying?">Education</button>
+      <button class="ai-chip" data-q="What are his career interests?">Career interests</button>
     </div>
     <div class="ai-input-row">
-      <input type="text" id="ai-input" class="ai-input" placeholder="Ask about Yash's journey, skills, work…" autocomplete="off" spellcheck="false" aria-label="Message">
+      <input type="text" id="ai-input" class="ai-input" placeholder="Ask about Yash, his work or skills…" autocomplete="off" spellcheck="false" aria-label="Message">
       <button class="ai-mic-btn" id="ai-mic-btn" type="button" aria-label="Voice input" aria-pressed="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
       </button>
@@ -3380,7 +3390,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   })();
 
   /* ============================================================
-     PREMIUM AI ASSISTANT — site knowledge plus privacy-friendly live tools
+     PREMIUM AI ASSISTANT — public site knowledge only
      No private API keys in the browser. Ctrl/Cmd+J to toggle. Esc / outside click closes.
   ============================================================ */
   (function(){
@@ -3568,7 +3578,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       hello:      ['home','hero','intro','welcome'],
       journey:    ['journey','timeline','college','education','cuet','university'],
       experience: ['experience','history of work','background'],
-      focus:      ['focus','pursuing','currently doing','right now'],
+      focus:      ['focus','currently doing','right now','currently working','working on'],
+      integration:['career interest','career interests','career','interests','building around','automation'],
       credentials:['credential','certification','certificate','project','folio','portfolio work'],
       skills:     ['skill','skills','abilities','tools'],
       contact:    ['contact','email','reach','linkedin','github']
@@ -3597,69 +3608,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       const text = new Intl.DateTimeFormat(undefined, {dateStyle:'full', timeStyle:'short', timeZone:zone}).format(date);
       return {zone, text};
     }
-    function weatherLabel(code){
-      const map = {0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'foggy',48:'rime fog',51:'light drizzle',53:'drizzle',55:'heavy drizzle',61:'light rain',63:'rain',65:'heavy rain',71:'light snow',73:'snow',75:'heavy snow',80:'rain showers',81:'rain showers',82:'heavy rain showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};
-      return map[code] || 'mixed conditions';
-    }
-    function extractPlace(msg, fallback='Delhi'){
-      const match = msg.match(/(?:weather|time|temperature)\s+(?:in|at|for)\s+(.+?)(?:\?|$)/i);
-      return clean(match?.[1] || fallback).replace(/[.!]+$/,'') || fallback;
-    }
-    async function liveWeather(msg){
-      const place = extractPlace(msg, 'Delhi');
-      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`;
-      const geo = await fetch(geoUrl, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('geocoding'); return r.json();});
-      const hit = geo?.results?.[0];
-      if(!hit) return `I couldn't locate <strong>${aiEsc(place)}</strong>. Try a city and country, such as <em>Delhi, India</em>.`;
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${hit.latitude}&longitude=${hit.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
-      const data = await fetch(url, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('weather'); return r.json();});
-      const c = data.current || {};
-      const unit = data.current_units || {};
-      const now = formatLocalTime(new Date(), data.timezone);
-      return `<strong>${aiEsc(hit.name)}, ${aiEsc(hit.country || '')}</strong><br>${weatherLabel(c.weather_code)} · ${c.temperature_2m}${unit.temperature_2m || '°C'} (feels like ${c.apparent_temperature}${unit.apparent_temperature || '°C'})<br>Humidity ${c.relative_humidity_2m}% · Wind ${c.wind_speed_10m}${unit.wind_speed_10m || ' km/h'}<br><span style="opacity:.72">Local time: ${aiEsc(now.text)} · ${aiEsc(data.timezone || '')}</span><br><small>Live data via Open-Meteo.</small>`;
-    }
-    async function liveWikipedia(msg){
-      const match = msg.match(/^(?:who is|what is|what are|define|explain|tell me about)\s+(.+?)[?.!]*$/i);
-      if(!match) return null;
-      const topic = clean(match[1]).replace(/^(the|a|an)\s+/i,'');
-      if(!topic || /^(yash|this website|my website|my skills|my journey|my credentials)/i.test(topic)) return null;
-      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic.replace(/\s+/g,'_'))}`;
-      const data = await fetch(url, {headers:{accept:'application/json'}}).then(r=>{if(!r.ok) throw new Error('wiki'); return r.json();});
-      if(!data?.extract) return null;
-      const snippet = data.extract.length > 700 ? data.extract.slice(0,700) + '…' : data.extract;
-      return `<strong>${aiEsc(data.title || topic)}</strong><br>${aiEsc(snippet)}<br>${aiLink(data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(topic.replace(/\s+/g,'_'))}`, 'Read more on Wikipedia')}`;
-    }
-    function liveSearchAnswer(msg){
-      const q = clean(msg.replace(/^(show|give|find|tell me|what are|what's|whats|latest|current|news about|updates on|search for)\s*/i,'')) || 'technology';
-      const encoded = encodeURIComponent(q);
-      return `<strong>Live search for “${aiEsc(q)}”</strong><br>${aiLink(`https://news.google.com/search?q=${encoded}`, 'Open current news')}<br>${aiLink(`https://www.google.com/search?q=${encoded}`, 'Open web results')}<br><small>I keep the static site fast and private by opening trusted live search results instead of exposing a paid news API key in the browser.</small>`;
-    }
-    async function liveToolAnswer(msg){
-      const m = msg.toLowerCase();
-      if(/\b(weather|temperature|forecast|rain|sunny|humidity)\b/.test(m)){
-        try { return {text: await liveWeather(msg), nav:null}; }
-        catch(e){ return {text:'Weather lookup is temporarily unavailable. Try again in a moment or ask for another city.', nav:null}; }
-      }
-      if(/\b(news|latest|current updates?|headlines?|articles?|movie|movies|film|song|music|trending)\b/.test(m)) return {text:liveSearchAnswer(msg), nav:null};
-      if(/\b(time|date|today|tomorrow|day is it|what day)\b/.test(m) && !/deadline|timeline|journey|news|headline|article|movie|film|song|music|trending/.test(m)){
-        const place = extractPlace(msg, '');
-        if(place){
-          try{
-            const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`).then(r=>r.json());
-            const hit = geo?.results?.[0];
-            if(hit?.timezone){ const t = formatLocalTime(new Date(), hit.timezone); return {text:`The local time in <strong>${aiEsc(hit.name)}</strong> is <strong>${aiEsc(t.text)}</strong>.<br><small>Timezone: ${aiEsc(t.zone)}</small>`, nav:null}; }
-          }catch(e){}
-        }
-        const t = formatLocalTime(new Date());
-        return {text:`Right now it is <strong>${aiEsc(t.text)}</strong>.<br><small>Your browser timezone is ${aiEsc(t.zone)}.</small>`, nav:null};
-      }
-      if(/^(who is|what is|what are|define|explain|tell me about)\b/i.test(msg.trim())){
-        try { const text = await liveWikipedia(msg); if(text) return {text, nav:null}; }
-        catch(e){}
-      }
-      return null;
-    }
-
     /* ---- Small talk layer — casual, friendly, not tied to site content ---- */
     function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
     const JOKES = [
@@ -3748,41 +3696,42 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       const section = detectSection(msg);
       const nav = section && hasNavIntent(msg);
 
-      const live = await liveToolAnswer(rawMsg);
-      if(live) return live;
-
       if(msg.includes('about') || msg.includes('who is yash') || msg.includes('who are you building') || msg.includes('tell me')){
-        return { text: aboutText(), nav:null };
+        return { text: aboutText(), nav:'hello' };
       }
       if(section === 'skills' || msg.includes('skill')){
         const list = skillsList();
-        return { text: list ? `Here's what Yash works with:<br><br>${list}` : "Skills info isn't available right now.", nav: nav ? 'skills' : null };
+        return { text: list ? `Here's what Yash works with:<br><br>${list}` : "That information isn't available on Yash's website yet.", nav: 'skills' };
       }
       if(section === 'credentials' || msg.includes('credential') || msg.includes('certif') || msg.includes('project')){
         const list = credentialsSummary();
-        return { text: list ? `Here are Yash's credential folios:<br><br>${list}` : "No credentials logged yet.", nav: nav ? 'credentials' : null };
+        return { text: list ? `Here are Yash's credential folios:<br><br>${list}` : "That information isn't available on Yash's website yet.", nav: 'credentials' };
       }
       if(section === 'contact' || msg.includes('contact') || msg.includes('email') || msg.includes('reach')){
         const info = contactInfo();
-        return { text: info ? `You can reach Yash here:<br><br>${info}` : "Contact info isn't available right now.", nav: nav ? 'contact' : null };
+        return { text: info ? `You can reach Yash here:<br><br>${info}` : "That information isn't available on Yash's website yet.", nav: 'contact' };
       }
-      if(section === 'journey' || msg.includes('journey') || msg.includes('timeline') || msg.includes('cuet') || msg.includes('college')){
+      if(section === 'journey' || msg.includes('journey') || msg.includes('timeline') || msg.includes('cuet') || msg.includes('college') || msg.includes('education') || msg.includes('studying')){
         const list = timelineSummary();
-        return { text: list ? `Yash's journey so far:<br><br>${list}` : "Journey info isn't available right now.", nav: nav ? 'journey' : null };
+        return { text: list ? `Yash's journey so far:<br><br>${list}` : "That information isn't available on Yash's website yet.", nav: 'journey' };
       }
       if(section === 'experience' || msg.includes('experience')){
         const text = sectionSummary('experience');
-        return { text: text || "No experience details found.", nav: nav ? 'experience' : null };
+        return { text: text || "That information isn't available on Yash's website yet.", nav: nav ? 'experience' : null };
       }
-      if(section === 'focus' || msg.includes('focus')){
+      if(section === 'focus' || msg.includes('focus') || msg.includes('currently working') || msg.includes('studying')){
         const text = sectionSummary('focus');
-        return { text: text || "No focus details found.", nav: nav ? 'focus' : null };
+        return { text: text || "That information isn't available on Yash's website yet.", nav: 'focus' };
+      }
+      if(section === 'integration' || /career interest|career path|what does yash want|long.term direction/i.test(msg)){
+        const text = sectionSummary('integration');
+        return { text: text || "That information isn't available on Yash's website yet.", nav: 'integration' };
       }
       if(nav && section){
         return { text: `Taking you to ${section}…`, nav: section };
       }
 
-      // Fallback: live-search all visible section text for keyword overlap
+      // Fallback: search visible public section text for keyword overlap
       const words = msg.split(/\s+/).filter(w => w.length > 2);
       let best = null, bestScore = 0;
       document.querySelectorAll('.section').forEach(sec=>{
@@ -3793,24 +3742,35 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       });
       if(best && bestScore > 0){
         const snippet = best.text.length > 260 ? best.text.slice(0, 260) + '…' : best.text;
-        return { text: `From the ${best.id} section: ${snippet}`, nav:null };
+        return { text: `From the ${best.id} section: ${snippet}`, nav:best.id };
       }
-      return { text:"I don't have that on the site, so I can't say for sure — but I'm happy to chat! Or ask me about Yash's background, skills, credentials, journey, or contact info.", nav:null };
+      return { text:"That information isn't available on Yash's website yet.", nav:null };
     }
 
     /* ---- UI helpers ---- */
     function scrollToBottom(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
 
-    function addMessage(text, who){
+    const exploreLabels = {hello:'Explore About Yash',journey:'Explore Journey',experience:'Explore Experience',focus:'Explore Current Focus',credentials:'View Credentials',skills:'Explore Skills',contact:'View Contact'};
+    function addMessage(text, who, nav=null){
       const row = document.createElement('div');
-      row.className = 'ai-msg ai-msg-' + who;
+      row.className = 'ai-msg ai-msg-' + who + (who === 'bot' ? ' ai-msg-streaming' : '');
       row.innerHTML = who === 'bot'
         ? `<span class="ai-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg></span><span class="ai-bubble">${text}</span>`
         : `<span class="ai-bubble"></span>`;
       if(who === 'user') row.querySelector('.ai-bubble').textContent = text;
+      if(who === 'bot' && nav && exploreLabels[nav]){
+        const action=document.createElement('button'); action.className='ai-explore'; action.type='button'; action.dataset.target=nav; action.textContent=exploreLabels[nav]+' ↗'; row.appendChild(action);
+      }
       messagesEl.appendChild(row);
       scrollToBottom();
       if(who === 'bot') speakText(text);
+    }
+    function streamMessage(text, nav=null){
+      const row=document.createElement('div'); row.className='ai-msg ai-msg-bot ai-msg-streaming';
+      row.innerHTML=`<span class="ai-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg></span><span class="ai-bubble"></span>`;
+      const bubble=row.querySelector('.ai-bubble'); messagesEl.appendChild(row);
+      const words=String(text).split(/(\s+)/); let i=0;
+      return new Promise(resolve=>{const tick=()=>{if(i<words.length){bubble.innerHTML+=words[i++];scrollToBottom();setTimeout(tick,Math.min(24,9+String(words[i-1]||'').length*1.2));}else{if(nav&&exploreLabels[nav]){const action=document.createElement('button');action.className='ai-explore';action.type='button';action.dataset.target=nav;action.textContent=exploreLabels[nav]+' ↗';row.appendChild(action);}speakText(text);resolve();}}; tick();});
     }
 
     function showTyping(){
@@ -3834,16 +3794,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       setTimeout(async ()=>{
         removeTyping();
         const res = await answer(msg);
-        addMessage(res.text, 'bot');
-        sendBtn.disabled = false;
-        if(res.nav){
-          setTimeout(()=>{
-            closePanel();
-            setTimeout(()=>{
-              document.getElementById(res.nav)?.scrollIntoView({behavior:'smooth', block:'start'});
-            }, 200);
-          }, 900);
-        }
+        streamMessage(res.text, res.nav).then(()=>{ sendBtn.disabled = false; });
       }, delay);
     }
 
@@ -3863,7 +3814,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       springTo(panel, 'ai', 1, { preset:'panel', onUpdate: applyPanelVisual });
       if(!greeted){
         greeted = true;
-        setTimeout(()=> addMessage("Hi! I'm Yash's assistant — I know this portfolio, can search the local journal, and can also check time, weather, facts, news and live web results.", 'bot'), 260);
+        setTimeout(()=> addMessage("Hi! I'm Ask Yash — I answer from the public information on this website only.", 'bot'), 260);
       }
       setTimeout(()=> inputEl.focus(), 300);
     }
@@ -3886,6 +3837,11 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     inputEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') handleUserMessage(inputEl.value); });
     suggestionsEl.querySelectorAll('.ai-chip').forEach(chip=>{
       chip.addEventListener('click', ()=> handleUserMessage(chip.dataset.q));
+    });
+    messagesEl.addEventListener('click', e=>{
+      const action=e.target.closest('.ai-explore'); if(!action) return;
+      const target=document.getElementById(action.dataset.target); if(!target) return;
+      closePanel(); setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),180);
     });
 
     document.addEventListener('click', (e)=>{
