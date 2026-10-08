@@ -94,9 +94,8 @@ const CURRENTLY_DATA = [
 window.CURRENTLY_DATA = CURRENTLY_DATA;
 
 // ---------- JOURNEY YEAR INDEX ----------
-// Empty years intentionally stay empty; the UI shows “More chapters coming.”
+// Only years with real entries are shown. Add a new populated record here when a new chapter is ready.
 const JOURNEY_YEAR_DATA = [
-  { year: "2024", entries: [] },
   { year: "2025", entries: [
     { category: "Education", title: "B.A. Economics", text: "Started B.A. Economics at Sri Venkateswara College after CUET 2025." },
     { category: "Societies", title: "Design & content work", text: "Worked with Connecting Dreams Foundation SVC, ASCEND (E-Cell) and TEDxSVC." }
@@ -105,9 +104,7 @@ const JOURNEY_YEAR_DATA = [
     { category: "Milestone", title: "Retook CUET by choice", text: "Went back into CUET preparation while continuing the academic year." },
     { category: "Education", title: "B.Com (Hons.) at ARSD", text: "Secured the B.Com (Hons.) seat at Atma Ram Sanatan Dharma College, DU." },
     { category: "Current chapter", title: "A new journey begins", text: "Started a new college chapter and began building around commerce, finance, creative work and automation." }
-  ] },
-  { year: "2027", entries: [] },
-  { year: "Future", entries: [] }
+  ] }
 ];
 window.JOURNEY_YEAR_DATA = JOURNEY_YEAR_DATA;
 

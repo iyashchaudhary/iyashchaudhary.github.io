@@ -1772,24 +1772,6 @@
 
   /* STORY_MODE_V1 */
 
-  /* YASH_BUILD_LOOP_V1 — personal portfolio system, not a generic tech demo */
-  .yash-build-loop{position:relative;margin:30px auto 12px;max-width:760px}
-  .yash-build-loop::before{content:"";position:absolute;left:12%;right:12%;top:50%;height:1px;background:linear-gradient(90deg,transparent,var(--line),var(--primary),var(--line),transparent);opacity:.7}
-  .build-core{position:relative;z-index:2;width:min(100%,250px);margin:0 auto 24px;padding:20px 22px;text-align:center;border:1px solid color-mix(in srgb,var(--primary) 42%,var(--line));border-radius:24px;background:color-mix(in srgb,var(--card) 92%,transparent);box-shadow:0 22px 54px -30px rgba(8,35,78,.65),inset 0 1px 0 rgba(255,255,255,.72)}
-  .build-core .eyebrow{margin-bottom:8px}.build-core h3{margin:0;color:var(--text);font:700 clamp(1.35rem,3vw,2rem)/1.05 'Fraunces',serif;letter-spacing:-.03em}.build-core p{margin:8px 0 0;color:var(--text-dim);font-size:.78rem}
-  .build-core::after{content:"";position:absolute;inset:-8px;border:1px solid color-mix(in srgb,var(--primary) 18%,transparent);border-radius:30px;animation:build-core-pulse 3.5s ease-in-out infinite;pointer-events:none}
-  @keyframes build-core-pulse{0%,100%{opacity:.28;transform:scale(.98)}50%{opacity:.75;transform:scale(1.015)}}
-  .build-lanes{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .build-lane{min-height:145px;padding:17px 15px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,color-mix(in srgb,var(--card) 94%,transparent),color-mix(in srgb,var(--primary) 5%,var(--card)));box-shadow:0 16px 34px -28px rgba(8,35,78,.7);transition:transform .35s var(--apple-spring),border-color .25s ease,box-shadow .25s ease}
-  .build-lane:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--primary) 45%,var(--line));box-shadow:0 24px 46px -30px rgba(8,35,78,.72)}
-  .build-lane:nth-child(2){transform:translateY(22px)}.build-lane:nth-child(2):hover{transform:translateY(16px)}
-  .build-lane .lane-index{display:inline-flex;width:25px;height:25px;align-items:center;justify-content:center;border-radius:50%;background:color-mix(in srgb,var(--primary) 12%,var(--card));color:var(--primary);font:700 .68rem 'IBM Plex Mono',monospace}
-  .build-lane h4{margin:14px 0 5px;color:var(--text);font:700 1.02rem/1.1 'Fraunces',serif}.build-lane p{margin:0;color:var(--text-dim);font-size:.76rem;line-height:1.5}.build-lane .lane-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:13px}.build-lane .lane-tags span{padding:4px 7px;border:1px solid var(--line);border-radius:999px;color:var(--text-dim);font-size:.61rem}
-  .build-caption{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:33px auto 0;color:var(--text-dim);font-size:.73rem;text-align:center}.build-caption strong{color:var(--primary);font-weight:700}
-  @media (max-width:720px){.yash-build-loop{margin-top:22px}.yash-build-loop::before{left:50%;right:auto;top:58px;bottom:58px;width:1px;height:auto;background:linear-gradient(180deg,transparent,var(--line),var(--primary),var(--line),transparent)}.build-core{width:min(100%,220px);padding:17px 18px;margin-bottom:20px}.build-lanes{grid-template-columns:1fr;gap:10px;padding:0 10px}.build-lane{min-height:0;padding:14px}.build-lane:nth-child(2),.build-lane:nth-child(2):hover{transform:none}.build-lane h4{margin-top:10px}.build-caption{margin-top:20px}}
-  @media (prefers-reduced-motion:reduce){.build-core::after{animation:none}.build-lane,.build-lane:hover{transition:none;transform:none!important}}
-
-
   /* SITE_SONAR_FIELD_V3 — cached base grid; only active rings animate */
   .site-sonar-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;color:var(--primary);opacity:.24;mix-blend-mode:multiply}
   html[data-theme="dark"] .site-sonar-canvas,html[data-theme="evening"] .site-sonar-canvas{opacity:.2;mix-blend-mode:screen}
@@ -1807,8 +1789,7 @@
   .yash-os-head,.yash-os-grid{position:relative;z-index:1}.yash-os-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px}.yash-os-kicker{color:var(--primary);font:700 .7rem/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase}.yash-os-head h3{margin:8px 0 5px;font:700 clamp(1.5rem,3vw,2.1rem)/1 Fraunces,serif;color:var(--text)}.yash-os-head p{margin:0;color:var(--text-dim);font-size:.83rem}.yash-os-status{display:inline-flex;align-items:center;gap:8px;border:1px solid color-mix(in srgb,#3ddc84 34%,var(--line));border-radius:999px;padding:8px 11px;color:var(--text);font-size:.7rem;font-weight:700;background:color-mix(in srgb,#3ddc84 9%,var(--card));white-space:nowrap}.yash-os-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 4px color-mix(in srgb,#3ddc84 16%,transparent)}
   .yash-os-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.yash-os-item{min-height:118px;padding:15px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 78%,transparent);transition:transform .25s var(--apple-ease),border-color .25s ease,box-shadow .25s ease}.yash-os-item:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 46%,var(--line));box-shadow:0 16px 30px -24px rgba(10,55,125,.7)}.yash-os-label,.currently-label{color:var(--text-dim);font:700 .63rem/1.2 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.yash-os-value{margin-top:16px;color:var(--text);font:650 1rem/1.2 Fraunces,serif}.yash-os-state{display:inline-block;margin-top:11px;color:var(--primary);font-size:.64rem;text-transform:capitalize}.yash-os-state::before{content:"•";margin-right:5px}
   .currently-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.currently-item{padding:17px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 76%,transparent);transition:transform .25s var(--apple-ease),border-color .25s ease}.currently-item:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--primary) 42%,var(--line))}.currently-value{margin-top:10px;color:var(--text);font:650 1.02rem/1.22 Fraunces,serif}
-  .journey-years{display:flex;gap:7px;flex-wrap:wrap;margin:22px 0 20px;padding:5px;border:1px solid var(--line);border-radius:15px;background:color-mix(in srgb,var(--card) 72%,transparent)}.journey-year{flex:1 1 72px;border:0;border-radius:10px;padding:10px 8px;background:transparent;color:var(--text-dim);font:700 .72rem 'IBM Plex Mono',monospace;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease}.journey-year:hover{color:var(--text);transform:translateY(-1px)}.journey-year.is-active{background:var(--primary);color:#fff;box-shadow:0 7px 16px -8px var(--primary)}.journey-year-panel{min-height:130px;margin-bottom:20px;padding:16px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 72%,transparent);animation:journey-year-in .35s var(--apple-ease)}@keyframes journey-year-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.journey-year-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}.journey-year-heading h3{margin:0;color:var(--text);font:700 1.2rem Fraunces,serif}.journey-year-heading span{color:var(--text-dim);font-size:.68rem}.journey-year-entry{padding:10px 0;border-top:1px solid var(--line)}.journey-year-entry:first-child{border-top:0;padding-top:0}.journey-year-entry strong{color:var(--primary);font-size:.68rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}.journey-year-entry h4{margin:5px 0 3px;color:var(--text);font:650 1rem Fraunces,serif}.journey-year-entry p{margin:0;color:var(--text-dim);font-size:.78rem;line-height:1.5}.journey-empty{display:flex;align-items:center;min-height:86px;color:var(--text-dim);font-size:.82rem}.journey-empty::before{content:"";width:7px;height:7px;margin-right:9px;border:1px solid var(--primary);border-radius:50%}
-  @media (max-width:980px){.yash-os-grid{grid-template-columns:repeat(3,1fr)}}@media (max-width:600px){.yash-os-grid{grid-template-columns:repeat(2,1fr)}.yash-os-item{min-height:104px;padding:13px}.yash-os-value{margin-top:12px;font-size:.94rem}.currently-grid{grid-template-columns:1fr}.journey-years{overflow-x:auto;flex-wrap:nowrap}.journey-year{flex:0 0 72px}.yash-os-shell{border-radius:20px}.yash-os-item:hover,.currently-item:hover{transform:none}}
+  .journey-years{display:flex;gap:7px;flex-wrap:wrap;margin:22px 0 20px;padding:5px;border:1px solid var(--line);border-radius:15px;background:color-mix(in srgb,var(--card) 72%,transparent)}.journey-year{flex:1 1 72px;border:0;border-radius:10px;padding:10px 8px;background:transparent;color:var(--text-dim);font:700 .72rem 'IBM Plex Mono',monospace;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease}.journey-year:hover{color:var(--text);transform:translateY(-1px)}.journey-year.is-active{background:var(--primary);color:#fff;box-shadow:0 7px 16px -8px var(--primary)}.journey-year-panel{min-height:130px;margin-bottom:20px;padding:16px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--card) 72%,transparent);animation:journey-year-in .35s var(--apple-ease)}@keyframes journey-year-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.journey-year-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}.journey-year-heading h3{margin:0;color:var(--text);font:700 1.2rem Fraunces,serif}.journey-year-heading span{color:var(--text-dim);font-size:.68rem}.journey-year-entry{padding:10px 0;border-top:1px solid var(--line)}.journey-year-entry:first-child{border-top:0;padding-top:0}.journey-year-entry strong{color:var(--primary);font-size:.68rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}.journey-year-entry h4{margin:5px 0 3px;color:var(--text);font:650 1rem Fraunces,serif}.journey-year-entry p{margin:0;color:var(--text-dim);font-size:.78rem;line-height:1.5}  @media (max-width:980px){.yash-os-grid{grid-template-columns:repeat(3,1fr)}}@media (max-width:600px){.yash-os-grid{grid-template-columns:repeat(2,1fr)}.yash-os-item{min-height:104px;padding:13px}.yash-os-value{margin-top:12px;font-size:.94rem}.currently-grid{grid-template-columns:1fr}.journey-years{overflow-x:auto;flex-wrap:nowrap}.journey-year{flex:0 0 72px}.yash-os-shell{border-radius:20px}.yash-os-item:hover,.currently-item:hover{transform:none}}
   @media (prefers-reduced-motion:reduce){.yash-os-item,.currently-item,.journey-year{transition:none}.journey-year-panel{animation:none}}
 </style>
 <style>
@@ -1996,7 +1977,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <a href="#experience" data-story-link><span>Experience</span></a>
     <a href="#credentials" data-story-link><span>Proof</span></a>
     <a href="#skills" data-story-link><span>Skills</span></a>
-    <a href="#integration" data-story-link><span>Build</span></a>
     <a href="#contact" data-story-link><span>Connect</span></a>
   </aside>
   <!-- STORY_RAIL_V1 -->
@@ -2238,46 +2218,10 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   </section>
 
 
-  <!-- ===================== YASH BUILD LOOP ===================== -->
-  <section class="section bento-card bento-span-5 scene" id="integration" data-scene="integration">
-    <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">08</span><h2>What I’m Building Around</h2></div>
-      <p class="sec-desc reveal">Not a list of random tools — the real lanes running through my life right now.</p>
-      <div class="yash-build-loop reveal" aria-label="Yash's current build loop">
-        <div class="build-core">
-          <span class="eyebrow">THE CURRENT CHAPTER</span>
-          <h3>Learn it. Use it. Build with it.</h3>
-          <p>Commerce, creative work and automation — moving together, one honest step at a time.</p>
-        </div>
-        <div class="build-lanes">
-          <article class="build-lane">
-            <span class="lane-index">01</span>
-            <h4>Study with direction</h4>
-            <p>Building the academic base instead of collecting disconnected courses.</p>
-            <div class="lane-tags"><span>B.Com (Hons)</span><span>Finance</span><span>Excel</span></div>
-          </article>
-          <article class="build-lane">
-            <span class="lane-index">02</span>
-            <h4>Make real work</h4>
-            <p>Turning editing and design into useful output for clients, societies and brands.</p>
-            <div class="lane-tags"><span>Video editing</span><span>Design</span><span>Client work</span></div>
-          </article>
-          <article class="build-lane">
-            <span class="lane-index">03</span>
-            <h4>Automate the next layer</h4>
-            <p>Learning n8n and AI workflows hands-on, without pretending the learning is finished.</p>
-            <div class="lane-tags"><span>n8n</span><span>AI workflows</span><span>Building</span></div>
-          </article>
-        </div>
-      </div>
-      <div class="build-caption"><strong>THE THROUGH-LINE</strong><span>show up → learn → ship → reflect</span></div>
-    </div>
-  </section>
-
   <!-- ===================== CONTACT ===================== -->
   <section class="section bento-card bento-span-5 scene" id="contact" data-scene="contact">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">09</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">08</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
       <p class="sec-desc reveal">The best ways to reach me or see more of my work.</p>
       <div class="contact-row reveal">
         <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="contact-pill">LinkedIn ↗</a>
@@ -2378,17 +2322,19 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     const yearTabs = document.getElementById('journey-years');
     const yearPanel = document.getElementById('journey-year-panel');
     if(yearTabs && yearPanel && Array.isArray(window.JOURNEY_YEAR_DATA)){
+      const availableYears = window.JOURNEY_YEAR_DATA.filter(item=>Array.isArray(item.entries) && item.entries.length);
       const renderYear = year => {
-        const record = window.JOURNEY_YEAR_DATA.find(item=>item.year===year) || window.JOURNEY_YEAR_DATA[0];
+        const record = availableYears.find(item=>item.year===year) || availableYears[availableYears.length-1];
         yearTabs.querySelectorAll('.journey-year').forEach(btn=>{
           const active=btn.dataset.year===record.year; btn.classList.toggle('is-active',active); btn.setAttribute('aria-selected',String(active));
         });
         const entries=Array.isArray(record.entries)?record.entries:[];
-        yearPanel.innerHTML = `<div class="journey-year-heading"><h3>${esc(record.year)}</h3><span>${entries.length ? `${entries.length} chapter${entries.length===1?'':'s'}` : 'No entries yet'}</span></div>` + (entries.length ? entries.map(entry=>`<article class="journey-year-entry"><strong>${esc(entry.category)}</strong><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></article>`).join('') : '<div class="journey-empty">More chapters coming.</div>');
+        yearPanel.innerHTML = `<div class="journey-year-heading"><h3>${esc(record.year)}</h3><span>${entries.length} chapter${entries.length===1?'':'s'}</span></div>` + entries.map(entry=>`<article class="journey-year-entry"><strong>${esc(entry.category)}</strong><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></article>`).join('');
       };
-      yearTabs.innerHTML = window.JOURNEY_YEAR_DATA.map((item,index)=>`<button class="journey-year${index===2?' is-active':''}" type="button" role="tab" data-year="${esc(item.year)}" aria-selected="${index===2?'true':'false'}">${esc(item.year)}</button>`).join('');
+      yearTabs.innerHTML = availableYears.map((item,index)=>`<button class="journey-year${index===availableYears.length-1?' is-active':''}" type="button" role="tab" data-year="${esc(item.year)}" aria-selected="${index===availableYears.length-1?'true':'false'}">${esc(item.year)}</button>`).join('');
       yearTabs.querySelectorAll('.journey-year').forEach(btn=>btn.addEventListener('click',()=>renderYear(btn.dataset.year)));
-      renderYear(window.JOURNEY_YEAR_DATA[2]?.year || window.JOURNEY_YEAR_DATA[0]?.year);
+      if(availableYears.length) renderYear(availableYears[availableYears.length-1].year);
+      else { yearTabs.innerHTML=''; yearPanel.innerHTML=''; }
     }
 
     // Journey
@@ -3644,7 +3590,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       journey:    ['journey','timeline','college','education','cuet','university'],
       experience: ['experience','history of work','background'],
       focus:      ['focus','currently doing','right now','currently working','working on'],
-      integration:['career interest','career interests','career','interests','building around','automation'],
       credentials:['credential','certification','certificate','project','folio','portfolio work'],
       skills:     ['skill','skills','abilities','tools'],
       contact:    ['contact','email','reach','linkedin','github']
@@ -3795,10 +3740,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       if(section === 'focus' || msg.includes('focus') || msg.includes('currently working') || msg.includes('studying')){
         const text = sectionSummary('focus');
         return { text: text || "That information isn't available on Yash's website yet.", nav: 'focus' };
-      }
-      if(section === 'integration' || /career interest|career path|what does yash want|long.term direction/i.test(msg)){
-        const text = sectionSummary('integration');
-        return { text: text || "That information isn't available on Yash's website yet.", nav: 'integration' };
       }
       if(nav && section){
         return { text: `Taking you to ${section}…`, nav: section };
