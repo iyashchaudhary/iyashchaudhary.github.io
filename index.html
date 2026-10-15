@@ -2245,12 +2245,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <script>
     function checkAdmin(e) {
       e.preventDefault();
-      const pass = prompt("Enter admin passcode:");
-      if(pass === "yash2026") {
-        window.location.href = "admin.html";
-      } else if(pass !== null) {
-        alert("Access denied.");
-      }
+      // Authentication is handled inside admin.html; do not duplicate a password in the public portfolio.
+      window.location.href = "admin.html";
       return false;
     }
   </script>

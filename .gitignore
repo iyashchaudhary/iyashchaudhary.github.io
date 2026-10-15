@@ -1,0 +1,11 @@
+# Local secrets and machine-only files
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+*.key
+
+# Local development output
+.DS_Store
+node_modules/

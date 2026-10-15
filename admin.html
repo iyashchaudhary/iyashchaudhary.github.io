@@ -465,17 +465,21 @@ body { overflow-x:clip; }
 <script>document.write('<script src="sections-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>document.write('<script src="portfolio-data.js?v='+Date.now()+'\"><\/script>');</script>
 <script>
-  const PASSCODE = "yash2026";
+  const PASSCODE_HASH = "b/69nx7tIBfBPiuSu73AICrGCkfiEnFEBsCGVb0Acxo=";
   const GITHUB_REPO = "iyashchaudhary/iyashchaudhary.github.io";
   let currentMode = 'entry';
   let uploadedPhotoFilename = null;
   // Convenience mode: keep the existing automatic publishing workflow across refreshes.
-  // The token is stored locally on this device; never use this on a shared/public computer.
-  let ghToken = localStorage.getItem('uy_gh_token') || '';
+  // The token is kept only for this browser session; never use this on a shared/public computer.
+  // PATs are session-only: never persist a GitHub credential across browser restarts.
+  let ghToken = sessionStorage.getItem('uy_gh_token') || '';
   function getGithubToken(){ return ghToken.trim(); }
 
-  function tryUnlock(){
-    if(document.getElementById('passcode').value.trim() === PASSCODE){
+  async function tryUnlock(){
+    const entered = document.getElementById('passcode').value;
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(entered));
+    const enteredHash = btoa(String.fromCharCode(...new Uint8Array(digest)));
+    if(enteredHash === PASSCODE_HASH){
       document.getElementById('lock').classList.remove('show');
       document.getElementById('form-card').classList.add('show');
       const savedToken = getGithubToken();
@@ -507,8 +511,8 @@ body { overflow-x:clip; }
   }
   document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click', ()=>switchMode(btn.dataset.mode)));
 
-  function saveGhToken() { ghToken = document.getElementById('gh-token').value.trim(); if(ghToken) localStorage.setItem('uy_gh_token', ghToken); else localStorage.removeItem('uy_gh_token'); updatePublishButtons(); setCmsStatus('Token saved on this device so publishing remains automatic. Use Forget token on shared devices.', 'info'); }
-  function forgetGhToken() { ghToken = ''; localStorage.removeItem('uy_gh_token'); document.getElementById('gh-token').value=''; updatePublishButtons(); setCmsStatus('Token removed from this device. Existing GitHub data was not changed.', 'ok'); }
+  function saveGhToken() { ghToken = document.getElementById('gh-token').value.trim(); if(ghToken) sessionStorage.setItem('uy_gh_token', ghToken); else sessionStorage.removeItem('uy_gh_token'); updatePublishButtons(); setCmsStatus('Token saved for this browser session. Use Forget token before leaving this device.', 'info'); }
+  function forgetGhToken() { ghToken = ''; sessionStorage.removeItem('uy_gh_token'); document.getElementById('gh-token').value=''; updatePublishButtons(); setCmsStatus('Token removed from this device. Existing GitHub data was not changed.', 'ok'); }
   function updatePublishButtons() { const display = getGithubToken() ? 'inline-block' : 'none'; document.getElementById('btn-publish').style.display = display; }
 
   // --- Daily Entry Logic ---
