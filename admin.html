@@ -472,6 +472,8 @@ body { overflow-x:clip; }
   // Convenience mode: keep the existing automatic publishing workflow across refreshes.
   // The token is kept only for this browser session; never use this on a shared/public computer.
   // PATs are session-only: never persist a GitHub credential across browser restarts.
+  // Remove the legacy persistent token key created by older admin builds.
+  try { localStorage.removeItem('uy_gh_token'); } catch (_) {}
   let ghToken = sessionStorage.getItem('uy_gh_token') || '';
   function getGithubToken(){ return ghToken.trim(); }
 
