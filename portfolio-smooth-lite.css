@@ -95,6 +95,18 @@ html.performance-lite .peak-magnetic { animation: none !important; transform-sty
 }
 
 
+/* Gentle chapter settling: native wheel/touch distance stays user-controlled. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  #main-content .scene {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+
+
 /* Quiet clay treatment: sculpted highlights, soft short shadows, no blur filters. */
 html.performance-lite #main-content .section.bento-card {
   border-color: rgba(255,255,255,.13) !important;
