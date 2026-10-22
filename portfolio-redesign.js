@@ -93,10 +93,8 @@
   }
 
   function startIdleMotion() {
-    if (!idleRaf && !reduceMotion.matches && document.visibilityState !== 'hidden') {
-      idleStartedAt = performance.now();
-      idleRaf = window.requestAnimationFrame(idleMotion);
-    }
+    // Continuous idle RAF work is intentionally disabled; scroll-driven face and camera motion remain.
+    if (idleRaf) stopIdleMotion();
   }
 
   function stopIdleMotion() {

@@ -131,3 +131,108 @@ html.performance-lite #main-content .section.bento-card :is(
     border-color: rgba(232,217,158,.32) !important;
   }
 }
+
+/* Replace the overlaid sonar artwork with a lightweight, stationary theme gradient. */
+html.scene-engine-off #tree-bg {
+  background-color: #173f73 !important;
+  background-image: linear-gradient(180deg, #173f73 0%, #4884b0 52%, #b5cde0 100%) !important;
+  background-size: 100% 100% !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+html.scene-engine-off[data-theme="dark"] #tree-bg {
+  background-color: #061326 !important;
+  background-image: linear-gradient(180deg, #061326 0%, #132b4a 55%, #081a31 100%) !important;
+}
+html.scene-engine-off[data-theme="evening"] #tree-bg {
+  background-color: #172349 !important;
+  background-image: linear-gradient(180deg, #172349 0%, #405878 55%, #172b49 100%) !important;
+}
+html.scene-engine-off[data-theme="morning"] #tree-bg {
+  background-color: #294565 !important;
+  background-image: linear-gradient(180deg, #37567a 0%, #829bb7 55%, #29415e 100%) !important;
+}
+
+/* Smoothness-first finish: keep the scenery static and leave frame time for native input. */
+html.scene-engine-off .scene {
+  will-change: auto !important;
+}
+html.scene-engine-off #tree-bg {
+  animation: none !important;
+  will-change: auto !important;
+}
+html.scene-engine-off #tree-bg::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+html.scene-engine-off #sen-stage .sen-stage-grid,
+html.scene-engine-off #sen-stage .sen-stage-orbit,
+html.scene-engine-off #sen-stage .sen-stage-noise {
+  display: none !important;
+}
+html.scene-engine-off #sen-stage::before {
+  display: none !important;
+}
+html.scene-engine-off #sen-stage .sen-stage-web {
+  display: none !important;
+}
+html.scene-engine-off :is(
+  .tree-bg-glow,
+  .tree-bg-glow-2,
+  #mesh-bg,
+  #particle-universe,
+  #light-engine,
+  .fireflies,
+  .petal-field
+) {
+  animation: none !important;
+  will-change: auto !important;
+}
+html.scene-engine-off #mesh-bg,
+html.scene-engine-off #particle-universe,
+html.scene-engine-off #light-engine,
+html.scene-engine-off .fireflies,
+html.scene-engine-off .petal-field {
+  display: none !important;
+}
+html.scene-engine-off :is(
+  #sen-stage .sen-sticker,
+  #sen-stage .sen-stage-glint,
+  #sen-stage .sen-stage-character-sticker,
+  #sen-stage .sen-stage-web,
+  .yash-os-icon,
+  .journey-icon-drift,
+  #experience .exp-circle,
+  .scroll-indicator .chevron
+) {
+  animation: none !important;
+  will-change: auto !important;
+}
+html.scene-engine-off .hero-glass::after,
+html.scene-engine-off .glass-card::after,
+html.scene-engine-off .section.bento-card::after {
+  animation: none !important;
+  will-change: auto !important;
+}
+html.scene-engine-off .tl-icon,
+html.scene-engine-off #ai-orb::before,
+html.scene-engine-off #ai-orb::after {
+  animation: none !important;
+  will-change: auto !important;
+}
+@media (max-width: 760px), (pointer: coarse) {
+  html.scene-engine-off :is(
+    .hero-glass,
+    .section.bento-card,
+    .glass-card,
+    .topnav,
+    .dock,
+    .ai-panel,
+    .yash-os-shell,
+    .journey-year-panel
+  ) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
