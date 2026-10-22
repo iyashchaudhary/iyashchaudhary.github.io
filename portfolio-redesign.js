@@ -23,6 +23,7 @@
     const viewport = Math.max(1, window.innerHeight || 1);
     const isMobile = window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     document.body.classList.toggle('portfolio-scrolled', y > viewport * 0.55);
+    document.body.classList.toggle('portfolio-detail-mode', y > (hero?.offsetHeight || viewport) * 0.78);
 
     if (reduceMotion.matches) {
       frames.forEach((frame, index) => {

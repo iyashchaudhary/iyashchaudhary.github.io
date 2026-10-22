@@ -306,3 +306,181 @@ body:not(.portfolio-scrolled) #dock-wrap,body:not(.portfolio-scrolled) #ai-orb,b
   .sen-stage-portrait{transform:translate(-50%,-50%) scale(.94)!important;will-change:auto!important;}
   .sen-stage-portrait img,.sen-sticker,.section.bento-card,.hero-glass,.scroll-indicator .chevron{transition:none!important;animation:none!important;}
 }
+
+
+/* REFERENCE PASS — zoomed portrait backdrop, dark translucent glass, and chunky editorial type. */
+.sen-stage-closeup{
+  position:absolute;inset:-8%;z-index:0;overflow:hidden;opacity:0;pointer-events:none;
+  transform:scale(1.025);transition:opacity .8s ease,transform 1.25s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform;
+}
+.sen-stage-closeup img{
+  display:block;width:100%;height:100%;object-fit:cover;object-position:center 17%;
+  filter:blur(9px) brightness(.44) saturate(.78);transform:scale(1.08);
+  transition:filter .85s ease,transform 1.2s cubic-bezier(.2,.7,.2,1);
+}
+body.portfolio-detail-mode .sen-stage-closeup{opacity:.82;transform:scale(1.075);}
+body.portfolio-detail-mode .sen-stage-closeup img{filter:blur(7px) brightness(.38) saturate(.82);transform:scale(1.14);}
+body.portfolio-detail-mode .sen-stage-body{opacity:.15!important;}
+body.portfolio-detail-mode .sen-stage::before{opacity:.13!important;}
+
+/* Hero copy remains crisp while the character shows softly through the charcoal glass. */
+.hero-glass,html[data-theme="light"] .hero-glass,html[data-theme="morning"] .hero-glass,
+html[data-theme="dark"] .hero-glass,html[data-theme="evening"] .hero-glass{
+  border:1px solid rgba(255,255,255,.24)!important;
+  background:linear-gradient(145deg,rgba(19,27,23,.71),rgba(18,25,22,.57))!important;
+  box-shadow:0 28px 80px rgba(10,19,14,.3),inset 0 1px 0 rgba(255,255,255,.18)!important;
+  backdrop-filter:blur(10px) saturate(118%)!important;-webkit-backdrop-filter:blur(10px) saturate(118%)!important;
+}
+.hero-glass::before{opacity:.20!important;background:radial-gradient(circle at 90% 16%,rgba(213,227,146,.24),transparent 22%),radial-gradient(circle at 7% 100%,rgba(215,157,142,.2),transparent 25%)!important;}
+.hero .story-kicker,.hero .eyebrow{color:#ecd69e!important;text-shadow:0 2px 14px rgba(0,0,0,.28);}
+.hero h1,#hero-heading{color:#fbf8ed!important;text-shadow:0 3px 24px rgba(0,0,0,.35)!important;}
+.hero h1 .dim{color:rgba(250,248,239,.84)!important;text-shadow:0 2px 12px rgba(0,0,0,.32)!important;}
+.hero .lede{color:rgba(250,248,239,.84)!important;text-shadow:0 2px 14px rgba(0,0,0,.38)!important;}
+html[data-theme] .hero .cta-row .btn-primary{background:#d8e58f!important;color:#283129!important;border:1px solid rgba(241,246,202,.85)!important;box-shadow:0 8px 24px rgba(4,12,8,.18)!important;}
+html[data-theme] .hero .cta-row .btn-ghost,html[data-theme] .hero .cta-row .uy-link{background:rgba(255,255,255,.1)!important;color:#fbf8ed!important;border:1px solid rgba(255,255,255,.3)!important;backdrop-filter:blur(8px);}
+html[data-theme] .hero .cta-row .btn-ghost:hover,html[data-theme] .hero .cta-row .uy-link:hover{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.55)!important;}
+.stats-row{border-color:rgba(255,255,255,.22)!important;}
+.stat-card+.stat-card{border-left-color:rgba(255,255,255,.2)!important;}
+.stat-icon{background:rgba(223,236,157,.18)!important;color:#e5edaf!important;border:1px solid rgba(239,244,204,.2)!important;}
+.stat-card .num{-webkit-text-fill-color:#faf8ee!important;color:#faf8ee!important;}
+.stat-card .label{color:rgba(250,248,239,.7)!important;}
+.scroll-indicator{color:rgba(250,248,239,.78)!important;text-shadow:0 2px 12px rgba(0,0,0,.3);}
+
+/* Every chapter becomes a smoked-glass sheet over the moving close-up, not an opaque tile. */
+.section.bento-card,#credentials.section.bento-card{
+  border:1px solid rgba(255,255,255,.23)!important;border-radius:26px!important;
+  background:linear-gradient(145deg,rgba(18,25,22,.66),rgba(18,24,21,.48))!important;
+  box-shadow:0 28px 82px -28px rgba(0,0,0,.53),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(11px) saturate(116%)!important;-webkit-backdrop-filter:blur(11px) saturate(116%)!important;
+  color:#f8f5ea!important;
+}
+.sec-head h2,.section h2,.section h3,.section.bento-card .sec-head h2,.section.bento-card h2,.section.bento-card h3{
+  color:#fbf8ee!important;font-family:'Fraunces',Georgia,serif!important;font-weight:700!important;
+  letter-spacing:-.045em!important;text-shadow:0 2px 22px rgba(0,0,0,.3);
+}
+.sec-head h2,.section h2{font-size:clamp(2.15rem,5.2vw,3.65rem)!important;}
+.sec-num{border-color:rgba(255,255,255,.25)!important;background:rgba(225,235,164,.16)!important;color:#e7d89f!important;}
+.sec-desc,.story-note,.section p,.section.bento-card .sec-desc,.section.bento-card .story-note,.section.bento-card p{
+  color:rgba(250,248,240,.78)!important;
+}
+
+/* Nested credentials, skills, timeline panels and project cards share the translucent treatment. */
+.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.contact-pill,.currently-card,
+.section.bento-card .yash-os-shell,.section.bento-card .currently-grid,.section.bento-card .glass-card,
+.section.bento-card .folio,.section.bento-card .skill-card,.section.bento-card .pursuing-card,
+.section.bento-card .card,.section.bento-card .contact-pill,.section.bento-card .currently-card,
+.section.bento-card .journey-year-panel,.section.bento-card .journey-years,.section.bento-card .timeline-node,
+.section.bento-card .exp-node,.section.bento-card .learning-strip{
+  color:rgba(250,248,240,.92)!important;
+  border-color:rgba(255,255,255,.19)!important;
+  background:linear-gradient(145deg,rgba(13,20,17,.48),rgba(16,22,19,.36))!important;
+  box-shadow:0 16px 40px -25px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1)!important;
+  backdrop-filter:blur(8px) saturate(112%)!important;-webkit-backdrop-filter:blur(8px) saturate(112%)!important;
+}
+.section.bento-card :is(.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.currently-card,.journey-year-panel,.journey-years,.timeline-node,.exp-node,.learning-strip) :is(h1,h2,h3,h4,p,span,small,strong,li,label,summary,a,dt,dd){
+  color:rgba(250,248,240,.9)!important;
+}
+.section.bento-card :is(.badge,.tag,.chip,.status,.status-badge,.folio-status,.card-skills span,.learning-list span){
+  color:#f7f3e7!important;border-color:rgba(255,255,255,.2)!important;background:rgba(255,255,255,.1)!important;
+}
+.section.bento-card .timeline-fill{background:linear-gradient(180deg,#e7d89f,#c6da7b)!important;}
+.section.bento-card .timeline-track{background:rgba(255,255,255,.16)!important;}
+.section.bento-card .contact-pill{color:#fbf8ee!important;}
+.section.bento-card .contact-pill:hover,.section.bento-card .folio:hover,.section.bento-card .skill-card:hover,.section.bento-card .card:hover{
+  border-color:rgba(233,224,172,.56)!important;box-shadow:0 20px 46px -23px rgba(0,0,0,.52)!important;
+}
+
+/* Fixed controls inherit the same smoked glass when moving over close-up sections. */
+body.portfolio-detail-mode .topnav{
+  border-color:rgba(255,255,255,.2)!important;background:rgba(18,26,22,.68)!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.3)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;
+}
+body.portfolio-detail-mode .topnav .brand,body.portfolio-detail-mode .topnav .navlinks>a[data-nav],
+body.portfolio-detail-mode .topnav button,body.portfolio-detail-mode .topnav select{color:#faf7ed!important;}
+body.portfolio-detail-mode .cmdk-trigger-btn,body.portfolio-detail-mode .lang-toggle,body.portfolio-detail-mode .theme-select,body.portfolio-detail-mode .admin-trigger{
+  border-color:rgba(255,255,255,.2)!important;background:rgba(255,255,255,.08)!important;
+}
+body.portfolio-detail-mode .story-rail a{color:rgba(250,248,239,.68)!important;}
+body.portfolio-detail-mode .story-rail a.active,body.portfolio-detail-mode .story-rail a:hover{color:#e8d99e!important;}
+body.portfolio-detail-mode .dock{border-color:rgba(255,255,255,.2)!important;background:rgba(20,28,24,.82)!important;}
+body.portfolio-detail-mode .dock-item{color:rgba(250,248,239,.78)!important;}
+body.portfolio-detail-mode .dock-item.dock-active,body.portfolio-detail-mode .dock-item:hover{color:#f5e7ac!important;background:rgba(225,235,164,.12)!important;}
+
+@media(max-width:760px),(pointer:coarse){
+  .sen-stage-body{width:min(100vw,58svh,600px)!important;top:43%!important;}
+  .sen-stage-closeup{inset:-6%;}
+  .sen-stage-closeup img{object-position:center 15%;filter:blur(7px) brightness(.42) saturate(.78);}
+  body.portfolio-detail-mode .sen-stage-closeup{opacity:.88;}
+  .hero-glass,html[data-theme] .hero-glass{background:linear-gradient(145deg,rgba(19,27,23,.73),rgba(18,25,22,.6))!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;}
+  .section.bento-card,#credentials.section.bento-card{padding:25px 18px!important;border-radius:23px!important;backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;}
+  .section.bento-card :is(.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.currently-card,.journey-year-panel,.journey-years,.timeline-node,.exp-node,.learning-strip){backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  .sen-stage-closeup,.sen-stage-closeup img{transition:none!important;transform:none!important;}
+}
+
+
+/* Accordion folios used their own light button gradients; replace those inner surfaces too. */
+.section.bento-card .folio .accordion-head{
+  color:#fbf8ee!important;border:1px solid rgba(255,255,255,.17)!important;border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(30,39,34,.74),rgba(19,26,22,.60))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
+}
+.section.bento-card .folio .accordion-head:hover,.section.bento-card .folio .accordion-head[aria-expanded="true"]{
+  background:linear-gradient(145deg,rgba(44,54,45,.78),rgba(22,30,25,.68))!important;border-color:rgba(231,216,159,.42)!important;
+}
+.section.bento-card .folio .folio-icon{color:#eee3ba!important;border-color:rgba(255,255,255,.19)!important;background:rgba(224,234,159,.12)!important;}
+.section.bento-card .folio .count{color:#edf0d8!important;border-color:rgba(255,255,255,.2)!important;background:rgba(221,233,166,.12)!important;}
+.section.bento-card .folio .accordion-body,.section.bento-card .folio .card-grid{color:rgba(250,248,240,.9)!important;background:transparent!important;border-color:rgba(255,255,255,.16)!important;}
+.section.bento-card .folio .card{color:rgba(250,248,240,.92)!important;background:linear-gradient(145deg,rgba(12,19,16,.55),rgba(17,24,20,.42))!important;border-color:rgba(255,255,255,.17)!important;}
+.section.bento-card .folio::before{opacity:.12!important;}
+.section.bento-card .folio::after{opacity:.08!important;}
+
+.section.bento-card .cert-thumb,.section.bento-card a.cert-thumb, .section.bento-card button.cert-thumb{
+  color:#f7f3e8!important;border:1px solid rgba(255,255,255,.21)!important;
+  background:rgba(255,255,255,.1)!important;box-shadow:none!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;
+}
+.section.bento-card .cert-thumb:hover{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.4)!important;}
+
+
+/* Some original sections have stronger ID-level light panels; apply glass above those legacy rules. */
+body #main-content .section.bento-card[id]{
+  border-color:rgba(255,255,255,.23)!important;
+  background:linear-gradient(145deg,rgba(18,25,22,.66),rgba(18,24,21,.48))!important;
+  box-shadow:0 28px 82px -28px rgba(0,0,0,.53),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(11px) saturate(116%)!important;-webkit-backdrop-filter:blur(11px) saturate(116%)!important;
+  color:#f8f5ea!important;
+}
+body #main-content .section.bento-card[id] .yash-os-item{
+  color:rgba(250,248,240,.92)!important;border-color:rgba(255,255,255,.18)!important;
+  background:linear-gradient(145deg,rgba(13,20,17,.5),rgba(16,22,19,.36))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09)!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;
+}
+body #main-content .section.bento-card[id] .yash-os-item :is(h1,h2,h3,h4,p,span,strong,small,li,label){color:rgba(250,248,240,.9)!important;}
+body #main-content .section.bento-card[id] .yash-os-item :is(.status,.state,.item-status){color:#e8e3c8!important;border-color:rgba(255,255,255,.18)!important;background:rgba(220,233,166,.1)!important;}
+
+
+/* Legacy labels are plain DIVs with explicit ink colors, so normalize all detail copy to ivory. */
+body #main-content .section.bento-card[id] :not(svg):not(path):not(.sec-num):not(.timeline-fill){
+  color:rgba(250,248,240,.9)!important;-webkit-text-fill-color:rgba(250,248,240,.9)!important;
+}
+body #main-content .section.bento-card[id] .yash-os-item :is(.yash-os-state,.state,.status),
+body #main-content .section.bento-card[id] :is(.count,.cert-thumb){
+  color:#eaf0d1!important;-webkit-text-fill-color:#eaf0d1!important;
+  border-color:rgba(255,255,255,.18)!important;background:rgba(220,233,166,.11)!important;
+}
+body #main-content .section.bento-card[id] .exp-circle{background:rgba(220,233,166,.2)!important;border-color:rgba(255,255,255,.24)!important;}
+
+
+.section.bento-card .yash-os-status{
+  color:#eaf0d1!important;-webkit-text-fill-color:#eaf0d1!important;
+  border:1px solid rgba(220,233,166,.22)!important;background:rgba(220,233,166,.11)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+.achv-toast{
+  color:#f7f4eb!important;border:1px solid rgba(255,255,255,.22)!important;
+  background:rgba(18,26,22,.83)!important;box-shadow:0 16px 46px rgba(0,0,0,.34)!important;
+  backdrop-filter:blur(15px) saturate(125%)!important;-webkit-backdrop-filter:blur(15px) saturate(125%)!important;
+}
+.achv-toast :is(strong,span,p,small){color:rgba(250,248,240,.9)!important;-webkit-text-fill-color:rgba(250,248,240,.9)!important;}
+.achv-toast strong{color:#e8d99e!important;-webkit-text-fill-color:#e8d99e!important;}
