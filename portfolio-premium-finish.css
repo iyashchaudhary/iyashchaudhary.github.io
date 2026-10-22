@@ -1072,8 +1072,8 @@ body #main-content #focus .glass-card{
 
 
 /* 2026-10-22: lightweight, clearer detail mode and calmer navigation. */
-/* Drop the decorative lens flare; the character motion and expression swaps remain. */
-#sen-stage .sen-stage-glint{display:none!important;animation:none!important;filter:none!important;}
+/* Bring back the lens glint as a slower CSS-only sheen, without the costly shadow filter. */
+#sen-stage .sen-stage-glint{display:block!important;animation:sen-lens-glint 8.6s ease-in-out infinite!important;filter:none!important;}
 
 /* Keep expressions crisp in chapter/detail mode instead of blurring the portrait itself. */
 body.portfolio-detail-mode #sen-stage .sen-stage-closeup>img[data-scene-portrait]{
@@ -1225,3 +1225,17 @@ body #main-content .section.bento-card[id] :is(.yash-os-shell,.currently-grid,.g
   #experience .exp-collection:hover { transform: none; }
   #experience .exp-collection-body { animation: none; }
 }
+
+
+/* RESTORE VISUAL LAYERS — keep the scenic blue environment; only heavy particles stay off. */
+#tree-bg.tree-bg{display:block!important;visibility:visible!important;opacity:1!important;}
+#sen-stage .sen-stage-orbit{display:block!important;opacity:.24!important;}
+#sen-stage .sen-stage-orbit-b{opacity:.16!important;}
+#sen-stage .sen-stage-glint{display:block!important;animation:sen-lens-glint 8.6s ease-in-out infinite!important;filter:none!important;}
+@media(max-width:760px),(pointer:coarse){
+  #tree-bg .tree-bg-glow,#tree-bg .tree-bg-glow-2{display:block!important;animation:none!important;opacity:.12!important;}
+  #sen-stage .sen-stage-orbit{opacity:.14!important;}
+  #sen-stage .sen-stage-orbit-b{opacity:.09!important;}
+  #sen-stage .sen-stage-glint{animation-duration:11s!important;}
+}
+@media(prefers-reduced-motion:reduce){#sen-stage .sen-stage-glint{display:none!important;animation:none!important;}}
