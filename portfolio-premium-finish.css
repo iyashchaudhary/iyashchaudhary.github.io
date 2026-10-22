@@ -1069,3 +1069,69 @@ body #main-content #focus .glass-card{
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto!important;}
 }
+
+
+/* 2026-10-22: lightweight, clearer detail mode and calmer navigation. */
+/* Drop the decorative lens flare; the character motion and expression swaps remain. */
+#sen-stage .sen-stage-glint{display:none!important;animation:none!important;filter:none!important;}
+
+/* Keep expressions crisp in chapter/detail mode instead of blurring the portrait itself. */
+body.portfolio-detail-mode #sen-stage .sen-stage-closeup>img[data-scene-portrait]{
+  filter:drop-shadow(0 20px 34px rgba(3,7,5,.24)) saturate(.98) brightness(1.02)!important;
+}
+
+/* Lower-cost glass keeps the animated portrait visible through every reading section. */
+body #main-content .section.bento-card[id]{
+  backdrop-filter:blur(2.5px) saturate(108%)!important;
+  -webkit-backdrop-filter:blur(2.5px) saturate(108%)!important;
+}
+body #main-content #journey .journey-year-panel,
+body #main-content #focus .glass-card{
+  backdrop-filter:blur(1.5px) saturate(108%)!important;
+  -webkit-backdrop-filter:blur(1.5px) saturate(108%)!important;
+}
+body #main-content .section.bento-card[id] :is(.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.currently-card,.journey-year-panel,.journey-years,.timeline-node,.exp-node,.learning-strip,.yash-os-item,.card-grid,.accordion-body){
+  backdrop-filter:blur(1.5px) saturate(108%)!important;
+  -webkit-backdrop-filter:blur(1.5px) saturate(108%)!important;
+}
+
+/* The story rail duplicates the full top navigation; keep one clear route to sections. */
+.story-rail{display:none!important;}
+@media(min-width:761px) and (max-width:1120px){
+  #topnav .navlinks>a[data-nav][href="#yash-os"],
+  #topnav .navlinks>a[data-nav][href="#currently"],
+  #topnav .navlinks>a[data-nav][href="#experience"],
+  #topnav .navlinks>a[data-nav][href="#focus"],
+  #topnav .navlinks>a[data-nav][href="#skills"]{display:none!important;}
+}
+@media(max-width:760px),(pointer:coarse){
+  body #main-content .section.bento-card[id]{
+    backdrop-filter:blur(2px) saturate(106%)!important;
+    -webkit-backdrop-filter:blur(2px) saturate(106%)!important;
+  }
+  body #main-content #journey .journey-year-panel,
+  body #main-content #focus .glass-card{
+    backdrop-filter:blur(1px) saturate(106%)!important;
+    -webkit-backdrop-filter:blur(1px) saturate(106%)!important;
+  }
+  body #main-content .section.bento-card[id] :is(.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.currently-card,.journey-year-panel,.journey-years,.timeline-node,.exp-node,.learning-strip,.yash-os-item,.card-grid,.accordion-body){
+    backdrop-filter:blur(1px) saturate(106%)!important;
+    -webkit-backdrop-filter:blur(1px) saturate(106%)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #sen-stage .sen-stage-glint{display:none!important;}
+}
+
+/* Clear primary routes at laptop widths; the dock's More control retains secondary sections. */
+@media(min-width:761px){
+  #topnav .navlinks>a[data-nav][href="#yash-os"],
+  #topnav .navlinks>a[data-nav][href="#currently"],
+  #topnav .navlinks>a[data-nav][href="#focus"],
+  #topnav .navlinks>a[data-nav][href="#credentials"]{display:none!important;}
+  #topnav .navlinks{gap:clamp(5px,.75vw,12px)!important;}
+}
+@media(min-width:761px) and (max-width:1120px){
+  #topnav .navlinks>a[data-nav][href="#experience"],
+  #topnav .navlinks>a[data-nav][href="#skills"]{display:none!important;}
+}

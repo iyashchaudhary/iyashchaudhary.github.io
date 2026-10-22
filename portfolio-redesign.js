@@ -286,7 +286,10 @@
     document.body.classList.toggle('portfolio-detail-mode', detailMode);
     if (detailMode) { if (idleRaf) stopIdleMotion(); }
     else if (!idleRaf && !reduceMotion.matches) startIdleMotion();
-    if (!activeScene || now - lastSceneCheck >= 72) {
+    // Section bounds need not be re-read on every few frames. Keep responsive
+    // scroll transforms per-frame, but sample chapter visibility at a lower rate.
+    const sceneCheckInterval = isMobile ? 144 : 96;
+    if (!activeScene || now - lastSceneCheck >= sceneCheckInterval) {
       updateChapterScene(viewport);
       lastSceneCheck = now;
     }
@@ -447,12 +450,8 @@
   }, { passive: true });
   window.addEventListener('pointerleave', resetParallax, { passive: true });
   window.addEventListener('blur', resetParallax, { passive: true });
-  window.addEventListener('touchmove', (event) => {
-    const touch = event.touches && event.touches[0];
-    if (touch) moveParallax(touch.clientX, touch.clientY, true);
-  }, { passive: true });
-  window.addEventListener('touchend', resetParallax, { passive: true });
-  window.addEventListener('touchcancel', resetParallax, { passive: true });
+  // Let mobile browsers devote touchmove frames to native scrolling; scroll-driven
+  // portrait motion remains active through the passive, rAF-batched scroll handler.
   reduceMotion.addEventListener?.('change', () => {
     if (reduceMotion.matches) { stopIdleMotion(); setGesturePlayback(false); }
     else { startIdleMotion(); requestPaint(); }
