@@ -1917,6 +1917,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   @media (prefers-reduced-motion:reduce){.sen-stage-grid,.sen-stage-orbit,.sen-stage-portrait{transform:none!important;transition:none!important;}.sen-stage-noise{display:none;}}
 </style>
 <!-- PEAK_PREMIUM_V1_END -->
+  <link rel="stylesheet" href="portfolio-redesign.css">
 </head>
 <body>
 
@@ -1964,8 +1965,12 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <div class="sen-stage-grid"></div>
   <div class="sen-stage-orbit sen-stage-orbit-a"></div>
   <div class="sen-stage-orbit sen-stage-orbit-b"></div>
-  <div class="sen-stage-portrait"><img src="yash-character.webp" alt="" width="400" height="345" decoding="async"></div>
-  <div class="sen-stage-label sen-stage-label-left"><span>YASH / 2026</span><b>BUILDING IN PUBLIC</b></div>
+  <div class="sen-stage-portrait" aria-hidden="true">
+    <img data-portrait="hello" class="is-active" src="yash-expression-hello.webp" alt="" width="1536" height="2304" fetchpriority="high" decoding="async">
+    <img data-portrait="focus" src="yash-expression-focus.webp" alt="" width="1536" height="2304" loading="lazy" decoding="async">
+    <img data-portrait="joy" src="yash-expression-joy.webp" alt="" width="1536" height="2304" loading="lazy" decoding="async">
+  </div>
+  <div class="sen-stage-label sen-stage-label-left"><span>YASH / 2026</span><b>CREATIVE · COMMERCE · AUTOMATION</b></div>
   <div class="sen-stage-label sen-stage-label-right"><span>SCROLL TO EXPLORE</span><b>DELHI · INDIA</b></div>
   <div class="sen-stage-noise"></div>
 </div>
@@ -4506,5 +4511,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     requestPaint();
   })();
 </script>
+<script src="portfolio-redesign.js" defer></script>
 </body>
 </html>
