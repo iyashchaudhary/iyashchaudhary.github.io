@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="performance-lite">
 <head>
 <meta charset="UTF-8">
 <script>
@@ -1920,6 +1920,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <link rel="stylesheet" href="portfolio-redesign.css">
   <link rel="stylesheet" href="portfolio-reference-match.css?v=20261022-2">
   <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-20">
+  <link rel="stylesheet" href="portfolio-smooth-lite.css?v=20261023-1">
 </head>
 <body>
 
@@ -2011,8 +2012,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <div class="navlinks" id="navlinks">
       <a href="#hello" data-nav data-en="Hello" data-hi="नमस्ते" style="display:none;">Hello</a>
       <a href="#yash-os" data-nav data-en="YASH OS" data-hi="YASH OS" style="display:none;">YASH OS</a>
-      <a href="#currently" data-nav data-en="Currently" data-hi="अभी" style="display:none;">Currently</a>
-      <a href="#journey" data-nav data-en="Journey" data-hi="सफर" style="display:none;">Journey</a>
+<a href="#journey" data-nav data-en="Journey" data-hi="सफर" style="display:none;">Journey</a>
       <a href="#experience" data-nav data-en="Experience" data-hi="अनुभव" style="display:none;">Experience</a>
       <a href="#focus" data-nav data-en="Focus" data-hi="फोकस" style="display:none;">Focus</a>
       <a href="#credentials" data-nav data-en="Credentials" data-hi="प्रमाणपत्र" style="display:none;">Credentials</a>
@@ -2039,8 +2039,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <aside class="story-rail" id="story-rail" aria-label="Story chapters">
     <a href="#hello" data-story-link><span>Meet Yash</span></a>
     <a href="#yash-os" data-story-link><span>Current State</span></a>
-    <a href="#currently" data-story-link><span>Currently</span></a>
-    <a href="#journey" data-story-link><span>The Journey</span></a>
+<a href="#journey" data-story-link><span>The Journey</span></a>
     <a href="#experience" data-story-link><span>Experience</span></a>
     <a href="#credentials" data-story-link><span>Proof</span></a>
     <a href="#skills" data-story-link><span>Skills</span></a>
@@ -2208,22 +2207,12 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       <div class="yash-os-shell reveal" id="yash-os-container"><!-- rendered from YASH_OS_DATA --></div>
     </div>
   </section>
-
-  <!-- ===================== CURRENTLY ===================== -->
-  <section class="section bento-card bento-span-5 scene" id="currently" data-scene="currently">
-    <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">02</span><h2>Currently</h2></div>
-      <p class="sec-desc reveal">A small live snapshot of the things moving through this chapter.</p>
-      <div class="currently-grid reveal" id="currently-container"><!-- rendered from CURRENTLY_DATA --></div>
-    </div>
-  </section>
-
-  <!-- ===================== JOURNEY ===================== -->
+<!-- ===================== JOURNEY ===================== -->
 
 <section class="section bento-card bento-span-7 scene" id="journey" data-scene="journey">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="sec-num">03</span><h2>Journey</h2>
+        <span class="sec-num">02</span><h2>Journey</h2>
         <button class="play-journey-btn" id="play-journey-btn" type="button" aria-label="Play journey — auto-scroll through the timeline">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           <span>Play Journey</span>
@@ -2244,7 +2233,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== EXPERIENCE ===================== -->
   <section class="section bento-card bento-span-5 scene" id="experience" data-scene="experience">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">04</span><h2 data-en="Experience" data-hi="अनुभव">Experience</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">03</span><h2 data-en="Experience" data-hi="अनुभव">Experience</h2></div>
       <p class="sec-desc reveal" data-en="A few chapters in campus communities and freelance creative work. Open a card to explore each role." data-hi="कॉलेज सोसाइटी और फ्रीलांस क्रिएटिव काम के कुछ अध्याय। हर भूमिका देखने के लिए कार्ड खोलें।">A few chapters in campus communities and freelance creative work. Open a card to explore each role.</p>
 
       <div class="exp-track" id="experience-track">
@@ -2256,7 +2245,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CURRENT FOCUS (glass card) ===================== -->
   <section class="section bento-card bento-span-5 scene" id="focus" data-scene="focus">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="Current Focus" data-hi="वर्तमान फोकस">Current Focus</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">04</span><h2 data-en="Current Focus" data-hi="वर्तमान फोकस">Current Focus</h2></div>
 
       <div class="glass-card reveal" id="focus-container">
         <!-- focus content rendered by JS -->
@@ -2267,7 +2256,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CREDENTIALS ===================== -->
   <section class="section bento-card bento-span-12 scene" id="credentials" data-scene="credentials">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">05</span><h2 data-en="Credentials" data-hi="प्रमाणपत्र">Credentials</h2></div>
       <p class="sec-desc reveal">Tap a folio to open it. Each one holds real, verifiable work — new entries get added here as they're completed.</p>
 
       <div id="credentials-container">
@@ -2279,7 +2268,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== SKILLS ===================== -->
   <section class="section bento-card bento-span-7 scene" id="skills" data-scene="skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">07</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">06</span><h2 data-en="Skills" data-hi="कौशल">Skills</h2></div>
       <p class="sec-desc reveal">What I actually work with, day to day.</p>
       <div class="skills-grid" id="skills-container">
         <!-- skills rendered by JS -->
@@ -2291,7 +2280,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== CONTACT ===================== -->
   <section class="section bento-card bento-span-5 scene" id="contact" data-scene="contact">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="sec-num">08</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
+      <div class="sec-head reveal"><span class="sec-num">07</span><h2 data-en="Contact" data-hi="संपर्क">Contact</h2></div>
       <p class="sec-desc reveal">The best ways to reach me or see more of my work.</p>
       <div class="contact-row reveal">
         <a href="https://www.linkedin.com/in/yash-chaudhary-943642374" target="_blank" rel="noopener" class="contact-pill social-pill social-pill--linkedin"><svg class="social-logo social-logo--linkedin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.05-1.86-3.05-1.87 0-2.16 1.46-2.16 2.96v5.66H9.3V9h3.42v1.56h.05c.48-.9 1.65-1.85 3.39-1.85 3.62 0 4.29 2.38 4.29 5.48v6.26zM5.28 7.43c-1.15 0-2.08-.93-2.08-2.08S4.13 3.27 5.28 3.27s2.08.93 2.08 2.08-.93 2.08-2.08 2.08zm1.79 13.02H3.49V9h3.58v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/></svg><span>LinkedIn</span><span class="social-arrow" aria-hidden="true">↗</span></a>
@@ -2364,7 +2353,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   window.__lenisReady = (typeof Lenis !== 'undefined');
 </script>
 <script>
-  function toggleTL(btn){ btn.closest('.tl-item').classList.toggle('open'); }
+  function toggleTL(btn){ const item=btn.closest('.tl-item'); const open=item.classList.toggle('open'); btn.setAttribute('aria-expanded',String(open)); }
   function toggleFolio(btn){ btn.closest('.folio').classList.toggle('open'); }
 
   // ---------- DYNAMIC RENDERING ----------
@@ -2396,67 +2385,49 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       currentlyContainer.innerHTML = window.CURRENTLY_DATA.map(item=>`<article class="currently-item"><div class="currently-label">${esc(item.label)}</div><div class="currently-value">${esc(item.value)}</div></article>`).join('');
     }
 
-    // Interactive Journey year index
     const journeyIconSvg = kind => {
       const paths = {
         education: '<path d="M4 5.5h6a2 2 0 0 1 2 2v11a2 2 0 0 0-2-2H4z"/><path d="M20 5.5h-6a2 2 0 0 0-2 2v11a2 2 0 0 1 2-2h6z"/>',
-        choice: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/><path d="m5 5 2 1M19 5l-2 1"/>',
-        community: '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14a5 5 0 0 1 3.5 4.8"/>',
-        chapter: '<path d="M5 21V4"/><path d="M6 5h12l-3 4 3 4H6"/><path d="M9 17h8"/>'
+        choice: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/>',
+        community: '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 5.8M17 14a5 5 0 0 1 3.5 4.8"/>',
+        chapter: '<path d="M5 21V4M6 5h12l-3 4 3 4H6M9 17h8"/>'
       };
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[kind]||paths.education}</svg>`;
     };
-    const yearTabs = document.getElementById('journey-years');
-    const yearPanel = document.getElementById('journey-year-panel');
-    if(yearTabs && yearPanel && Array.isArray(window.JOURNEY_YEAR_DATA)){
-      const availableYears = window.JOURNEY_YEAR_DATA.filter(item=>Array.isArray(item.entries) && item.entries.length);
-      const renderYear = year => {
-        const record = availableYears.find(item=>item.year===year) || availableYears[availableYears.length-1];
-        yearTabs.querySelectorAll('.journey-year').forEach(btn=>{
-          const active=btn.dataset.year===record.year; btn.classList.toggle('is-active',active); btn.setAttribute('aria-selected',String(active));
-        });
-        const entries=Array.isArray(record.entries)?record.entries:[];
-        yearPanel.innerHTML = `<div class="journey-year-heading"><h3>${esc(record.year)}</h3><span>${entries.length} chapter${entries.length===1?'':'s'}</span></div>` + entries.map(entry=>{const category=String(entry.category||'').toLowerCase();const kind=category.includes('societ')?'community':category.includes('mile')?'choice':category.includes('chapter')?'chapter':'education';return `<article class="journey-year-entry"><strong><span class="journey-category-icon">${journeyIconSvg(kind)}</span>${esc(entry.category)}</strong><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></article>`;}).join('');
-      };
-      yearTabs.innerHTML = availableYears.map((item,index)=>`<button class="journey-year${index===availableYears.length-1?' is-active':''}" type="button" role="tab" data-year="${esc(item.year)}" aria-selected="${index===availableYears.length-1?'true':'false'}">${esc(item.year)}</button>`).join('');
-      yearTabs.querySelectorAll('.journey-year').forEach(btn=>btn.addEventListener('click',()=>renderYear(btn.dataset.year)));
-      if(availableYears.length) renderYear(availableYears[availableYears.length-1].year);
-      else { yearTabs.innerHTML=''; yearPanel.innerHTML=''; }
-    }
-
-    // Journey
+    // Compact year cards keep every milestone and complete story, including galleries.
     const timeline = document.getElementById('timeline');
-    if(timeline && window.JOURNEY_DATA) {
-      const track = timeline.querySelector('.timeline-track');
-      const fill = timeline.querySelector('.timeline-fill');
-      let body = '<div class="timeline-track"></div><div class="timeline-fill" id="timeline-fill"></div>';
-      window.JOURNEY_DATA.forEach((item, idx) => {
-        const titleKey = String(item.title||'').toLowerCase();
-        const iconKind = titleKey.includes('cuet') ? 'choice' : titleKey.includes('new journey') ? 'chapter' : 'education';
-        let gallery = '';
-        if(item.images && item.images.length) {
-          gallery = `<div class="tl-gallery">` + item.images.map((img, i) =>
-            `<button onclick="openLightbox(${i})"><img src="${img.src}" alt="${esc(img.alt)}" loading="lazy" decoding="async"></button>`
-          ).join('') + `</div>`;
-        }
-
-        body += `
-          <div class="tl-item">
-            <button class="tl-head" onclick="toggleTL(this)">
-              <span class="tl-icon tl-icon--${iconKind}" aria-hidden="true">${journeyIconSvg(iconKind)}</span>
-              <span class="tl-title">${esc(item.title)}</span>
-              <span class="tl-date mono">${esc(item.date)}</span>
-              <span class="tl-chevron">+</span>
-            </button>
-            <div class="tl-body">
-              ${item.paragraphs.map(p => `<p>${esc(p)}</p>`).join('')}
-              ${gallery}
-            </div>
-          </div>`;
+    if(timeline && Array.isArray(window.JOURNEY_YEAR_DATA)){
+      const years = new Map();
+      window.JOURNEY_YEAR_DATA.forEach(record=>{
+        const key=String(record.year);
+        years.set(key,{year:key,entries:Array.isArray(record.entries)?record.entries:[],stories:[]});
       });
-      timeline.innerHTML = body;
+      (window.JOURNEY_DATA||[]).forEach(item=>{
+        const match=String(item.date||'').match(/20\d{2}/);
+        const year=match?match[0]:Array.from(years.keys()).slice(-1)[0]||'Journey';
+        if(!years.has(year)) years.set(year,{year,entries:[],stories:[]});
+        years.get(year).stories.push(item);
+      });
+      const ordered=Array.from(years.values()).sort((a,b)=>a.year.localeCompare(b.year,undefined,{numeric:true}));
+      timeline.innerHTML=ordered.map(record=>{
+        const milestones=record.entries.map(entry=>{
+          const category=String(entry.category||'').toLowerCase();
+          const kind=category.includes('societ')||category.includes('club')?'community':category.includes('mile')?'choice':category.includes('chapter')?'chapter':'education';
+          return `<article class="journey-year-entry"><strong><span class="journey-category-icon">${journeyIconSvg(kind)}</span>${esc(entry.category)}</strong><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></article>`;
+        }).join('');
+        const stories=record.stories.map(item=>{
+          const titleKey=String(item.title||'').toLowerCase();
+          const iconKind=titleKey.includes('cuet')?'choice':titleKey.includes('new journey')?'chapter':'education';
+          const gallery=(item.images&&item.images.length)?`<div class="tl-gallery">${item.images.map((img,i)=>`<button type="button" onclick="openLightbox(${i})" aria-label="View ${esc(img.alt||'journey photo')}"><img src="${img.src}" alt="${esc(img.alt)}" loading="lazy" decoding="async"></button>`).join('')}</div>`:'';
+          return `<article class="tl-item journey-story"><button class="tl-head" type="button" aria-expanded="false" onclick="toggleTL(this)"><span class="tl-icon tl-icon--${iconKind}" aria-hidden="true">${journeyIconSvg(iconKind)}</span><span class="tl-title">${esc(item.title)}</span><span class="tl-date mono">${esc(item.date)}</span><span class="tl-chevron" aria-hidden="true">+</span></button><div class="tl-body">${(item.paragraphs||[]).map(text=>`<p>${esc(text)}</p>`).join('')}${gallery}</div></article>`;
+        }).join('');
+        const total=record.entries.length+record.stories.length;
+        return `<details class="journey-year-card"><summary class="journey-year-summary"><span class="journey-year-number">${esc(record.year)}</span><span class="journey-year-meta"><strong>${total} ${total===1?'chapter':'chapters'}</strong><span>${record.entries.length} milestones · ${record.stories.length} detailed stor${record.stories.length===1?'y':'ies'}</span></span><span class="journey-year-chevron" aria-hidden="true">+</span></summary><div class="journey-year-content">${milestones?`<div class="journey-milestones">${milestones}</div>`:''}${stories?`<div class="journey-stories">${stories}</div>`:''}</div></details>`;
+      }).join('');
+      timeline.querySelectorAll('.journey-year-card').forEach(card=>card.addEventListener('toggle',()=>{
+        if(card.open) timeline.querySelectorAll('.journey-year-card[open]').forEach(other=>{if(other!==card)other.open=false;});
+      }));
     }
-
     // Experience
     const expTrack = document.getElementById('experience-track');
     if(expTrack && window.EXPERIENCE_DATA) {
@@ -2589,7 +2560,11 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       if(cancelled || i >= items.length){ stopPlay(); return; }
       items.forEach(it => it.classList.remove('tl-playing', 'open'));
       const item = items[i];
+      const yearCard=item.closest('.journey-year-card');
+      if(yearCard) yearCard.open=true;
       item.classList.add('tl-playing', 'open');
+      const head=item.querySelector('.tl-head');
+      if(head) head.setAttribute('aria-expanded','true');
       item.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block:'center' });
       const holdTime = reduced ? 1000 : 2600;
       timers.push(setTimeout(()=> playStep(i + 1), holdTime));
@@ -3483,9 +3458,11 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         } else if(item.action.type === 'link'){
           window.open(item.action.href, '_blank', 'noopener');
         } else if(item.action.type === 'timeline'){
-          item.action.el.scrollIntoView({behavior:'smooth', block:'center'});
-          const head = item.action.el.querySelector('.tl-head');
-          if(head && typeof toggleTL === 'function' && !item.action.el.classList.contains('open')) toggleTL(head);
+          const yearCard=item.action.el.closest('.journey-year-card');
+          if(yearCard) yearCard.open=true;
+          const head=item.action.el.querySelector('.tl-head');
+          if(head && typeof toggleTL==='function' && !item.action.el.classList.contains('open')) toggleTL(head);
+          requestAnimationFrame(()=>item.action.el.scrollIntoView({behavior:'smooth',block:'center'}));
         } else if(item.action.type === 'folio'){
           item.action.folio.scrollIntoView({behavior:'smooth', block:'start'});
           if(typeof toggleFolio === 'function'){
@@ -4067,7 +4044,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
      - Fully skipped under prefers-reduced-motion.
   ============================================================ */
   (function(){
-    if(prefersReducedGlobal || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760) return;
+    if(document.documentElement.classList.contains('performance-lite') || prefersReducedGlobal || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760) return;
     const scenes = Array.from(document.querySelectorAll('.scene'));
     if(!scenes.length) return;
 
@@ -4316,7 +4293,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 (function(){
   // Drifting fireflies / light motes among the blossoms.
   const layer = document.getElementById('fireflies');
-  if(!layer) return;
+  if(!layer || document.documentElement.classList.contains('performance-lite')) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 720) return;
   const count = 18;
@@ -4345,7 +4322,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   const canHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const field = document.getElementById('petal-field');
-  if(!canHover || prefersReduced || !field) return;
+  if(!canHover || prefersReduced || !field || document.documentElement.classList.contains('performance-lite')) return;
   const PETAL_IMAGES = ['petal-1.png','petal-2.png','petal-3.png'];
   let lastSpawn = 0;
 
@@ -4367,7 +4344,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
 (function(){
   const field = document.getElementById('petal-field');
-  if(!field || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 720) return;
+  if(!field || document.documentElement.classList.contains('performance-lite') || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 720) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PETAL_IMAGES = ['petal-1.png','petal-2.png','petal-3.png'];
   const isMobile = window.innerWidth < 720;
@@ -4458,11 +4435,12 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <script>
   /* STORY_MODE_SCRIPT_V1 */
   (() => {
+    if(document.documentElement.classList.contains('performance-lite')) return;
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const links = [...document.querySelectorAll('[data-story-link]')];
     const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
     const root = document.documentElement;
-    const lite = window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760;
+    const lite = document.documentElement.classList.contains('performance-lite') || window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 760;
     const update = () => {
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       root.style.setProperty('--story-progress', `${Math.min(100, Math.max(0, window.scrollY / max * 100))}%`);
@@ -4489,6 +4467,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets=[...document.querySelectorAll('.hero-glass,.section.bento-card,.folio,.skill-card')];
   revealTargets.forEach((el,i)=>{el.classList.add('apple-reveal');if(i%4===0)el.classList.add('apple-float');});
+  if(document.documentElement.classList.contains('performance-lite')){revealTargets.forEach(el=>el.classList.add('is-visible'));return;}
   if(reduce){revealTargets.forEach(el=>el.classList.add('is-visible'));return;}
   const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');io.unobserve(entry.target);}}),{threshold:.12,rootMargin:'0px 0px -8%'});
   revealTargets.forEach(el=>io.observe(el));
@@ -4530,7 +4509,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   const cards = [...document.querySelectorAll('.hero-glass,.section.bento-card,.folio,.skill-card')];
   cards.forEach(card => card.classList.add('peak-tilt'));
   document.querySelectorAll('.btn-primary,.btn-ghost,.dock-item,.topnav button,.play-journey-btn').forEach(el => el.classList.add('peak-magnetic'));
-  if (reduce || !desktop) return;
+  if (reduce || !desktop || document.documentElement.classList.contains('performance-lite')) return;
   let raf = 0;
   let pointerX = 0;
   let pointerY = 0;
@@ -4576,6 +4555,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <script id="site-sonar-runtime-v3">
 (() => {
   const canvas=document.getElementById('site-sonar-canvas'); if(!canvas||!canvas.getContext)return;
+  if(document.documentElement.classList.contains('performance-lite')){canvas.hidden=true;return;}
   const ctx=canvas.getContext('2d'), base=document.createElement('canvas'), bctx=base.getContext('2d');
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'), coarse=matchMedia('(pointer: coarse)');
   let w=1,h=1,dpr=1,raf=0,timer=0,lastPing=0,visible=true,color='#246BDB',spacing=34;
@@ -4601,7 +4581,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   // Scroll camera for the lightweight cinematic stage. One rAF per frame, no layout reads in the loop.
   (function(){
     const stage=document.getElementById('sen-stage');
-    if(!stage) return;
+    if(!stage || document.documentElement.classList.contains('performance-lite')) return;
     let queued=false;
     const paint=()=>{
       queued=false;
