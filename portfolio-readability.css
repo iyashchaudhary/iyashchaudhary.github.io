@@ -1,0 +1,101 @@
+/* Readability pass layered over the user's scenic Claymorphism design. */
+:root{
+  --clay-ink:#26344b;
+  --clay-muted:#43546c;
+  --clay-focus:#2457a6;
+}
+html[data-theme="dark"],html[data-theme="evening"]{
+  --clay-ink:#f1f4f8;
+  --clay-muted:#c7d2df;
+  --clay-focus:#b8d2ff;
+}
+/* Keep hero metadata legible without hiding the character or scenery. */
+body #main-content #hello .stats-row{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  max-width:900px!important;
+  margin:26px auto 0!important;
+  padding:0!important;
+  border:0!important;
+}
+body #main-content #hello .stats-row .stat-card{
+  min-width:0!important;
+  min-height:72px!important;
+  padding:12px 10px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid color-mix(in srgb,var(--clay-ink) 15%,transparent)!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(239,245,250,.72))!important;
+  box-shadow:0 8px 16px -13px rgba(38,52,75,.32),inset 1px 1px 2px rgba(255,255,255,.88),inset -2px -3px 6px rgba(71,101,145,.10)!important;
+}
+html[data-theme="dark"] body #main-content #hello .stats-row .stat-card,
+html[data-theme="evening"] body #main-content #hello .stats-row .stat-card{
+  background:linear-gradient(145deg,rgba(37,54,75,.9),rgba(30,43,60,.92))!important;
+  border-color:rgba(255,255,255,.17)!important;
+}
+body #main-content #hello .stats-row .stat-card+.stat-card{border-left:1px solid color-mix(in srgb,var(--clay-ink) 15%,transparent)!important;}
+body #main-content #hello .stats-row .stat-card .num{
+  color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;
+  font:700 clamp(1.15rem,2vw,1.55rem)/1 'IBM Plex Mono',monospace!important;
+}
+body #main-content #hello .stats-row .stat-card .label{
+  color:var(--clay-muted)!important;-webkit-text-fill-color:var(--clay-muted)!important;
+  margin-top:6px!important;font-size:clamp(.58rem,.82vw,.7rem)!important;
+  font-weight:650!important;letter-spacing:.045em!important;line-height:1.25!important;
+  text-align:center!important;max-width:15ch!important;
+}
+body #main-content #hello .hero-glass .lede{
+  max-width:62ch!important;font-size:clamp(.96rem,1.18vw,1.08rem)!important;
+  line-height:1.7!important;letter-spacing:.005em!important;
+}
+/* Pale clay cards use ink text, not inherited white text-fill from older theme layers. */
+body #main-content :is(#yash-os .yash-os-item,#journey .journey-year-card,#journey .journey-milestones,#experience .exp-collection,#credentials .folio,#skills .skill-card,#skills .pursuing-card,#focus .glass-card,#contact .contact-pill) :is(h1,h2,h3,h4,h5,p,span,strong,em,small,li,label,.skill-level,.skill-desc,.status-tag,.card-skills span,.folio-num,.accordion-meta,.exp-role-date,.exp-role-org,.exp-collection-eyebrow,.exp-collection-preview,.exp-collection-count,.yash-os-label,.yash-os-state,.journey-year-number,.journey-year-meta,.journey-year-entry strong,.journey-year-entry p,.journey-story .tl-title,.journey-story .tl-date,.journey-story .tl-body,.journey-story .tl-body p){
+  color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;
+  text-shadow:none!important;
+}
+body #main-content :is(#yash-os .yash-os-item,#journey .journey-year-card,#journey .journey-milestones,#experience .exp-collection,#credentials .folio,#skills .skill-card,#skills .pursuing-card,#focus .glass-card,#contact .contact-pill) :is(.muted,.subtle,.meta,.description,.skill-level,.exp-role-date,.exp-collection-preview,.exp-collection-count,.journey-year-meta,.journey-year-entry p,.journey-story .tl-date,.journey-story .tl-body,.journey-story .tl-body p){
+  color:var(--clay-muted)!important;-webkit-text-fill-color:var(--clay-muted)!important;
+}
+body #main-content :is(#journey .journey-year-entry strong,#experience .exp-role-org,#experience .exp-collection-eyebrow,#credentials .folio-icon,#skills .skill-icon){
+  color:var(--clay-focus)!important;-webkit-text-fill-color:var(--clay-focus)!important;
+}
+body #main-content #journey .journey-year-chevron{
+  width:38px!important;height:38px!important;min-width:38px!important;
+  border:2px solid color-mix(in srgb,var(--clay-focus) 35%,white)!important;
+  background:linear-gradient(145deg,#fff,#dbeaff)!important;
+  color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;
+  box-shadow:0 5px 12px -8px rgba(38,52,75,.55),inset 1px 1px 2px #fff,inset -2px -2px 4px rgba(71,101,145,.13)!important;
+  font-size:24px!important;font-weight:700!important;
+}
+body #main-content #journey .journey-year-card[open] .journey-year-chevron{background:linear-gradient(145deg,#e4efff,#ccddfa)!important;}
+body #main-content #journey .journey-story .tl-title{color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;text-shadow:none!important;}
+body #main-content #journey .journey-story .tl-date,body #main-content #journey .journey-story .tl-body,body #main-content #journey .journey-story .tl-body p{color:var(--clay-muted)!important;-webkit-text-fill-color:var(--clay-muted)!important;text-shadow:none!important;}
+body #main-content #journey .journey-story .tl-chevron{display:grid!important;place-items:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important;margin-left:8px!important;border:2px solid color-mix(in srgb,var(--clay-focus) 38%,white)!important;border-radius:50%!important;background:linear-gradient(145deg,#fff,#dbeaff)!important;color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;box-shadow:0 5px 12px -8px rgba(38,52,75,.55),inset 1px 1px 2px #fff,inset -2px -2px 4px rgba(71,101,145,.13)!important;font:800 23px/1 Inter,sans-serif!important;}
+body #main-content #journey .journey-story.open .tl-chevron{transform:rotate(45deg)!important;background:linear-gradient(145deg,#e4efff,#ccddfa)!important;}
+#sen-stage .sen-stage-portrait img{transition:opacity .48s cubic-bezier(.2,.7,.2,1)!important;}
+#main-content .section.bento-card{transition:opacity .38s ease,transform .38s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease!important;}
+#journey .journey-year-card,#journey .journey-story,#experience .exp-collection,#credentials .folio,#skills .skill-card{transition-duration:.22s!important;}
+@media(max-width:650px),(pointer:coarse){
+  body #main-content #hello .wrap{padding-bottom:clamp(150px,19vh,174px)!important;}
+  body #main-content #hello .hero-glass{max-width:520px!important;transform:translateY(-116px)!important;padding:12px 11px 10px!important;border-radius:22px!important;background:linear-gradient(180deg,rgba(24,43,65,.13),rgba(24,43,65,.34))!important;}
+  body:not(.portfolio-scrolled) #dock-wrap,body:not(.portfolio-scrolled) #ai-orb,body:not(.portfolio-scrolled) #ai-nudge{visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+  body #main-content #hello .hero-glass h1,body #main-content #hello .hero-glass h1 .dim,body #main-content #hello .hero-glass .lede{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 10px rgba(11,24,42,.8)!important;}
+  body #main-content #hello .cta-row a{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 7px rgba(11,24,42,.8)!important;}
+  body #main-content #hello .hero-glass h1{font-size:clamp(3rem,10vw,3.5rem)!important;}
+  body #main-content #hello .hero-glass .lede{max-width:46ch!important;margin-top:10px!important;font-size:.78rem!important;line-height:1.38!important;}
+  body #main-content #hello .cta-row{margin-top:10px!important;gap:5px!important;}
+  body #main-content #hello .cta-row a{padding:6px 8px!important;font-size:.62rem!important;}
+  body #main-content #hello .stats-row{margin-top:11px!important;}
+  body #main-content #hello .stats-row .stat-card{min-height:58px!important;padding:8px 6px!important;border-radius:14px!important;}
+  body #main-content #hello .stats-row .stat-card .num{font-size:1.16rem!important;}
+  body #main-content #hello .stats-row .stat-card .label{font-size:.62rem!important;max-width:18ch!important;}
+  body #main-content #journey .journey-year-summary{grid-template-columns:68px minmax(0,1fr) 42px!important;gap:9px!important;padding:13px 12px!important;}
+  body #main-content #journey .journey-year-chevron{width:38px!important;height:38px!important;min-width:38px!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  #sen-stage .sen-stage-portrait img,#main-content .section.bento-card,#journey .journey-year-card,#journey .journey-story,#experience .exp-collection,#credentials .folio,#skills .skill-card{transition:none!important;animation:none!important;}
+}
