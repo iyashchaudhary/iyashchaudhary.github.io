@@ -1047,3 +1047,25 @@ body.portfolio-detail-mode #sen-stage .sen-stage-closeup>img[data-scene-portrait
   body.portfolio-detail-mode .dock{backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;}
 }
 @media(prefers-reduced-motion:reduce){body.portfolio-scrolling *{animation-play-state:paused!important;}}
+
+/* 2026-10-22: reveal the moving character behind journey/detail glass at half the former blur. */
+body #main-content #journey .journey-year-panel,
+body #main-content #focus .glass-card{
+  backdrop-filter:blur(4.5px) saturate(118%)!important;
+  -webkit-backdrop-filter:blur(4.5px) saturate(118%)!important;
+}
+@media(max-width:760px),(pointer:coarse){
+  body #main-content #journey .journey-year-panel,
+  body #main-content #focus .glass-card{
+    backdrop-filter:blur(3.5px) saturate(118%)!important;
+    -webkit-backdrop-filter:blur(3.5px) saturate(118%)!important;
+  }
+}
+
+/* Native wheel/touch scrolling stays untouched; smooth only programmatic/anchor navigation. */
+@media(prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth;}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important;}
+}
