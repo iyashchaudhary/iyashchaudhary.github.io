@@ -1,12 +1,17 @@
-/* Scroll-led portrait direction for Yash's portfolio. Native scrolling stays untouched. */
+/* Scroll-led portrait direction and accessible character motion for Yash's portfolio. */
 (() => {
   const stage = document.getElementById('sen-stage');
   const portrait = stage?.querySelector('.sen-stage-portrait');
   const hero = document.getElementById('hello');
+  const bodyLayer = stage?.querySelector('.sen-stage-body');
+  const gestureVideo = stage?.querySelector('.sen-stage-gesture-source');
+  const gestureCanvas = stage?.querySelector('.sen-stage-gesture-canvas');
   if (!stage || !portrait) return;
 
   const frames = Array.from(portrait.querySelectorAll('[data-portrait]'));
   const stickers = Array.from(stage.querySelectorAll('.sen-sticker'));
+  const closeupFrames = Array.from(stage.querySelectorAll('.sen-stage-closeup [data-scene-portrait]'));
+  const chapters = Array.from(document.querySelectorAll('#main-content .section[data-scene]'));
   if (!frames.length) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -15,10 +20,28 @@
     const t = clamp(value, 0, 1);
     return t * t * (3 - 2 * t);
   };
+  const SCENES = {
+    'yash-os':      { portrait: 'curious',   x: -4.8, y: -1.8, scale: 1.10, roll: -1.2 },
+    'currently':    { portrait: 'surprised', x:  4.6, y: -3.2, scale: 1.08, roll:  1.4 },
+    'journey':      { portrait: 'cheeky',    x: -2.2, y:  1.1, scale: 1.16, roll: -2.0 },
+    'experience':   { portrait: 'curious',   x:  3.8, y: -2.2, scale: 1.06, roll:  1.0 },
+    'focus':        { portrait: 'surprised', x: -4.0, y:  1.4, scale: 1.18, roll: -1.6 },
+    'credentials':  { portrait: 'cheeky',    x:  4.5, y: -1.6, scale: 1.12, roll:  1.8 },
+    'skills':       { portrait: 'curious',   x: -3.2, y:  0.4, scale: 1.08, roll: -0.8 },
+    'contact':      { portrait: 'surprised', x:  3.2, y: -2.4, scale: 1.12, roll:  1.3 }
+  };
+
   let queued = false;
   let pointerTargetX = 0, pointerTargetY = 0, pointerX = 0, pointerY = 0;
   let idleRaf = 0;
   let idleStartedAt = performance.now();
+  let activeScene = '';
+  let gestureGL = null;
+  let gestureTexture = null;
+  let gestureProgram = null;
+  let gestureRenderRaf = 0;
+  let gesturePlaying = false;
+  let motionReady = false;
 
   function clearIdleMotion() {
     stage.style.setProperty('--idle-x', '0px');
@@ -67,6 +90,164 @@
     clearIdleMotion();
   }
 
+  function compileShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      const error = gl.getShaderInfoLog(shader) || 'shader compilation failed';
+      gl.deleteShader(shader);
+      throw new Error(error);
+    }
+    return shader;
+  }
+
+  function setupGestureRenderer() {
+    if (!gestureVideo || !gestureCanvas) return false;
+    try {
+      const gl = gestureCanvas.getContext('webgl', {
+        alpha: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        antialias: false
+      });
+      if (!gl) return false;
+      const vertexSource = 'attribute vec2 a_position; attribute vec2 a_uv; varying vec2 v_uv; void main(){ gl_Position=vec4(a_position,0.0,1.0); v_uv=a_uv; }';
+      const fragmentSource = `
+        precision mediump float;
+        uniform sampler2D u_video;
+        varying vec2 v_uv;
+        void main(){
+          vec4 sampleColor = texture2D(u_video, v_uv);
+          vec3 color = sampleColor.rgb;
+          float greenDominance = min(color.g - color.r * 1.18, color.g - color.b * 1.12);
+          float key = smoothstep(0.06, 0.22, greenDominance);
+          float alpha = 1.0 - key;
+          color.g = mix(color.g, min(color.g, max(color.r, color.b) + 0.055), key * 0.84);
+          gl_FragColor = vec4(color, alpha);
+        }`;
+      const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexSource);
+      const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+      const program = gl.createProgram();
+      gl.attachShader(program, vertex);
+      gl.attachShader(program, fragment);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) || 'program link failed');
+      gl.useProgram(program);
+
+      const vertices = new Float32Array([
+        -1, -1, 0, 1,  1, -1, 1, 1,
+        -1,  1, 0, 0,  1,  1, 1, 0
+      ]);
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      const position = gl.getAttribLocation(program, 'a_position');
+      const uv = gl.getAttribLocation(program, 'a_uv');
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 16, 0);
+      gl.enableVertexAttribArray(uv);
+      gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 16, 8);
+
+      const texture = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.uniform1i(gl.getUniformLocation(program, 'u_video'), 0);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.clearColor(0, 0, 0, 0);
+      gl.viewport(0, 0, gestureCanvas.width, gestureCanvas.height);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      gestureGL = gl;
+      gestureProgram = program;
+      gestureTexture = texture;
+      return true;
+    } catch (error) {
+      console.warn('Character motion renderer unavailable; using the still illustration.', error);
+      return false;
+    }
+  }
+
+  function drawGestureFrame() {
+    gestureRenderRaf = 0;
+    if (!gesturePlaying || !gestureGL || !gestureVideo || document.visibilityState === 'hidden' || reduceMotion.matches) return;
+    if (gestureVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      try {
+        gestureGL.useProgram(gestureProgram);
+        gestureGL.activeTexture(gestureGL.TEXTURE0);
+        gestureGL.bindTexture(gestureGL.TEXTURE_2D, gestureTexture);
+        gestureGL.pixelStorei(gestureGL.UNPACK_FLIP_Y_WEBGL, false);
+        gestureGL.texImage2D(gestureGL.TEXTURE_2D, 0, gestureGL.RGBA, gestureGL.RGBA, gestureGL.UNSIGNED_BYTE, gestureVideo);
+        gestureGL.viewport(0, 0, gestureCanvas.width, gestureCanvas.height);
+        gestureGL.drawArrays(gestureGL.TRIANGLE_STRIP, 0, 4);
+        if (!motionReady) {
+          motionReady = true;
+          bodyLayer?.classList.add('is-motion-ready');
+        }
+      } catch (error) {
+        console.warn('Character motion frame could not be rendered.', error);
+      }
+    }
+    gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+  }
+
+  function setGesturePlayback(shouldPlay) {
+    const active = Boolean(shouldPlay && gestureGL && gestureVideo && !reduceMotion.matches && document.visibilityState !== 'hidden');
+    if (active === gesturePlaying) return;
+    gesturePlaying = active;
+    if (!active) {
+      if (gestureRenderRaf) window.cancelAnimationFrame(gestureRenderRaf);
+      gestureRenderRaf = 0;
+      gestureVideo?.pause();
+      motionReady = false;
+      bodyLayer?.classList.remove('is-motion-ready');
+      return;
+    }
+    const playPromise = gestureVideo.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        gesturePlaying = false;
+        motionReady = false;
+        bodyLayer?.classList.remove('is-motion-ready');
+      });
+    }
+    if (!gestureRenderRaf) gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+  }
+
+  function setChapterScene(id) {
+    const config = SCENES[id] || SCENES['yash-os'];
+    if (id === activeScene) return;
+    activeScene = id;
+    stage.dataset.activeScene = id;
+    closeupFrames.forEach((frame) => frame.classList.toggle('is-active', frame.dataset.scenePortrait === config.portrait));
+    stage.style.setProperty('--chapter-camera-x', `${config.x}vw`);
+    stage.style.setProperty('--chapter-camera-y', `${config.y}vh`);
+    stage.style.setProperty('--chapter-camera-scale', String(config.scale));
+    stage.style.setProperty('--chapter-camera-roll', `${config.roll}deg`);
+  }
+
+  function updateChapterScene(viewport) {
+    if (!chapters.length) return;
+    const anchorY = viewport * 0.46;
+    const anchorX = window.innerWidth * 0.5;
+    let chosen = null;
+    let bestScore = Infinity;
+    chapters.forEach((chapter) => {
+      const rect = chapter.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= viewport) return;
+      const dy = anchorY < rect.top ? rect.top - anchorY : anchorY > rect.bottom ? anchorY - rect.bottom : 0;
+      const centerX = rect.left + rect.width / 2;
+      const dx = Math.abs(centerX - anchorX) * 0.22;
+      const score = dy + dx;
+      if (score < bestScore) { bestScore = score; chosen = chapter; }
+    });
+    if (chosen) setChapterScene(chosen.dataset.scene || chosen.id);
+  }
+
   function paint() {
     queued = false;
     const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
@@ -74,6 +255,11 @@
     const isMobile = window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     document.body.classList.toggle('portfolio-scrolled', y > viewport * 0.55);
     document.body.classList.toggle('portfolio-detail-mode', y > (hero?.offsetHeight || viewport) * 0.78);
+    updateChapterScene(viewport);
+
+    const heroRect = hero?.getBoundingClientRect();
+    const heroVisible = Boolean(heroRect && heroRect.bottom > 0 && heroRect.top < viewport && !document.body.classList.contains('portfolio-detail-mode'));
+    setGesturePlayback(heroVisible);
 
     if (reduceMotion.matches) {
       frames.forEach((frame, index) => {
@@ -107,7 +293,7 @@
       return;
     }
 
-    // Let the existing face artwork tell a short hello → focus → joy story in the hero.
+    // The first scroll beat still transitions hello → focus → joy over the full-body artwork.
     const expressionProgress = clamp(y / (viewport * 0.92), 0, 1) * (frames.length - 1);
     const first = Math.min(frames.length - 1, Math.floor(expressionProgress));
     const blend = expressionProgress - first;
@@ -118,8 +304,7 @@
       frame.setAttribute('aria-hidden', 'true');
     });
 
-    // Start with the complete illustration; zoom toward the face during the first scroll beat,
-    // then ease the portrait back so later content remains the focus.
+    // Ease from the complete figure into a clean, face-first close-up during the first scroll beat.
     const zoomIn = smooth(y / (viewport * 0.94));
     const zoomOut = smooth((y - viewport * 0.9) / (viewport * 0.8));
     const maxZoom = isMobile ? 1.46 : 1.38;
@@ -148,7 +333,7 @@
     stage.style.setProperty('--portrait-opacity', portraitOpacity.toFixed(3));
     stage.style.setProperty('--expression-opacity', expressionOpacity.toFixed(3));
 
-    // Ease toward the pointer/touch target so the character feels like a separate 3D layer.
+    // Inertial pointer/touch parallax remains independent from the scroll-directed face camera.
     const pointerEase = isMobile ? 0.16 : 0.12;
     pointerX += (pointerTargetX - pointerX) * pointerEase;
     pointerY += (pointerTargetY - pointerY) * pointerEase;
@@ -168,9 +353,7 @@
     const stickerOpacity = stickerReveal * portraitOpacity;
     stage.style.setProperty('--sticker-reveal', stickerReveal.toFixed(3));
     stage.style.setProperty('--sticker-opacity', stickerOpacity.toFixed(3));
-    stickers.forEach((sticker, index) => {
-      sticker.style.setProperty('--sticker-delay', `${index * 45}ms`);
-    });
+    stickers.forEach((sticker, index) => sticker.style.setProperty('--sticker-delay', `${index * 45}ms`));
   }
 
   function requestPaint() {
@@ -190,6 +373,7 @@
   }
   function resetParallax() { pointerTargetX = pointerTargetY = 0; requestPaint(); }
 
+  if (!setupGestureRenderer()) bodyLayer?.classList.remove('is-motion-ready');
   window.addEventListener('scroll', requestPaint, { passive: true });
   window.addEventListener('resize', requestPaint, { passive: true });
   window.addEventListener('pointermove', (event) => {
@@ -204,13 +388,13 @@
   window.addEventListener('touchend', resetParallax, { passive: true });
   window.addEventListener('touchcancel', resetParallax, { passive: true });
   reduceMotion.addEventListener?.('change', () => {
-    if (reduceMotion.matches) stopIdleMotion();
-    else startIdleMotion();
+    if (reduceMotion.matches) { stopIdleMotion(); setGesturePlayback(false); }
+    else { startIdleMotion(); requestPaint(); }
     requestPaint();
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') stopIdleMotion();
-    else startIdleMotion();
+    if (document.visibilityState === 'hidden') { stopIdleMotion(); setGesturePlayback(false); }
+    else { startIdleMotion(); requestPaint(); }
   });
   startIdleMotion();
   requestPaint();
