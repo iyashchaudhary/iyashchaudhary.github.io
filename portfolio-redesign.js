@@ -12,6 +12,7 @@
 
   function paint() {
     queued = false;
+    document.body.classList.toggle('portfolio-scrolled', window.scrollY > window.innerHeight * 0.72);
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const progress = clamp(window.scrollY / maxScroll, 0, 1);
     const framePosition = progress * (frames.length - 1);

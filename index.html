@@ -109,9 +109,9 @@
      applied via the print->all media swap trick so it never blocks first paint.
      font-display=swap (in the URL) keeps text visible with a fallback font
      the instant it can render, instead of hiding it while fonts load. -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
 
 <style>
   :root{
@@ -1918,6 +1918,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 </style>
 <!-- PEAK_PREMIUM_V1_END -->
   <link rel="stylesheet" href="portfolio-redesign.css">
+  <link rel="stylesheet" href="portfolio-reference-match.css?v=20261022-2">
 </head>
 <body>
 
@@ -1970,8 +1971,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <img data-portrait="focus" src="yash-expression-focus.webp" alt="" width="1536" height="2304" loading="lazy" decoding="async">
     <img data-portrait="joy" src="yash-expression-joy.webp" alt="" width="1536" height="2304" loading="lazy" decoding="async">
   </div>
-  <div class="sen-stage-label sen-stage-label-left"><span>YASH / 2026</span><b>CREATIVE · COMMERCE · AUTOMATION</b></div>
-  <div class="sen-stage-label sen-stage-label-right"><span>SCROLL TO EXPLORE</span><b>DELHI · INDIA</b></div>
+  <div class="sen-stage-label sen-stage-label-left"><span>YASH CHAUDHARY · DELHI</span><b>COMMERCE · CREATIVE · AUTOMATION</b></div>
+  <div class="sen-stage-label sen-stage-label-right"><span>PORTFOLIO · 2026</span><b>BUILDING IN PUBLIC</b></div>
   <div class="sen-stage-noise"></div>
 </div>
 
@@ -2142,7 +2143,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
             <div class="visitor-greeting" id="visitor-greeting"></div>
             <div class="story-kicker hero-entrance-el">Chapter 01 · Meet Yash</div>
             <div class="eyebrow hero-entrance-el" id="hero-eyebrow" data-en="Delhi · Building in Public" data-hi="दिल्ली · सार्वजनिक रूप से निर्माण">Delhi · Building in Public</div>
-            <h1 class="hero-entrance-el" id="hero-heading"><span id="type-target" data-en="Hello. I'm Yash." data-hi="नमस्ते। मैं यश हूं।"></span><span class="dim" id="hero-subtitle" data-en="B.Com (Hons) student." data-hi="बी.कॉम (ऑनर्स) छात्र।">B.Com (Hons) student.</span></h1>
+            <h1 class="hero-entrance-el" id="hero-heading"><span id="type-target" data-en="About Yash" data-hi="यश के बारे में"></span><span class="dim" id="hero-subtitle" data-en="B.Com (Hons) student." data-hi="बी.कॉम (ऑनर्स) छात्र।">B.Com (Hons) student.</span></h1>
           </div>
         </div>
 
@@ -4511,6 +4512,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     requestPaint();
   })();
 </script>
-<script src="portfolio-redesign.js" defer></script>
+<script src="portfolio-redesign.js?v=20261022-2" defer></script>
 </body>
 </html>
