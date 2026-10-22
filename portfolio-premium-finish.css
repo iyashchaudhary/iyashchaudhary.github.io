@@ -774,3 +774,95 @@ body.portfolio-detail-mode #sen-stage .sen-sticker-hi,body.portfolio-detail-mode
   #main-content .hero#hello .hero-glass h1{font-size:39px!important;line-height:.98!important;}
   #main-content .hero#hello .hero-glass p{font-size:12px!important;line-height:1.28!important;margin-top:3px!important;}
 }
+
+
+/* SECTION 02 + DETAIL READABILITY POLISH — colored glass, clearer hierarchy, smoother chapter changes. */
+html{scroll-behavior:smooth;}
+body #main-content .section.bento-card[id] :is(.sec-desc,.story-note){
+  max-width:68ch!important;padding:5px 12px!important;margin:0 0 18px!important;
+  border-left:2px solid rgba(232,217,158,.58)!important;
+  background:linear-gradient(90deg,rgba(232,217,158,.095),rgba(232,217,158,.025) 38%,transparent 88%)!important;
+  color:rgba(250,247,234,.96)!important;text-shadow:0 2px 12px rgba(0,0,0,.72),0 0 24px rgba(9,15,11,.35)!important;
+  font-size:clamp(.9rem,1vw,1rem)!important;line-height:1.72!important;
+}
+
+/* Four gently distinct hues keep Currently memorable without turning the chapter into white tiles. */
+body #main-content #currently #currently-container{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:clamp(11px,1.35vw,17px)!important;align-items:stretch;
+}
+body #main-content #currently #currently-container .currently-item{
+  --current-accent:#cfe593;--current-wash:rgba(159,190,111,.2);
+  position:relative!important;isolation:isolate;display:flex!important;flex-direction:column;justify-content:center;align-items:flex-start;
+  min-width:0;min-height:clamp(126px,13vw,164px);overflow:hidden!important;
+  padding:clamp(16px,1.7vw,22px)!important;border:1px solid color-mix(in srgb,var(--current-accent) 38%,rgba(255,255,255,.14))!important;
+  border-radius:19px!important;
+  background:radial-gradient(130% 115% at 100% 0%,var(--current-wash),transparent 64%),linear-gradient(145deg,rgba(37,51,39,.86),rgba(15,22,18,.79))!important;
+  box-shadow:0 18px 40px -28px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.13)!important;
+  backdrop-filter:blur(11px) saturate(128%)!important;-webkit-backdrop-filter:blur(11px) saturate(128%)!important;
+  transition:transform .38s cubic-bezier(.22,.75,.2,1),border-color .32s ease,box-shadow .32s ease,background-color .32s ease!important;
+}
+body #main-content #currently #currently-container .currently-item:nth-child(4n+1){--current-accent:#d5e99b;--current-wash:rgba(158,194,105,.24);}
+body #main-content #currently #currently-container .currently-item:nth-child(4n+2){--current-accent:#d2c0ee;--current-wash:rgba(167,139,210,.23);}
+body #main-content #currently #currently-container .currently-item:nth-child(4n+3){--current-accent:#f0d18f;--current-wash:rgba(211,163,89,.23);}
+body #main-content #currently #currently-container .currently-item:nth-child(4n+4){--current-accent:#efb1a3;--current-wash:rgba(211,126,111,.22);}
+body #main-content #currently #currently-container .currently-item::before{
+  content:"";position:absolute;z-index:-1;left:0;top:18px;bottom:18px;width:2px;border-radius:2px;
+  background:linear-gradient(180deg,transparent,var(--current-accent),transparent);opacity:.88;
+}
+body #main-content #currently #currently-container .currently-item::after{
+  content:"";position:absolute;z-index:-1;right:-28px;top:-42px;width:120px;height:120px;border-radius:50%;
+  background:var(--current-wash);filter:blur(24px);opacity:.7;pointer-events:none;
+}
+body #main-content #currently #currently-container .currently-label{
+  display:flex;align-items:center;gap:8px;margin:0 0 8px!important;color:var(--current-accent)!important;
+  font:700 .64rem/1.3 'IBM Plex Mono',monospace!important;letter-spacing:.12em!important;text-transform:uppercase;
+  text-shadow:0 1px 12px rgba(0,0,0,.55)!important;
+}
+body #main-content #currently #currently-container .currently-label::before{
+  content:"";width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:var(--current-accent);
+  box-shadow:0 0 12px color-mix(in srgb,var(--current-accent) 68%,transparent);
+}
+body #main-content #currently #currently-container .currently-value{
+  margin:0!important;color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important;
+  font:650 clamp(1.03rem,1.45vw,1.3rem)/1.28 Fraunces,Georgia,serif!important;
+  letter-spacing:-.018em!important;text-wrap:pretty;text-shadow:0 2px 14px rgba(0,0,0,.72)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  body #main-content #currently #currently-container .currently-item:hover{
+    transform:translateY(-4px)!important;border-color:color-mix(in srgb,var(--current-accent) 62%,rgba(255,255,255,.24))!important;
+    box-shadow:0 23px 46px -27px rgba(0,0,0,.78),inset 0 1px 0 rgba(255,255,255,.2)!important;
+  }
+}
+
+/* Accent metadata and softly lit copy make the long-form details compete less with the portrait. */
+body #main-content .section.bento-card[id] :is(.yash-os-label,.journey-year-entry>strong,.journey-year-heading>span,.currently-label,.folio-num,.sec-label,.skill-level){
+  color:#e9d89d!important;-webkit-text-fill-color:#e9d89d!important;text-shadow:0 1px 12px rgba(0,0,0,.55)!important;
+}
+body #main-content .section.bento-card[id] :is(.yash-os-value,.journey-year-entry h4,.exp-role,.skill-card h3,.folio h3,.card h3){
+  color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important;text-shadow:0 2px 14px rgba(0,0,0,.65)!important;
+}
+body #main-content .section.bento-card[id] :is(.yash-os-head p,.journey-year-entry p,.exp-node p,.skill-card p,.card p){
+  color:rgba(247,245,234,.9)!important;-webkit-text-fill-color:rgba(247,245,234,.9)!important;text-shadow:0 2px 12px rgba(0,0,0,.62)!important;
+}
+body #main-content .section.bento-card[id] :is(.folio .count,.status-tag,.skill-tag,.skill-chip,.tag){
+  display:inline-flex;align-items:center;min-height:24px;padding:4px 9px!important;border:1px solid rgba(232,217,158,.3)!important;
+  border-radius:999px!important;background:rgba(232,217,158,.12)!important;color:#f2e5b5!important;
+  -webkit-text-fill-color:#f2e5b5!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;text-shadow:none!important;
+}
+body #main-content .section.bento-card[id] :is(.exp-node,.skill-card,.folio){border-bottom-color:rgba(232,217,158,.28)!important;}
+
+/* Shorter, deliberate portrait cross-fades and native smooth anchor navigation—without overriding reduced motion. */
+#sen-stage .sen-stage-closeup>img[data-scene-portrait]{
+  transition:opacity .48s cubic-bezier(.22,.75,.2,1),transform .68s cubic-bezier(.22,.75,.2,1),filter .48s ease!important;
+}
+@media(max-width:760px),(pointer:coarse){
+  body #main-content #currently #currently-container{grid-template-columns:1fr!important;gap:11px!important;}
+  body #main-content #currently #currently-container .currently-item{min-height:104px;padding:15px 16px!important;border-radius:17px!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;}
+  body #main-content .section.bento-card[id] :is(.sec-desc,.story-note){padding:5px 10px!important;font-size:.9rem!important;line-height:1.68!important;}
+  #sen-stage .sen-stage-closeup>img[data-scene-portrait]{transition:opacity .42s cubic-bezier(.22,.75,.2,1),transform .58s cubic-bezier(.22,.75,.2,1),filter .42s ease!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important;}
+  body #main-content #currently #currently-container .currently-item,#sen-stage .sen-stage-closeup>img[data-scene-portrait]{transition:none!important;}
+}
