@@ -6,8 +6,8 @@ html,body{background:var(--bg)!important;color:var(--text)!important;}
 body{background:linear-gradient(180deg,#b8c8b3 0%,#cbd8c6 42%,#d4dfcf 100%)!important;overflow-x:clip;}
 html[data-theme="dark"] body,html[data-theme="evening"] body{background:linear-gradient(180deg,#253329,#18211a 58%,#1e2a21)!important;}
 #mesh-bg,#particle-universe,.particle-universe,.light-engine,.cursor-glow,#fireflies,#petal-field{display:none!important;}
-.sen-stage{z-index:0;background:radial-gradient(ellipse 58% 70% at 50% 42%,rgba(237,242,229,.3),transparent 70%),linear-gradient(180deg,#aebfa9,#cbd8c6 62%,#d4dfcf 100%)!important;}
-html[data-theme="dark"] .sen-stage,html[data-theme="evening"] .sen-stage{background:radial-gradient(ellipse 58% 70% at 50% 42%,rgba(105,127,103,.19),transparent 70%),linear-gradient(180deg,#253329,#18211a 65%,#1e2a21)!important;}
+.sen-stage{z-index:0;background:transparent!important;}
+html[data-theme="dark"] .sen-stage,html[data-theme="evening"] .sen-stage{background:transparent!important;}
 .sen-stage::before{background-image:linear-gradient(rgba(40,51,41,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,51,41,.045) 1px,transparent 1px)!important;background-size:54px 54px!important;opacity:.55!important;mask-image:linear-gradient(180deg,transparent 0%,black 15%,black 79%,transparent 100%);}
 .sen-stage-grid{opacity:.04!important;}.sen-stage-orbit{display:block;opacity:.24!important;}.sen-stage-noise{opacity:.06!important;}
 .sen-stage-portrait{left:50%!important;top:47%!important;width:min(108vw,1120px)!important;height:150svh!important;height:150dvh!important;transform:translate3d(calc(-50% + var(--portrait-x,0px)),calc(-50% + var(--portrait-y,0px)),0) perspective(1200px) rotateX(var(--portrait-rx,0deg)) rotateY(var(--portrait-ry,0deg)) rotateZ(var(--portrait-rz,0deg)) scale(var(--portrait-scale,.96))!important;transform-origin:50% 40%!important;opacity:1!important;filter:drop-shadow(0 20px 30px rgba(30,44,32,.12))!important;mix-blend-mode:normal!important;mask-image:linear-gradient(to bottom,transparent 0%,black 5%,black 74%,transparent 99%)!important;}
