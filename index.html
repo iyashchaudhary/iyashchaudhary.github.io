@@ -1892,6 +1892,28 @@ html[data-theme="dark"] body::after{background:radial-gradient(34rem 24rem at va
 html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.1) inset}
 @media (max-width:760px),(pointer:coarse){body::after{display:none!important}.peak-tilt{transform:none!important;transition:box-shadow .25s ease}.peak-tilt::before{display:none}.peak-magnetic{transform:none!important;will-change:auto}}
 @media (prefers-reduced-motion:reduce){body::after{display:none}.peak-tilt,.peak-magnetic{transform:none!important;transition:none!important}.peak-tilt::before{display:none}}
+
+  /* SENBUZY_INSPIRED_STAGE_V1 — original, lightweight scroll camera for Yash */
+  .sen-stage{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 58% 72% at 50% 42%,rgba(255,255,255,.96),rgba(224,238,255,.55) 44%,rgba(183,211,246,.14) 72%,transparent 100%);isolation:isolate;}
+  .sen-stage::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,transparent 0 24%,rgba(36,107,219,.09) 24.2% 24.35%,transparent 24.55% 34%,rgba(36,107,219,.07) 34.2% 34.35%,transparent 34.6% 46%,rgba(36,107,219,.055) 46.2% 46.35%,transparent 46.7%);opacity:.9;}
+  .sen-stage-grid{position:absolute;inset:-10%;opacity:.18;background-image:linear-gradient(rgba(36,107,219,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(36,107,219,.14) 1px,transparent 1px);background-size:54px 54px;transform:perspective(700px) rotateX(62deg) translateY(calc(22% + var(--sen-stage-progress,0) * -10%));transform-origin:center bottom;mask-image:linear-gradient(to bottom,transparent 0,black 42%,transparent 100%);}
+  .sen-stage-orbit{position:absolute;left:50%;top:50%;width:min(76vw,920px);height:min(34vw,410px);border:1px solid rgba(36,107,219,.18);border-radius:50%;transform:translate(-50%,-50%) rotate(-16deg) scale(calc(1 + var(--sen-stage-progress,0) * .06));opacity:.75;}
+  .sen-stage-orbit-b{width:min(58vw,700px);height:min(88vw,880px);transform:translate(-50%,-50%) rotate(24deg);border-color:rgba(75,143,245,.12);}
+  .sen-stage-portrait{position:absolute;left:50%;top:50%;width:min(48vw,560px);height:min(82vh,820px);transform:translate3d(-50%,calc(-50% + var(--sen-stage-y,0px)),0) scale(var(--sen-stage-scale,1)) rotate(var(--sen-stage-tilt,0deg));transform-origin:50% 55%;opacity:.27;filter:saturate(.72) contrast(1.04) drop-shadow(0 28px 35px rgba(21,75,152,.16));mix-blend-mode:multiply;mask-image:linear-gradient(to bottom,transparent 0,black 13%,black 72%,transparent 100%);will-change:transform;}
+  .sen-stage-portrait img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;}
+  .sen-stage-label{position:absolute;top:50%;display:flex;flex-direction:column;gap:7px;color:var(--primary);font:600 .62rem/1.15 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.7;}
+  .sen-stage-label b{font-weight:500;color:var(--text-dim);font-size:.56rem;letter-spacing:.12em;}
+  .sen-stage-label-left{left:clamp(18px,5vw,76px);transform:rotate(-90deg) translateX(-50%);transform-origin:left top;}
+  .sen-stage-label-right{right:clamp(18px,5vw,76px);transform:rotate(90deg) translateX(50%);transform-origin:right top;text-align:right;}
+  .sen-stage-noise{position:absolute;inset:0;opacity:.16;background-image:radial-gradient(rgba(10,45,95,.5) .6px,transparent .7px);background-size:5px 5px;mix-blend-mode:multiply;}
+  #main-content{position:relative;z-index:3;}
+  .topnav,.story-rail,.dock-wrap,.ai-orb,.ai-panel,.cmdk-overlay{z-index:80;}
+  html[data-theme="dark"] .sen-stage,html[data-theme="evening"] .sen-stage{background:radial-gradient(ellipse 58% 72% at 50% 42%,rgba(21,45,79,.92),rgba(8,20,40,.82) 52%,rgba(5,13,27,.98) 100%);}
+  html[data-theme="dark"] .sen-stage::before,html[data-theme="evening"] .sen-stage::before{opacity:.42;}
+  html[data-theme="dark"] .sen-stage-portrait,html[data-theme="evening"] .sen-stage-portrait{opacity:.18;filter:grayscale(.2) saturate(.72) contrast(1.12) drop-shadow(0 28px 35px rgba(0,0,0,.4));mix-blend-mode:screen;}
+  html[data-theme="dark"] .sen-stage-noise,html[data-theme="evening"] .sen-stage-noise{mix-blend-mode:screen;opacity:.08;}
+  @media (max-width:760px),(pointer:coarse){.sen-stage-grid{opacity:.1;background-size:42px 42px;}.sen-stage-portrait{width:min(82vw,430px);height:62vh;opacity:.19;}.sen-stage-orbit{width:120vw;height:54vw;}.sen-stage-orbit-b{width:86vw;height:120vw;}.sen-stage-label{font-size:.52rem;opacity:.55;}.sen-stage-label b{font-size:.48rem;}.sen-stage-label-left{left:7px;}.sen-stage-label-right{right:7px;}.sen-stage-noise{opacity:.08;}#main-content{z-index:3;}}
+  @media (prefers-reduced-motion:reduce){.sen-stage-grid,.sen-stage-orbit,.sen-stage-portrait{transform:none!important;transition:none!important;}.sen-stage-noise{display:none;}}
 </style>
 <!-- PEAK_PREMIUM_V1_END -->
 </head>
@@ -1933,6 +1955,18 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <div class="light-beam light-beam-blue"  data-target="credentials"></div>
   <div class="light-beam light-beam-cyan"  data-target="skills"></div>
   <div class="light-beam light-beam-white" data-target="contact"></div>
+</div>
+
+
+<!-- SENBUZY_INSPIRED_CINEMATIC_STAGE: original Yash implementation -->
+<div class="sen-stage" id="sen-stage" aria-hidden="true">
+  <div class="sen-stage-grid"></div>
+  <div class="sen-stage-orbit sen-stage-orbit-a"></div>
+  <div class="sen-stage-orbit sen-stage-orbit-b"></div>
+  <div class="sen-stage-portrait"><img src="yash-photo.webp" alt="" width="400" height="345" decoding="async"></div>
+  <div class="sen-stage-label sen-stage-label-left"><span>YASH / 2026</span><b>BUILDING IN PUBLIC</b></div>
+  <div class="sen-stage-label sen-stage-label-right"><span>SCROLL TO EXPLORE</span><b>DELHI · INDIA</b></div>
+  <div class="sen-stage-noise"></div>
 </div>
 
 <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
@@ -4449,6 +4483,27 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   const focus=document.getElementById('focus-mode-btn'), root=document.documentElement;
   if(focus){const key='yash-focus-mode';const set=on=>{root.dataset.focus=on?'true':'false';focus.setAttribute('aria-pressed',String(on));focus.title=on?'Exit Focus Mode':'Enable Focus Mode';try{localStorage.setItem(key,on?'1':'0')}catch(_){}};let initial=false;try{initial=localStorage.getItem(key)==='1'}catch(_){}set(initial);focus.addEventListener('click',()=>set(root.dataset.focus!=='true'));}
 })();
+</script>
+<script>
+  // Scroll camera for the lightweight cinematic stage. One rAF per frame, no layout reads in the loop.
+  (function(){
+    const stage=document.getElementById('sen-stage');
+    if(!stage) return;
+    let queued=false;
+    const paint=()=>{
+      queued=false;
+      const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+      const p=Math.min(1,Math.max(0,window.scrollY/max));
+      stage.style.setProperty('--sen-stage-progress',p.toFixed(4));
+      stage.style.setProperty('--sen-stage-y',`${(p-.28)*-54}px`);
+      stage.style.setProperty('--sen-stage-scale',(1.02+p*.12).toFixed(4));
+      stage.style.setProperty('--sen-stage-tilt',`${(p-.5)*-1.4}deg`);
+    };
+    const requestPaint=()=>{if(!queued){queued=true;requestAnimationFrame(paint);}};
+    window.addEventListener('scroll',requestPaint,{passive:true});
+    window.addEventListener('resize',requestPaint,{passive:true});
+    requestPaint();
+  })();
 </script>
 </body>
 </html>
