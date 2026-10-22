@@ -76,8 +76,8 @@ body #main-content #journey .journey-story .tl-title{color:var(--clay-ink)!impor
 body #main-content #journey .journey-story .tl-date,body #main-content #journey .journey-story .tl-body,body #main-content #journey .journey-story .tl-body p{color:var(--clay-muted)!important;-webkit-text-fill-color:var(--clay-muted)!important;text-shadow:none!important;}
 body #main-content #journey .journey-story .tl-chevron{display:grid!important;place-items:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important;margin-left:8px!important;border:2px solid color-mix(in srgb,var(--clay-focus) 38%,white)!important;border-radius:50%!important;background:linear-gradient(145deg,#fff,#dbeaff)!important;color:var(--clay-ink)!important;-webkit-text-fill-color:var(--clay-ink)!important;box-shadow:0 5px 12px -8px rgba(38,52,75,.55),inset 1px 1px 2px #fff,inset -2px -2px 4px rgba(71,101,145,.13)!important;font:800 23px/1 Inter,sans-serif!important;}
 body #main-content #journey .journey-story.open .tl-chevron{transform:rotate(45deg)!important;background:linear-gradient(145deg,#e4efff,#ccddfa)!important;}
-/* Keep the opening header quiet; the bottom dock already carries these destinations. */
-body .topnav .brand,body .topnav .navlinks>a[href="#journey"],body .topnav .navlinks>a[href="#credentials"]{display:none!important;}
+/* Keep the opening header quiet; Journey and Credentials are omitted from its markup. */
+body .topnav .brand{display:none!important;}
 /* Current Focus sits on pastel clay: use the theme's ink, muted and focus tokens. */
 body #main-content #focus #focus-container .focus-window,
 body #main-content #focus #focus-container .focus-window strong,
@@ -94,7 +94,7 @@ body #main-content #skills .skill-card .skill-level{display:inline-flex!importan
 #journey .journey-year-card,#journey .journey-story,#experience .exp-collection,#credentials .folio,#skills .skill-card{transition-duration:.22s!important;}
 @media(max-width:650px),(pointer:coarse){
   body #main-content #hello .wrap{padding-bottom:clamp(150px,19vh,174px)!important;}
-  body #main-content #hello .hero-glass{max-width:520px!important;transform:translateY(-116px)!important;padding:12px 11px 10px!important;border-radius:22px!important;background:linear-gradient(180deg,rgba(24,43,65,.13),rgba(24,43,65,.34))!important;}
+  body #main-content #hello .hero-glass{max-width:520px!important;transform:translateY(-132px)!important;padding:12px 11px 10px!important;border-radius:22px!important;background:linear-gradient(180deg,rgba(24,43,65,.08),rgba(24,43,65,.22))!important;}
   body:not(.portfolio-scrolled) #dock-wrap,body:not(.portfolio-scrolled) #ai-orb,body:not(.portfolio-scrolled) #ai-nudge{visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
   body #main-content #hello .hero-glass h1,body #main-content #hello .hero-glass h1 .dim,body #main-content #hello .hero-glass .lede{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 10px rgba(11,24,42,.8)!important;}
   body #main-content #hello .cta-row a{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 7px rgba(11,24,42,.8)!important;}
@@ -111,4 +111,13 @@ body #main-content #skills .skill-card .skill-level{display:inline-flex!importan
 }
 @media(prefers-reduced-motion:reduce){
   #sen-stage .sen-stage-portrait img,#main-content .section.bento-card,#journey .journey-year-card,#journey .journey-story,#experience .exp-collection,#credentials .folio,#skills .skill-card{transition:none!important;animation:none!important;}
+}
+/* The illustrated bottom navigation is part of the hero design: never hide it before scrolling. */
+body:not(.portfolio-scrolled) #dock-wrap{visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:translateX(-50%) translateY(0)!important;}
+/* Preserve expression cross-fades, but reduce large-area effects on phones and short laptop screens. */
+@media(max-width:760px),(pointer:coarse),(max-height:820px){
+  #sen-stage .sen-stage-portrait{filter:none!important;}
+  #sen-stage .sen-stage-grid,#sen-stage .sen-stage-orbit,#sen-stage .sen-stage-noise{animation:none!important;}
+  body .dock{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  #main-content .section.bento-card :is(.glass-card,.folio,.skill-card,.exp-collection,.journey-year-card){backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
 }
