@@ -42,6 +42,11 @@
   let gestureRenderRaf = 0;
   let gesturePlaying = false;
   let motionReady = false;
+  let gestureVideoFrame = 0;
+  let lastSceneCheck = 0;
+  let lastPaintAt = 0;
+  let cameraCurrent = { ...SCENES['yash-os'] };
+  let cameraTarget = { ...SCENES['yash-os'] };
 
   function clearIdleMotion() {
     stage.style.setProperty('--idle-x', '0px');
@@ -120,10 +125,12 @@
         void main(){
           vec4 sampleColor = texture2D(u_video, v_uv);
           vec3 color = sampleColor.rgb;
-          float greenDominance = min(color.g - color.r * 1.18, color.g - color.b * 1.12);
-          float key = smoothstep(0.06, 0.22, greenDominance);
+          float greenDominance = min(color.g - color.r * 1.16, color.g - color.b * 1.10);
+          float key = smoothstep(0.045, 0.19, greenDominance);
           float alpha = 1.0 - key;
-          color.g = mix(color.g, min(color.g, max(color.r, color.b) + 0.055), key * 0.84);
+          float edgeDespill = smoothstep(0.008, 0.15, greenDominance);
+          float neutralGreen = min(color.g, max(color.r, color.b) + 0.035);
+          color.g = mix(color.g, neutralGreen, edgeDespill * 0.94);
           gl_FragColor = vec4(color, alpha);
         }`;
       const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexSource);
@@ -174,6 +181,7 @@
 
   function drawGestureFrame() {
     gestureRenderRaf = 0;
+    gestureVideoFrame = 0;
     if (!gesturePlaying || !gestureGL || !gestureVideo || document.visibilityState === 'hidden' || reduceMotion.matches) return;
     if (gestureVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
       try {
@@ -192,7 +200,11 @@
         console.warn('Character motion frame could not be rendered.', error);
       }
     }
-    gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+    if (typeof gestureVideo.requestVideoFrameCallback === 'function') {
+      gestureVideoFrame = gestureVideo.requestVideoFrameCallback(drawGestureFrame);
+    } else {
+      gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+    }
   }
 
   function setGesturePlayback(shouldPlay) {
@@ -201,7 +213,9 @@
     gesturePlaying = active;
     if (!active) {
       if (gestureRenderRaf) window.cancelAnimationFrame(gestureRenderRaf);
+      if (gestureVideoFrame && typeof gestureVideo?.cancelVideoFrameCallback === 'function') gestureVideo.cancelVideoFrameCallback(gestureVideoFrame);
       gestureRenderRaf = 0;
+      gestureVideoFrame = 0;
       gestureVideo?.pause();
       motionReady = false;
       bodyLayer?.classList.remove('is-motion-ready');
@@ -215,7 +229,11 @@
         bodyLayer?.classList.remove('is-motion-ready');
       });
     }
-    if (!gestureRenderRaf) gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+    if (typeof gestureVideo.requestVideoFrameCallback === 'function') {
+      if (!gestureVideoFrame) gestureVideoFrame = gestureVideo.requestVideoFrameCallback(drawGestureFrame);
+    } else if (!gestureRenderRaf) {
+      gestureRenderRaf = window.requestAnimationFrame(drawGestureFrame);
+    }
   }
 
   function setChapterScene(id) {
@@ -224,10 +242,7 @@
     activeScene = id;
     stage.dataset.activeScene = id;
     closeupFrames.forEach((frame) => frame.classList.toggle('is-active', frame.dataset.scenePortrait === config.portrait));
-    stage.style.setProperty('--chapter-camera-x', `${config.x}vw`);
-    stage.style.setProperty('--chapter-camera-y', `${config.y}vh`);
-    stage.style.setProperty('--chapter-camera-scale', String(config.scale));
-    stage.style.setProperty('--chapter-camera-roll', `${config.roll}deg`);
+    cameraTarget = config;
   }
 
   function updateChapterScene(viewport) {
@@ -236,6 +251,7 @@
     const anchorX = window.innerWidth * 0.5;
     let chosen = null;
     let bestScore = Infinity;
+    let currentScore = Infinity;
     chapters.forEach((chapter) => {
       const rect = chapter.getBoundingClientRect();
       if (rect.bottom <= 0 || rect.top >= viewport) return;
@@ -243,19 +259,47 @@
       const centerX = rect.left + rect.width / 2;
       const dx = Math.abs(centerX - anchorX) * 0.22;
       const score = dy + dx;
+      if ((chapter.dataset.scene || chapter.id) === activeScene) currentScore = score;
       if (score < bestScore) { bestScore = score; chosen = chapter; }
     });
-    if (chosen) setChapterScene(chosen.dataset.scene || chosen.id);
+    if (chosen) {
+      const nextId = chosen.dataset.scene || chosen.id;
+      const switchMargin = Math.min(92, Math.max(42, viewport * 0.075));
+      if (activeScene && nextId !== activeScene && currentScore < Infinity && bestScore + switchMargin >= currentScore) return;
+      setChapterScene(nextId);
+    }
   }
 
   function paint() {
     queued = false;
+    const now = performance.now();
     const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
     const viewport = Math.max(1, window.innerHeight || 1);
     const isMobile = window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     document.body.classList.toggle('portfolio-scrolled', y > viewport * 0.55);
     document.body.classList.toggle('portfolio-detail-mode', y > (hero?.offsetHeight || viewport) * 0.78);
-    updateChapterScene(viewport);
+    if (!activeScene || now - lastSceneCheck >= 72) {
+      updateChapterScene(viewport);
+      lastSceneCheck = now;
+    }
+    const frameDelta = Math.min(50, lastPaintAt ? now - lastPaintAt : 16.7);
+    lastPaintAt = now;
+    const cameraEase = reduceMotion.matches ? 1 : 1 - Math.exp(-frameDelta / 190);
+    let cameraMoving = false;
+    ['x', 'y', 'scale', 'roll'].forEach((key) => {
+      const difference = cameraTarget[key] - cameraCurrent[key];
+      if (Math.abs(difference) > 0.012) {
+        cameraCurrent[key] += difference * cameraEase;
+        cameraMoving = true;
+      } else {
+        cameraCurrent[key] = cameraTarget[key];
+      }
+    });
+    stage.style.setProperty('--chapter-camera-x', `${cameraCurrent.x.toFixed(3)}vw`);
+    stage.style.setProperty('--chapter-camera-y', `${cameraCurrent.y.toFixed(3)}vh`);
+    stage.style.setProperty('--chapter-camera-scale', cameraCurrent.scale.toFixed(4));
+    stage.style.setProperty('--chapter-camera-roll', `${cameraCurrent.roll.toFixed(3)}deg`);
+    if (cameraMoving && !reduceMotion.matches) requestPaint();
 
     const heroRect = hero?.getBoundingClientRect();
     const heroVisible = Boolean(heroRect && heroRect.bottom > 0 && heroRect.top < viewport && !document.body.classList.contains('portfolio-detail-mode'));

@@ -957,3 +957,68 @@ body #main-content #experience .exp-circle{animation:experience-dot-pulse 3.8s e
 @media(prefers-reduced-motion:reduce){
   .tl-icon,#contact .social-logo,#contact .social-arrow,#experience .exp-circle{animation:none!important;transition:none!important;}
 }
+
+
+/* FINAL CHARACTER FINISH — clearer YASH OS glass, discreet line icons/web, and responsive camera easing. */
+body #main-content #yash-os .yash-os-shell{
+  border-color:rgba(232,217,158,.26)!important;
+  background:radial-gradient(120% 100% at 100% 0%,rgba(170,194,118,.12),transparent 55%),linear-gradient(145deg,rgba(25,35,29,.64),rgba(14,21,17,.46))!important;
+  box-shadow:0 22px 54px -34px rgba(0,0,0,.66),inset 0 1px 0 rgba(255,255,255,.13)!important;
+  backdrop-filter:blur(10px) saturate(116%)!important;-webkit-backdrop-filter:blur(10px) saturate(116%)!important;
+}
+body #main-content #yash-os .yash-os-head{padding-bottom:15px;border-bottom:1px solid rgba(232,217,158,.16);}
+body #main-content #yash-os .yash-os-kicker{color:#e9d89d!important;text-shadow:0 1px 10px rgba(0,0,0,.45);}
+body #main-content #yash-os .yash-os-grid{gap:clamp(8px,1vw,12px)!important;}
+body #main-content #yash-os .yash-os-item{
+  --os-accent:#d5e99b;--os-wash:rgba(158,194,105,.12);
+  position:relative;isolation:isolate;overflow:hidden!important;min-height:126px;
+  border:1px solid color-mix(in srgb,var(--os-accent) 28%,rgba(255,255,255,.14))!important;border-radius:17px!important;
+  background:radial-gradient(120% 110% at 100% 0%,var(--os-wash),transparent 62%),linear-gradient(145deg,rgba(31,42,35,.68),rgba(14,21,17,.46))!important;
+  box-shadow:0 14px 32px -26px rgba(0,0,0,.64),inset 0 1px 0 rgba(255,255,255,.1)!important;
+  backdrop-filter:blur(8px) saturate(114%)!important;-webkit-backdrop-filter:blur(8px) saturate(114%)!important;
+  transition:transform .32s cubic-bezier(.22,.75,.2,1),border-color .28s ease,box-shadow .28s ease!important;
+}
+body #main-content #yash-os .yash-os-item[data-os-kind="focus"]{--os-accent:#d4c1ee;--os-wash:rgba(167,139,210,.14);}
+body #main-content #yash-os .yash-os-item[data-os-kind="exploring"]{--os-accent:#f0d18f;--os-wash:rgba(211,163,89,.14);}
+body #main-content #yash-os .yash-os-item[data-os-kind="building"]{--os-accent:#9fd8d0;--os-wash:rgba(88,166,153,.13);}
+body #main-content #yash-os .yash-os-item[data-os-kind="goal"]{--os-accent:#efb1a3;--os-wash:rgba(211,126,111,.13);}
+body #main-content #yash-os .yash-os-label{
+  display:flex;align-items:center;gap:8px;margin:0!important;color:var(--os-accent)!important;
+  font:700 .62rem/1.2 'IBM Plex Mono',monospace!important;letter-spacing:.08em!important;
+}
+.yash-os-icon{display:inline-grid;place-items:center;flex:0 0 29px;width:29px;height:29px;border:1px solid color-mix(in srgb,var(--os-accent) 34%,rgba(255,255,255,.1));border-radius:10px;background:linear-gradient(145deg,color-mix(in srgb,var(--os-accent) 16%,transparent),rgba(255,255,255,.035));color:var(--os-accent);animation:yash-os-icon-float 5s ease-in-out infinite;}
+.yash-os-icon svg{display:block;width:16px;height:16px;}
+.yash-os-item:nth-child(3n) .yash-os-icon{animation-delay:-1.4s;}
+.yash-os-item:nth-child(4n) .yash-os-icon{animation-delay:-2.6s;}
+body #main-content #yash-os .yash-os-value{margin-top:12px;color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important;text-shadow:0 2px 12px rgba(0,0,0,.62)!important;font:650 clamp(.91rem,1vw,1.04rem)/1.28 Fraunces,Georgia,serif!important;}
+body #main-content #yash-os .yash-os-state{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:4px 8px;border:1px solid color-mix(in srgb,var(--os-accent) 28%,rgba(255,255,255,.1));border-radius:999px;background:rgba(255,255,255,.045);color:var(--os-accent)!important;font:600 .58rem/1 'IBM Plex Mono',monospace!important;}
+body #main-content #yash-os .yash-os-state::before{content:"";width:5px;height:5px;margin:0;border-radius:50%;background:var(--os-accent);box-shadow:0 0 9px color-mix(in srgb,var(--os-accent) 66%,transparent);}
+@media(hover:hover) and (pointer:fine){body #main-content #yash-os .yash-os-item:hover{transform:translateY(-3px)!important;border-color:color-mix(in srgb,var(--os-accent) 58%,rgba(255,255,255,.2))!important;box-shadow:0 19px 36px -25px rgba(0,0,0,.76),inset 0 1px 0 rgba(255,255,255,.17)!important;}}
+
+/* Quiet comic-web thread behind the wall-crawl sticker; its visibility follows the character cameo. */
+#sen-stage .sen-stage-web{position:absolute;z-index:3;left:calc(50% - clamp(460px,40vw,570px));top:34%;width:clamp(160px,20vw,260px);height:auto;overflow:visible;pointer-events:none;color:rgba(233,239,222,.72);opacity:var(--sticker-opacity,0);filter:drop-shadow(0 2px 8px rgba(0,0,0,.3));transform:rotate(-7deg);transform-origin:50% 50%;transition:opacity .42s ease;}
+#sen-stage .sen-web-spokes{opacity:.55;stroke-dasharray:3 6;animation:sen-web-thread 16s linear infinite;}
+#sen-stage .sen-web-rings{opacity:.72;stroke-dasharray:2 5;animation:sen-web-thread 20s linear infinite reverse;}
+#sen-stage .sen-web-thread{opacity:.82;stroke-dasharray:4 5;animation:sen-web-glint 3.8s ease-in-out infinite;}
+#sen-stage .sen-web-node{fill:currentColor;stroke:none;opacity:.8;}
+body.portfolio-detail-mode #sen-stage .sen-stage-web--climb{left:auto;right:clamp(10px,5vw,72px);top:65%;width:clamp(132px,16vw,210px);}
+@keyframes sen-web-thread{to{stroke-dashoffset:-44}}
+@keyframes sen-web-glint{0%,100%{opacity:.42}50%{opacity:.9}}
+@keyframes yash-os-icon-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+
+/* Let scroll-driven transforms follow the scroll itself; JS eases only between chapter camera targets. */
+#sen-stage .sen-stage-closeup>img[data-scene-portrait]{transition:opacity .34s ease,filter .34s ease!important;will-change:transform,opacity;}
+#sen-stage .sen-stage-body>img:first-child{filter:drop-shadow(0 10px 18px rgba(7,12,9,.18)) saturate(.96);}
+@media(max-width:760px),(pointer:coarse){
+  body #main-content #yash-os .yash-os-shell{padding:20px 15px!important;backdrop-filter:blur(8px) saturate(112%)!important;-webkit-backdrop-filter:blur(8px) saturate(112%)!important;}
+  body #main-content #yash-os .yash-os-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;}
+  body #main-content #yash-os .yash-os-item{min-height:112px;padding:12px!important;}
+  body #main-content #yash-os .yash-os-value{font-size:.91rem!important;}
+  #sen-stage .sen-stage-web--climb{left:calc(50% - clamp(177px,47vw,206px));top:39%;width:clamp(112px,32vw,138px);}
+  body.portfolio-detail-mode #sen-stage .sen-stage-web--climb{left:auto;right:2px;top:67%;width:clamp(118px,34vw,140px);}
+}
+@media(max-width:380px){body #main-content #yash-os .yash-os-grid{grid-template-columns:1fr!important;}body #main-content #yash-os .yash-os-item{min-height:98px;}}
+@media(prefers-reduced-motion:reduce){
+  #sen-stage .sen-stage-web,#sen-stage .sen-web-spokes,#sen-stage .sen-web-rings,#sen-stage .sen-web-thread,.yash-os-icon{animation:none!important;transition:none!important;}
+  #sen-stage .sen-stage-closeup>img[data-scene-portrait]{transition:none!important;}
+}

@@ -1919,7 +1919,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <!-- PEAK_PREMIUM_V1_END -->
   <link rel="stylesheet" href="portfolio-redesign.css">
   <link rel="stylesheet" href="portfolio-reference-match.css?v=20261022-2">
-  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-11">
+  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-12">
 </head>
 <body>
 
@@ -1973,7 +1973,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     <img data-scene-portrait="cheeky" src="motion/yash-expression-cheeky.webp" alt="" width="1200" height="1800" loading="lazy" decoding="async">
   </div>
   <div class="sen-stage-body" aria-hidden="true">
-    <img src="yash-full-character.png" alt="" width="1024" height="1536" fetchpriority="high" decoding="async">
+    <img src="yash-full-character-edge-clean.png" alt="" width="1536" height="2304" fetchpriority="high" decoding="async">
     <video class="sen-stage-gesture-source" muted playsinline loop preload="none" aria-hidden="true"><source src="motion/yash-hero-gesture.mp4" type="video/mp4"></video>
     <canvas class="sen-stage-gesture-canvas" width="540" height="960" aria-hidden="true"></canvas>
     <span class="sen-stage-glint" aria-hidden="true"></span>
@@ -1988,6 +1988,14 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <span class="sen-sticker sen-sticker-mood" aria-hidden="true"><b>mood</b> curious ♡</span>
   <span class="sen-sticker sen-sticker-star" aria-hidden="true">✦</span>
   <img class="sen-stage-character-sticker sen-stage-character-sticker--wave" src="motion/yash-sticker-wave-hair.webp" alt="" width="720" height="1080" loading="lazy" decoding="async">
+  <svg class="sen-stage-web sen-stage-web--climb" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path class="sen-web-spokes" stroke-width="1.15" d="M110 110V4M110 110 184 34M110 110H216M110 110l76 76M110 110v106M110 110l-76 76M110 110H4M110 110 34 34"/>
+      <path class="sen-web-rings" stroke-width="1.25" d="M110 20 146 34 186 74 200 110 186 146 146 186 110 200 74 186 34 146 20 110 34 74 74 34Z M110 48 132 56 164 84 172 110 164 136 132 164 110 172 88 164 56 136 48 110 56 84 88 56Z"/>
+      <path class="sen-web-thread" stroke-width="1.5" d="M110 110Q150 74 204 18"/>
+      <circle class="sen-web-node" cx="110" cy="110" r="3.2"/>
+    </g>
+  </svg>
   <img class="sen-stage-character-sticker sen-stage-character-sticker--climb" src="motion/yash-sticker-wallcrawl.webp" alt="" width="720" height="1080" loading="lazy" decoding="async">
   <div class="sen-stage-label sen-stage-label-left"><span>YASH CHAUDHARY · DELHI</span><b>COMMERCE · CREATIVE · AUTOMATION</b></div>
   <div class="sen-stage-label sen-stage-label-right"><span>PORTFOLIO · 2026</span><b>BUILDING IN PUBLIC</b></div>
@@ -2365,10 +2373,22 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
     // YASH OS / Current State
+    const yashOsIcon = label => {
+      const key = (label || '').toLowerCase();
+      if (key.includes('education')) return '<path d="m3 9 9-5 9 5-9 5-9-5Z"/><path d="M7 11.2v4.3c3.3 2.1 6.7 2.1 10 0v-4.3M21 9v6"/>';
+      if (key.includes('focus')) return '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v2.5M22 12h-2.5M12 22v-2.5M2 12h2.5"/>';
+      if (key.includes('explor')) return '<path d="m12 3 1.9 5.6L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.4L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/>';
+      if (key.includes('build')) return '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>';
+      return '<path d="M6 21V4m0 1c5-4 8 3 13-1v10c-5 4-8-3-13 1"/><path d="M6 5h.01"/>';
+    };
+    const yashOsKind = label => {
+      const key = (label || '').toLowerCase();
+      return key.includes('education') ? 'education' : key.includes('focus') ? 'focus' : key.includes('explor') ? 'exploring' : key.includes('build') ? 'building' : 'goal';
+    };
     const osContainer = document.getElementById('yash-os-container');
     if(osContainer && window.YASH_OS_DATA){
       const data=window.YASH_OS_DATA;
-      osContainer.innerHTML = `<div class="yash-os-head"><div><span class="yash-os-kicker">PERSONAL OPERATING SYSTEM</span><h3>${esc(data.title)}</h3><p>${esc(data.subtitle)}</p></div><span class="yash-os-status">${esc(data.status)}</span></div><div class="yash-os-grid">${(data.items||[]).map(item=>`<article class="yash-os-item"><div class="yash-os-label">${esc(item.label)}</div><div class="yash-os-value">${esc(item.value)}</div><span class="yash-os-state">${esc(item.state||'active')}</span></article>`).join('')}</div>`;
+      osContainer.innerHTML = `<div class="yash-os-head"><div><span class="yash-os-kicker">PERSONAL OPERATING SYSTEM</span><h3>${esc(data.title)}</h3><p>${esc(data.subtitle)}</p></div><span class="yash-os-status">${esc(data.status)}</span></div><div class="yash-os-grid">${(data.items||[]).map(item=>`<article class="yash-os-item" data-os-kind="${yashOsKind(item.label)}"><div class="yash-os-label"><span class="yash-os-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${yashOsIcon(item.label)}</svg></span><span>${esc(item.label)}</span></div><div class="yash-os-value">${esc(item.value)}</div><span class="yash-os-state">${esc(item.state||'active')}</span></article>`).join('')}</div>`;
     }
 
     // Currently snapshot
@@ -4580,6 +4600,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     requestPaint();
   })();
 </script>
-<script src="portfolio-redesign.js?v=20261022-9" defer></script>
+<script src="portfolio-redesign.js?v=20261022-10" defer></script>
 </body>
 </html>
