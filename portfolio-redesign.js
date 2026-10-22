@@ -17,6 +17,55 @@
   };
   let queued = false;
   let pointerTargetX = 0, pointerTargetY = 0, pointerX = 0, pointerY = 0;
+  let idleRaf = 0;
+  let idleStartedAt = performance.now();
+
+  function clearIdleMotion() {
+    stage.style.setProperty('--idle-x', '0px');
+    stage.style.setProperty('--idle-y', '0px');
+    stage.style.setProperty('--idle-tilt', '0deg');
+    stage.style.setProperty('--idle-breath', '1');
+    stage.style.setProperty('--idle-face-x', '0px');
+    stage.style.setProperty('--idle-face-y', '0px');
+    stage.style.setProperty('--idle-face-scale', '0');
+    stage.style.setProperty('--idle-face-yaw', '0deg');
+    stage.style.setProperty('--idle-face-pitch', '0deg');
+    stage.style.setProperty('--idle-face-roll', '0deg');
+  }
+
+  function idleMotion(now) {
+    idleRaf = 0;
+    if (reduceMotion.matches || document.visibilityState === 'hidden') {
+      clearIdleMotion();
+      return;
+    }
+    const t = (now - idleStartedAt) / 1000;
+    const homeStrength = document.body.classList.contains('portfolio-detail-mode') ? 0.18 : 1;
+    stage.style.setProperty('--idle-x', `${(Math.sin(t * 0.43) * 1.8 * homeStrength).toFixed(2)}px`);
+    stage.style.setProperty('--idle-y', `${(Math.sin(t * 0.82) * 2.8 * homeStrength).toFixed(2)}px`);
+    stage.style.setProperty('--idle-tilt', `${(Math.sin(t * 0.36) * 0.36 * homeStrength).toFixed(2)}deg`);
+    stage.style.setProperty('--idle-breath', `${(1 + Math.sin(t * 1.12) * 0.0028).toFixed(4)}`);
+    stage.style.setProperty('--idle-face-x', `${(Math.sin(t * 0.27) * 4.5).toFixed(2)}px`);
+    stage.style.setProperty('--idle-face-y', `${(Math.cos(t * 0.32) * 3.5).toFixed(2)}px`);
+    stage.style.setProperty('--idle-face-scale', `${(Math.sin(t * 0.29) * 0.008).toFixed(4)}`);
+    stage.style.setProperty('--idle-face-yaw', `${(Math.sin(t * 0.25) * 0.42).toFixed(2)}deg`);
+    stage.style.setProperty('--idle-face-pitch', `${(Math.cos(t * 0.31) * 0.28).toFixed(2)}deg`);
+    stage.style.setProperty('--idle-face-roll', `${(Math.sin(t * 0.22) * 0.24).toFixed(2)}deg`);
+    idleRaf = window.requestAnimationFrame(idleMotion);
+  }
+
+  function startIdleMotion() {
+    if (!idleRaf && !reduceMotion.matches && document.visibilityState !== 'hidden') {
+      idleStartedAt = performance.now();
+      idleRaf = window.requestAnimationFrame(idleMotion);
+    }
+  }
+
+  function stopIdleMotion() {
+    if (idleRaf) window.cancelAnimationFrame(idleRaf);
+    idleRaf = 0;
+    clearIdleMotion();
+  }
 
   function paint() {
     queued = false;
@@ -154,6 +203,15 @@
   }, { passive: true });
   window.addEventListener('touchend', resetParallax, { passive: true });
   window.addEventListener('touchcancel', resetParallax, { passive: true });
-  reduceMotion.addEventListener?.('change', requestPaint);
+  reduceMotion.addEventListener?.('change', () => {
+    if (reduceMotion.matches) stopIdleMotion();
+    else startIdleMotion();
+    requestPaint();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') stopIdleMotion();
+    else startIdleMotion();
+  });
+  startIdleMotion();
   requestPaint();
 })();

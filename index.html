@@ -1919,7 +1919,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <!-- PEAK_PREMIUM_V1_END -->
   <link rel="stylesheet" href="portfolio-redesign.css">
   <link rel="stylesheet" href="portfolio-reference-match.css?v=20261022-2">
-  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-6">
+  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-7">
 </head>
 <body>
 
@@ -2036,9 +2036,9 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <!-- ===================== SYSTEM 1: FLOATING DOCK NAVIGATION ===================== -->
   <div class="dock-wrap" id="dock-wrap">
     <nav class="dock" id="dock" aria-label="Primary navigation">
-      <a href="#hello" class="dock-item" data-dock data-section="hello" aria-label="Hello">
+      <a href="#hello" class="dock-item" data-dock data-section="hello" aria-label="Home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg>
-        <span class="dock-tooltip">Hello</span>
+        <span class="dock-tooltip">Home</span>
       </a>
       <a href="#journey" class="dock-item" data-dock data-section="journey" aria-label="Journey">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.2 7.4C10 10 8 13 12 14.5c4 1.5 3 2.5 3.8 4.1"/></svg>
@@ -2048,14 +2048,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/><path d="M3.5 12.5h17"/></svg>
         <span class="dock-tooltip">Experience</span>
       </a>
-      <a href="#focus" class="dock-item" data-dock data-section="focus" aria-label="Focus">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>
-        <span class="dock-tooltip">Focus</span>
-      </a>
-      <a href="#credentials" class="dock-item" data-dock data-section="credentials" aria-label="Credentials">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.8 7 21l5-2.6 5 2.6-1.5-7.2"/></svg>
-        <span class="dock-tooltip">Credentials</span>
-      </a>
       <a href="#skills" class="dock-item" data-dock data-section="skills" aria-label="Skills">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l9-12H12.5z" stroke-linejoin="round"/></svg>
         <span class="dock-tooltip">Skills</span>
@@ -2064,15 +2056,27 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.3"/><path d="M4.5 7 12 12.5 19.5 7"/></svg>
         <span class="dock-tooltip">Contact</span>
       </a>
-      <div class="dock-sep"></div>
-      <a href="unfiltered.html" class="dock-item" data-dock data-section="unfiltered" aria-label="Unfiltered Yash">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5A2.5 2.5 0 0 1 7 2h10a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-2.5 2.5H7a2.5 2.5 0 0 1-2.5-2.5v-15"/><path d="M8 8h8M8 12h8M8 16h5"/><circle cx="8.8" cy="10" r=".7" fill="currentColor"/><circle cx="15.2" cy="10" r=".7" fill="currentColor"/></svg>
-        <span class="dock-tooltip">Unfiltered 😼</span>
-      </a>
-      <button class="dock-item dock-cmdk" id="dock-cmdk" type="button" aria-label="Open command palette">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <span class="dock-tooltip">Search<span class="cmdk-hint-desktop"> (⌘K / Ctrl K)</span></span>
-      </button>
+      <div class="dock-sep" aria-hidden="true"></div>
+      <div class="dock-more-wrap">
+        <button class="dock-item dock-more-toggle" id="dock-more-toggle" type="button" aria-label="More navigation" aria-controls="dock-more-panel" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>
+          <span class="dock-tooltip">More</span>
+        </button>
+        <div class="dock-more-panel" id="dock-more-panel" role="group" aria-label="More sections" aria-hidden="true" inert>
+          <a href="#focus" class="dock-more-link" data-dock data-section="focus" aria-label="Focus">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg><span>Focus</span>
+          </a>
+          <a href="#credentials" class="dock-more-link" data-dock data-section="credentials" aria-label="Credentials">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.8 7 21l5-2.6 5 2.6-1.5-7.2"/></svg><span>Credentials</span>
+          </a>
+          <a href="unfiltered.html" class="dock-more-link" data-dock data-section="unfiltered" aria-label="Unfiltered Yash">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 4.5A2.5 2.5 0 0 1 7 2h10a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-2.5 2.5H7a2.5 2.5 0 0 1-2.5-2.5v-15"/><path d="M8 8h8M8 12h8M8 16h5"/><circle cx="8.8" cy="10" r=".7" fill="currentColor"/><circle cx="15.2" cy="10" r=".7" fill="currentColor"/></svg><span>Unfiltered Yash</span>
+          </a>
+          <button class="dock-more-link dock-cmdk" id="dock-cmdk" type="button" aria-label="Open command palette">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Search</span>
+          </button>
+        </div>
+      </div>
     </nav>
   </div>
 
@@ -3122,8 +3126,38 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     const dockWrap = document.getElementById('dock-wrap');
     const dock = document.getElementById('dock');
     const dockItems = Array.from(dock.querySelectorAll('.dock-item'));
+    const dockMoreToggle = document.getElementById('dock-more-toggle');
+    const dockMorePanel = document.getElementById('dock-more-panel');
     const isTouch = window.matchMedia('(hover:none)').matches;
     const reduced = prefersReducedGlobal;
+
+    function setMoreNavOpen(open, restoreFocus = false) {
+      if (!dockMoreToggle || !dockMorePanel) return;
+      dockMoreToggle.setAttribute('aria-expanded', String(open));
+      dockMorePanel.setAttribute('aria-hidden', String(!open));
+      dockMorePanel.inert = !open;
+      dockMorePanel.classList.toggle('is-open', open);
+      if (open) setTimeout(() => {
+        if (dockMorePanel.classList.contains('is-open')) dockMorePanel.querySelector('a,button')?.focus({preventScroll:true});
+      }, 250);
+      else if (restoreFocus) dockMoreToggle.focus({preventScroll:true});
+    }
+
+    dockMoreToggle?.addEventListener('click', () => {
+      setMoreNavOpen(dockMoreToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && dockMorePanel?.classList.contains('is-open')) setMoreNavOpen(false, true);
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (dockMorePanel?.classList.contains('is-open') && !dockWrap.contains(event.target)) setMoreNavOpen(false);
+    }, {passive:true});
+    window.addEventListener('scroll', () => {
+      if (dockMorePanel?.classList.contains('is-open')) setMoreNavOpen(false, true);
+    }, {passive:true});
+    dockMorePanel?.addEventListener('click', (event) => {
+      if (event.target.closest('a,button')) setMoreNavOpen(false, event.target.closest('button')?.id !== 'dock-cmdk');
+    });
 
     // Entrance: slide up after hero reveal begins
     setTimeout(()=> dockWrap.classList.add('dock-in'), 650);
@@ -3165,6 +3199,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         if(entry.isIntersecting){
           dockLinks.forEach(l=>l.classList.remove('dock-active'));
           link.classList.add('dock-active');
+          dockMoreToggle?.classList.toggle('dock-active', link.classList.contains('dock-more-link'));
         }
       });
     }, {rootMargin:"-45% 0px -50% 0px"});
@@ -3172,7 +3207,10 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
     // Smooth-scroll on click (respects existing anchor behavior, closes any open cmdk)
     dockLinks.forEach(link=>{
-      link.addEventListener('click', ()=>{ dockItems.forEach(i=> i.style.transform = ''); });
+      link.addEventListener('click', ()=>{
+        dockItems.forEach(i=> i.style.transform = '');
+        if (link.closest('.dock-more-panel')) setMoreNavOpen(false, true);
+      });
     });
   })();
 
@@ -4523,6 +4561,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     requestPaint();
   })();
 </script>
-<script src="portfolio-redesign.js?v=20261022-6" defer></script>
+<script src="portfolio-redesign.js?v=20261022-7" defer></script>
 </body>
 </html>
