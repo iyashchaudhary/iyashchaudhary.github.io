@@ -24,22 +24,15 @@ html[data-theme="dark"],html[data-theme="evening"]{
 html{background:var(--bg)!important;color:var(--text)!important;scroll-padding-top:84px;}
 body{background:var(--bg)!important;color:var(--text)!important;overflow-x:clip!important;}
 
-/* Soft mint atmosphere with a little editorial grain, rather than a blank or hidden backdrop. */
+/* Preserve a faint contrast veil while letting the scenic background read through the stage. */
 .sen-stage{
   z-index:0!important;
   overflow:hidden!important;
-  background:
-    radial-gradient(ellipse 46% 48% at 50% 36%,rgba(251,250,238,.76),transparent 75%),
-    radial-gradient(ellipse 31% 42% at 8% 66%,rgba(210,190,213,.32),transparent 76%),
-    radial-gradient(ellipse 36% 38% at 94% 58%,rgba(204,219,143,.28),transparent 75%),
-    linear-gradient(155deg,#d2e0d3 0%,#e4e9dd 48%,#ceddce 100%)!important;
+  background:linear-gradient(180deg,rgba(7,18,36,.07),rgba(7,18,36,.14))!important;
   transition:background .45s ease;
 }
 html[data-theme="dark"] .sen-stage,html[data-theme="evening"] .sen-stage{
-  background:
-    radial-gradient(ellipse 48% 50% at 50% 36%,rgba(76,99,79,.42),transparent 75%),
-    radial-gradient(ellipse 34% 40% at 8% 66%,rgba(106,77,107,.16),transparent 75%),
-    linear-gradient(155deg,#26372b 0%,#18231d 55%,#202c24 100%)!important;
+  background:linear-gradient(180deg,rgba(2,8,18,.14),rgba(2,8,18,.24))!important;
 }
 .sen-stage::before{
   background-image:
