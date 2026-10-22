@@ -1919,7 +1919,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 <!-- PEAK_PREMIUM_V1_END -->
   <link rel="stylesheet" href="portfolio-redesign.css">
   <link rel="stylesheet" href="portfolio-reference-match.css?v=20261022-2">
-  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-19">
+  <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261022-20">
 </head>
 <body>
 
@@ -2245,7 +2245,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <section class="section bento-card bento-span-5 scene" id="experience" data-scene="experience">
     <div class="wrap">
       <div class="sec-head reveal"><span class="sec-num">04</span><h2 data-en="Experience" data-hi="अनुभव">Experience</h2></div>
-      <p class="sec-desc reveal" data-en="Society and freelance roles, mostly during my time at Sri Venkateswara College." data-hi="ज्यादातर श्री वेंकटेश्वर कॉलेज के दौरान की सोसाइटी और फ्रीलांस भूमिकाएं।">Society and freelance roles, mostly during my time at Sri Venkateswara College.</p>
+      <p class="sec-desc reveal" data-en="A few chapters in campus communities and freelance creative work. Open a card to explore each role." data-hi="कॉलेज सोसाइटी और फ्रीलांस क्रिएटिव काम के कुछ अध्याय। हर भूमिका देखने के लिए कार्ड खोलें।">A few chapters in campus communities and freelance creative work. Open a card to explore each role.</p>
 
       <div class="exp-track" id="experience-track">
         <!-- experience nodes rendered by JS -->
@@ -2460,16 +2460,35 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     // Experience
     const expTrack = document.getElementById('experience-track');
     if(expTrack && window.EXPERIENCE_DATA) {
-      expTrack.innerHTML = window.EXPERIENCE_DATA.map((exp, idx) => `
-        <div class="exp-node">
-          ${idx < window.EXPERIENCE_DATA.length - 1 ? '<div class="exp-line"></div>' : ''}
-          <div class="exp-circle"></div>
-          <div class="exp-org">${esc(exp.role)}</div>
-          <div class="exp-college">${esc(exp.org)}</div>
-          <div class="exp-date mono">${esc(exp.date)}</div>
-          <p class="exp-desc">${esc(exp.desc)}</p>
-          ${exp.image ? `<button class="portfolio-inline-image" type="button" onclick="openImageLightbox('${exp.image}', '${esc(exp.imageAlt || exp.role)}')"><img src="${exp.image}" alt="${esc(exp.imageAlt || exp.role)}" loading="lazy"></button>` : ''}
-        </div>`).join('');
+      const experienceGroups = [
+        { key: 'campus', title: 'Campus societies', eyebrow: 'COMMUNITY', note: 'Creative work across college societies' },
+        { key: 'freelance', title: 'Freelance creative work', eyebrow: 'INDEPENDENT', note: 'Client work beyond campus' }
+      ];
+      const groupedExperience = experienceGroups.map(group => {
+        const entries = window.EXPERIENCE_DATA.filter(exp => {
+          const isFreelance = /self-employed|freelance/i.test(`${exp.org || ''} ${exp.role || ''}`);
+          return group.key === 'freelance' ? isFreelance : !isFreelance;
+        });
+        if (!entries.length) return '';
+        const preview = group.key === 'campus'
+          ? [...new Set(entries.map(exp => (exp.org || '').split('·')[0].trim()))].join(' · ')
+          : entries[0].org;
+        return `<details class="exp-collection">
+          <summary class="exp-collection-summary">
+            <span class="exp-collection-mark" aria-hidden="true">${group.key === 'campus' ? '✳' : '↗'}</span>
+            <span class="exp-collection-copy"><span class="exp-collection-eyebrow">${group.eyebrow}</span><span class="exp-collection-title">${group.title}</span><span class="exp-collection-preview">${esc(preview)}</span></span>
+            <span class="exp-collection-count">${entries.length} ${entries.length === 1 ? 'role' : 'roles'}</span>
+            <span class="exp-collection-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="exp-collection-body">${entries.map(exp => `<article class="exp-role">
+            <div class="exp-role-heading"><h3>${esc(exp.role)}</h3><span class="exp-role-date">${esc(exp.date)}</span></div>
+            <div class="exp-role-org">${esc(exp.org)}</div>
+            <p>${esc(exp.desc)}</p>
+            ${exp.image ? `<button class="portfolio-inline-image" type="button" onclick="openImageLightbox('${exp.image}', '${esc(exp.imageAlt || exp.role)}')"><img src="${exp.image}" alt="${esc(exp.imageAlt || exp.role)}" loading="lazy"></button>` : ''}
+          </article>`).join('')}</div>
+        </details>`;
+      }).join('');
+      expTrack.innerHTML = groupedExperience || '<p class="exp-empty">Experience entries will appear here as they are added.</p>';
     }
 
     // Focus
