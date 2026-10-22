@@ -24,8 +24,12 @@ html.performance-lite .sen-stage-portrait,
 html.performance-lite .sen-stage-body,
 html.performance-lite .sen-stage-noise { animation: none !important; }
 html.performance-lite .sen-stage-grid,
-html.performance-lite .sen-stage-orbit,
-html.performance-lite .sen-stage-body { display: none !important; }
+html.performance-lite .sen-stage-orbit { display: none !important; }
+/* Keep Yash's full-body hero image; only the costly gesture-video renderer is disabled. */
+html.performance-lite #sen-stage .sen-stage-body { display: block !important; }
+html.performance-lite #sen-stage .sen-stage-body > img:first-child { opacity: 1 !important; transition: none !important; }
+html.performance-lite #sen-stage .sen-stage-gesture-source,
+html.performance-lite #sen-stage .sen-stage-gesture-canvas { display: none !important; }
 html.performance-lite .section.bento-card,
 html.performance-lite .hero-glass,
 html.performance-lite .topnav,

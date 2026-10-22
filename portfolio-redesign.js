@@ -7,6 +7,13 @@
   const gestureVideo = stage?.querySelector('.sen-stage-gesture-source');
   const gestureCanvas = stage?.querySelector('.sen-stage-gesture-canvas');
   if (!stage || !portrait) return;
+  // In lightweight mode, keep the original character artwork visible but skip
+  // the WebGL/video renderer and its scroll/parallax animation loop.
+  if (document.documentElement.classList.contains('performance-lite')) {
+    bodyLayer?.classList.remove('is-motion-ready');
+    gestureVideo?.pause();
+    return;
+  }
 
   const frames = Array.from(portrait.querySelectorAll('[data-portrait]'));
   const stickers = Array.from(stage.querySelectorAll('.sen-sticker'));
