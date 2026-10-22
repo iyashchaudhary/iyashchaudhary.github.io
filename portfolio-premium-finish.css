@@ -1022,3 +1022,28 @@ body.portfolio-detail-mode #sen-stage .sen-stage-web--climb{left:auto;right:clam
   #sen-stage .sen-stage-web,#sen-stage .sen-web-spokes,#sen-stage .sen-web-rings,#sen-stage .sen-web-thread,.yash-os-icon{animation:none!important;transition:none!important;}
   #sen-stage .sen-stage-closeup>img[data-scene-portrait]{transition:none!important;}
 }
+
+
+/* PERFORMANCE PASS — prioritize finger-driven scroll/camera motion and lighten mobile compositing. */
+body.portfolio-scrolling .sen-stage-glint,
+body.portfolio-scrolling .sen-stage-web,
+body.portfolio-scrolling .sen-web-spokes,
+body.portfolio-scrolling .sen-web-rings,
+body.portfolio-scrolling .sen-web-thread,
+body.portfolio-scrolling .sen-sticker,
+body.portfolio-scrolling .sen-stage-character-sticker,
+body.portfolio-scrolling .mesh-blob,
+body.portfolio-scrolling .mesh-particles,
+body.portfolio-scrolling .tl-icon,
+body.portfolio-scrolling #experience .exp-circle,
+body.portfolio-scrolling .yash-os-icon,
+body.portfolio-scrolling .achv-toast{animation-play-state:paused!important;}
+body.portfolio-detail-mode #sen-stage .sen-stage-closeup>img[data-scene-portrait]{filter:blur(7px) brightness(.34) saturate(.84)!important;}
+@media(max-width:760px),(pointer:coarse){
+  body #main-content .section.bento-card[id]{backdrop-filter:blur(5px) saturate(108%)!important;-webkit-backdrop-filter:blur(5px) saturate(108%)!important;}
+  body #main-content .section.bento-card[id] :is(.yash-os-shell,.currently-grid,.glass-card,.folio,.skill-card,.pursuing-card,.card,.currently-card,.journey-year-panel,.journey-years,.timeline-node,.exp-node,.learning-strip,.yash-os-item,.card-grid,.accordion-body){backdrop-filter:blur(3px) saturate(106%)!important;-webkit-backdrop-filter:blur(3px) saturate(106%)!important;}
+  body.portfolio-detail-mode #sen-stage .sen-stage-closeup>img[data-scene-portrait]{filter:blur(4px) brightness(.35) saturate(.82)!important;}
+  body.portfolio-detail-mode .topnav{backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;}
+  body.portfolio-detail-mode .dock{backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;}
+}
+@media(prefers-reduced-motion:reduce){body.portfolio-scrolling *{animation-play-state:paused!important;}}

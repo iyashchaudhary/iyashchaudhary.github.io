@@ -47,6 +47,9 @@
   let lastPaintAt = 0;
   let cameraCurrent = { ...SCENES['yash-os'] };
   let cameraTarget = { ...SCENES['yash-os'] };
+  let lastGestureTime = -1;
+  let scrollStopTimer = 0;
+  let cachedHeroHeight = hero?.offsetHeight || window.innerHeight;
 
   function clearIdleMotion() {
     stage.style.setProperty('--idle-x', '0px');
@@ -63,7 +66,7 @@
 
   function idleMotion(now) {
     idleRaf = 0;
-    if (reduceMotion.matches || document.visibilityState === 'hidden') {
+    if (reduceMotion.matches || document.visibilityState === 'hidden' || document.body.classList.contains('portfolio-detail-mode')) {
       clearIdleMotion();
       return;
     }
@@ -183,7 +186,8 @@
     gestureRenderRaf = 0;
     gestureVideoFrame = 0;
     if (!gesturePlaying || !gestureGL || !gestureVideo || document.visibilityState === 'hidden' || reduceMotion.matches) return;
-    if (gestureVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+    if (gestureVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && gestureVideo.currentTime !== lastGestureTime) {
+      lastGestureTime = gestureVideo.currentTime;
       try {
         gestureGL.useProgram(gestureProgram);
         gestureGL.activeTexture(gestureGL.TEXTURE0);
@@ -217,6 +221,7 @@
       gestureRenderRaf = 0;
       gestureVideoFrame = 0;
       gestureVideo?.pause();
+      lastGestureTime = -1;
       motionReady = false;
       bodyLayer?.classList.remove('is-motion-ready');
       return;
@@ -277,7 +282,10 @@
     const viewport = Math.max(1, window.innerHeight || 1);
     const isMobile = window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
     document.body.classList.toggle('portfolio-scrolled', y > viewport * 0.55);
-    document.body.classList.toggle('portfolio-detail-mode', y > (hero?.offsetHeight || viewport) * 0.78);
+    const detailMode = y > cachedHeroHeight * 0.78;
+    document.body.classList.toggle('portfolio-detail-mode', detailMode);
+    if (detailMode) { if (idleRaf) stopIdleMotion(); }
+    else if (!idleRaf && !reduceMotion.matches) startIdleMotion();
     if (!activeScene || now - lastSceneCheck >= 72) {
       updateChapterScene(viewport);
       lastSceneCheck = now;
@@ -364,7 +372,7 @@
     const sceneProgress = clamp(y / Math.max(1, document.documentElement.scrollHeight - viewport), 0, 1);
     const sceneSway = Math.sin(sceneProgress * Math.PI * 1.35);
 
-    stage.style.setProperty('--sen-stage-progress', clamp(y / Math.max(viewport, hero?.offsetHeight || viewport), 0, 1).toFixed(4));
+    stage.style.setProperty('--sen-stage-progress', clamp(y / Math.max(viewport, cachedHeroHeight || viewport), 0, 1).toFixed(4));
     stage.style.setProperty('--scene-scroll-x', `${(sceneSway * (isMobile ? 8 : 18)).toFixed(2)}px`);
     stage.style.setProperty('--scene-scroll-y', `${((sceneProgress - 0.5) * (isMobile ? 8 : 14)).toFixed(2)}px`);
     stage.style.setProperty('--scene-scroll-scale', `${(smooth(sceneProgress) * 0.02).toFixed(4)}`);
@@ -417,9 +425,23 @@
   }
   function resetParallax() { pointerTargetX = pointerTargetY = 0; requestPaint(); }
 
+  function handleScroll() {
+    document.body.classList.add('portfolio-scrolling');
+    window.clearTimeout(scrollStopTimer);
+    scrollStopTimer = window.setTimeout(() => {
+      document.body.classList.remove('portfolio-scrolling');
+      scrollStopTimer = 0;
+    }, 150);
+    requestPaint();
+  }
+  function handleResize() {
+    cachedHeroHeight = hero?.offsetHeight || window.innerHeight;
+    requestPaint();
+  }
+
   if (!setupGestureRenderer()) bodyLayer?.classList.remove('is-motion-ready');
-  window.addEventListener('scroll', requestPaint, { passive: true });
-  window.addEventListener('resize', requestPaint, { passive: true });
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('resize', handleResize, { passive: true });
   window.addEventListener('pointermove', (event) => {
     if (event.pointerType === 'mouse') moveParallax(event.clientX, event.clientY, false);
   }, { passive: true });
