@@ -1135,3 +1135,18 @@ body #main-content .section.bento-card[id] :is(.yash-os-shell,.currently-grid,.g
   #topnav .navlinks>a[data-nav][href="#experience"],
   #topnav .navlinks>a[data-nav][href="#skills"]{display:none!important;}
 }
+
+
+/* Mobile Admin access: keep the lock visible without crowding the compact header. */
+@media(max-width:760px),(pointer:coarse){
+  /* The bottom dock already contains these routes, so free header space for controls. */
+  .topnav .navlinks>a[data-nav]{display:none!important;}
+  #topnav .navlinks .admin-trigger{
+    display:inline-flex!important;align-items:center;justify-content:center;
+    flex:0 0 32px!important;width:32px!important;min-width:32px!important;
+    height:32px!important;min-height:32px!important;padding:7px!important;
+    order:100!important;margin-left:2px!important;opacity:.68!important;
+  }
+  #topnav .navlinks .admin-trigger svg{display:block!important;width:16px!important;height:16px!important;}
+  #topnav .navlinks .admin-trigger:focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px!important;opacity:1!important;}
+}
