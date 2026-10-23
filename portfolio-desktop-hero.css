@@ -1,0 +1,160 @@
+/* Laptop hero composition: keep copy in a calm left column and gather character art on the right. */
+@media (min-width: 761px) and (pointer: fine) {
+  #main-content .hero#hello {
+    align-items: center !important;
+    padding: clamp(104px, 13vh, 132px) 0 clamp(72px, 9vh, 96px) !important;
+  }
+
+  #main-content .hero#hello .wrap {
+    width: min(calc(100% - clamp(48px, 8vw, 144px)), 1400px) !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+
+  #main-content .hero#hello .hero-glass {
+    width: 100% !important;
+    max-width: min(50vw, 660px) !important;
+    margin: 0 !important;
+    padding: clamp(25px, 3vw, 40px) !important;
+    border: 1px solid rgba(245, 249, 250, .2) !important;
+    border-radius: 26px !important;
+    background: linear-gradient(145deg, rgba(8, 23, 40, .34), rgba(8, 23, 40, .20)) !important;
+    box-shadow: 0 22px 54px rgba(4, 16, 30, .16) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  #main-content .hero#hello .hero-grid {
+    display: block !important;
+  }
+
+  #main-content .hero#hello .hero-grid > div:last-child {
+    max-width: 100%;
+  }
+
+  #main-content .hero#hello .story-kicker,
+  #main-content .hero#hello .eyebrow {
+    text-align: left !important;
+  }
+
+  #main-content .hero#hello .story-kicker {
+    margin-bottom: 9px !important;
+  }
+
+  #main-content .hero#hello .eyebrow {
+    margin-bottom: 6px !important;
+  }
+
+  #main-content .hero#hello h1,
+  #main-content .hero#hello #hero-heading {
+    max-width: 10ch !important;
+    margin: .24em 0 .16em !important;
+    font-size: clamp(3.2rem, 6vw, 5.5rem) !important;
+    line-height: .96 !important;
+  }
+
+  #main-content .hero#hello .lede {
+    max-width: 49ch !important;
+    margin-top: 12px !important;
+    font-size: clamp(.94rem, 1.12vw, 1.06rem) !important;
+    line-height: 1.62 !important;
+  }
+
+  #main-content .hero#hello .cta-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 9px !important;
+    margin-top: 19px !important;
+  }
+
+  #main-content .hero#hello .stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+    margin-top: 21px !important;
+  }
+
+  #main-content .hero#hello .stats-row .stat-card {
+    min-width: 0 !important;
+    padding: 11px 9px !important;
+    border: 1px solid rgba(255, 255, 255, .16) !important;
+    border-radius: 12px !important;
+    background: rgba(10, 25, 39, .22) !important;
+    text-align: left !important;
+  }
+
+  #main-content .hero#hello .stats-row .stat-card .label {
+    font-size: .64rem !important;
+    line-height: 1.24 !important;
+    letter-spacing: .02em !important;
+  }
+
+  #sen-stage {
+    --laptop-mascot-width: min(42vw, 58svh, 500px);
+  }
+
+  #sen-stage .sen-stage-body,
+  #sen-stage .sen-stage-portrait {
+    left: 78vw !important;
+    top: 50% !important;
+    width: var(--laptop-mascot-width) !important;
+    height: auto !important;
+    aspect-ratio: 2 / 3 !important;
+  }
+
+  #sen-stage .sen-stage-character-sticker--climb {
+    left: 61vw !important;
+    top: 42% !important;
+    width: clamp(76px, 9vw, 128px) !important;
+  }
+
+  #sen-stage .sen-stage-character-sticker--wave {
+    left: 83vw !important;
+    top: 23% !important;
+    width: clamp(76px, 9vw, 128px) !important;
+  }
+
+  #main-content .hero#hello .scroll-indicator {
+    right: clamp(28px, 5vw, 72px) !important;
+    bottom: clamp(24px, 4vh, 42px) !important;
+    left: auto !important;
+  }
+}
+
+/* Compact laptop windows still get the split composition, with a roomy two-by-two stats grid. */
+@media (min-width: 761px) and (max-width: 1023px) and (pointer: fine) {
+  #main-content .hero#hello .hero-glass {
+    max-width: 48vw !important;
+    padding: 24px !important;
+  }
+
+  #main-content .hero#hello .stats-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #sen-stage {
+    --laptop-mascot-width: min(38vw, 58svh, 390px);
+  }
+
+  #sen-stage .sen-stage-character-sticker--climb {
+    left: 55vw !important;
+    top: 46% !important;
+    width: clamp(68px, 8vw, 90px) !important;
+  }
+
+  #sen-stage .sen-stage-character-sticker--wave {
+    left: 84vw !important;
+    width: clamp(68px, 8vw, 90px) !important;
+  }
+
+  #main-content .hero#hello h1,
+  #main-content .hero#hello #hero-heading {
+    font-size: clamp(3rem, 6.6vw, 4.5rem) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #main-content .hero#hello .hero-glass {
+    scroll-behavior: auto !important;
+  }
+}
