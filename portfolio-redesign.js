@@ -22,6 +22,7 @@
   if (!frames.length) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const touchLayout = window.matchMedia('(max-width:760px), (pointer:coarse)');
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const smooth = (value) => {
     const t = clamp(value, 0, 1);
@@ -285,7 +286,7 @@
     const now = performance.now();
     const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
     const viewport = Math.max(1, window.innerHeight || 1);
-    const isMobile = window.matchMedia('(max-width:760px), (pointer:coarse)').matches;
+    const isMobile = touchLayout.matches;
     document.body.classList.toggle('portfolio-scrolled', y > viewport * 0.55);
     const detailMode = y > cachedHeroHeight * 0.78;
     document.body.classList.toggle('portfolio-detail-mode', detailMode);
@@ -317,9 +318,11 @@
     stage.style.setProperty('--chapter-camera-roll', `${cameraCurrent.roll.toFixed(3)}deg`);
     if (cameraMoving && !reduceMotion.matches) requestPaint();
 
-    const heroRect = hero?.getBoundingClientRect();
-    const heroVisible = Boolean(heroRect && heroRect.bottom > 0 && heroRect.top < viewport && !document.body.classList.contains('portfolio-detail-mode'));
-    setGesturePlayback(heroVisible);
+    if (gestureVideo && gestureCanvas) {
+      const heroRect = hero?.getBoundingClientRect();
+      const heroVisible = Boolean(heroRect && heroRect.bottom > 0 && heroRect.top < viewport && !document.body.classList.contains('portfolio-detail-mode'));
+      setGesturePlayback(heroVisible);
+    }
 
     if (reduceMotion.matches) {
       frames.forEach((frame, index) => {

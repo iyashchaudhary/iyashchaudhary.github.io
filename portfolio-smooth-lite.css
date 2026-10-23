@@ -96,7 +96,7 @@ html.performance-lite .peak-magnetic { animation: none !important; transform-sty
 
 
 /* Gentle chapter settling: native wheel/touch distance stays user-controlled. */
-@media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
   html {
     scroll-snap-type: y proximity;
   }
@@ -104,6 +104,10 @@ html.performance-lite .peak-magnetic { animation: none !important; transform-sty
     scroll-snap-align: start;
     scroll-snap-stop: normal;
   }
+}
+
+@media (max-width: 760px), (pointer: coarse) {
+  html { scroll-snap-type: none !important; }
 }
 
 
@@ -278,4 +282,48 @@ html.scene-engine-off #ai-orb::after {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+
+/* Yield the stage's idle-only motion while the user is actively scrolling. */
+body.portfolio-scrolling #sen-stage .sen-stage-body,
+body.portfolio-scrolling #sen-stage .sen-stage-portrait,
+body.portfolio-scrolling #sen-stage .sen-stage-character-sticker {
+  animation-play-state: paused !important;
+}
+
+/* Keep touch devices on static idle art; scroll-driven expression cross-fades remain intact. */
+@media (max-width: 760px), (pointer: coarse) {
+  html.scene-engine-off #sen-stage .sen-stage-body,
+  html.scene-engine-off #sen-stage .sen-stage-portrait,
+  html.scene-engine-off #sen-stage .sen-stage-character-sticker {
+    animation: none !important;
+    translate: none !important;
+    rotate: none !important;
+  }
+}
+
+/* One shared, tiny tap ripple; only transform/opacity animate, and only while pressed. */
+#tap-ripple {
+  position: fixed;
+  z-index: 2147483000;
+  left: 0;
+  top: 0;
+  width: 88px;
+  height: 88px;
+  border: 1px solid rgba(232, 217, 158, .27);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 217, 158, .16) 0%, rgba(232, 217, 158, .09) 34%, rgba(232, 217, 158, 0) 72%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0) scale(.08);
+  contain: layout paint style;
+}
+#tap-ripple.is-active {
+  visibility: visible;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  #tap-ripple { display: none !important; }
 }

@@ -1914,7 +1914,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <link rel="stylesheet" href="portfolio-redesign.css?v=20261023-2">
   <link rel="stylesheet" href="portfolio-reference-match.css?v=20261023-4">
   <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261023-22">
-  <link rel="stylesheet" href="portfolio-smooth-lite.css?v=20261023-9">
+  <link rel="stylesheet" href="portfolio-smooth-lite.css?v=20261024-10">
   <link rel="stylesheet" href="portfolio-clay.css?v=20261023-3">
   <link rel="stylesheet" href="portfolio-readability.css?v=20261023-7">
   <link rel="stylesheet" href="portfolio-desktop-hero.css?v=20261024-1">
@@ -4461,7 +4461,36 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   }
 })();
 </script>
+<div id="tap-ripple" aria-hidden="true"></div>
+<script id="tap-ripple-runtime">
+(() => {
+  const ripple = document.getElementById('tap-ripple');
+  if (!ripple || typeof ripple.animate !== 'function') return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const targets = 'a[href],button:not(:disabled),summary,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]';
+  let activeAnimation = null;
+
+  document.addEventListener('pointerdown', (event) => {
+    if (reduceMotion.matches || event.isPrimary === false || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    const target = event.target instanceof Element ? event.target.closest(targets) : null;
+    if (!target || target.getAttribute('aria-disabled') === 'true') return;
+
+    ripple.style.left = `${event.clientX}px`;
+    ripple.style.top = `${event.clientY}px`;
+    if (activeAnimation) activeAnimation.cancel();
+    ripple.classList.add('is-active');
+    activeAnimation = ripple.animate([
+      { opacity: .16, transform: 'translate3d(-50%, -50%, 0) scale(.12)' },
+      { opacity: 0, transform: 'translate3d(-50%, -50%, 0) scale(1)' }
+    ], { duration: 360, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'none' });
+    activeAnimation.onfinish = () => {
+      ripple.classList.remove('is-active');
+      activeAnimation = null;
+    };
+  }, { passive: true });
+})();
+</script>
 <!-- The portrait scroll camera is updated by the consolidated portfolio scroll renderer. -->
-<script src="portfolio-redesign.js?v=20261023-3" defer></script>
+<script src="portfolio-redesign.js?v=20261024-1" defer></script>
 </body>
 </html>
