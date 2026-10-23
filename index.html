@@ -1918,7 +1918,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <link rel="stylesheet" href="portfolio-clay.css?v=20261023-3">
   <link rel="stylesheet" href="portfolio-readability.css?v=20261023-7">
   <link rel="stylesheet" href="portfolio-desktop-hero.css?v=20261024-1">
-  <link rel="stylesheet" href="portfolio-intro-motion.css?v=20261024-3">
 </head>
 <body>
 
@@ -1972,7 +1971,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   </div>
   <div class="sen-stage-body" aria-hidden="true">
     <img src="assets/anime/yash-full-character.webp" alt="" width="1024" height="1536" fetchpriority="high" decoding="async">
-    <span class="sen-stage-wordmark" aria-hidden="true">YASH</span>
     <span class="sen-stage-glint" aria-hidden="true"></span>
   </div>
   <div class="sen-stage-portrait" aria-hidden="true">
@@ -3050,8 +3048,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   /* ---- Hero entrance (loader/intro removed — content shows immediately) ---- */
   (function(){
     const photoRing = document.querySelector('.photo-ring');
-    const stage = document.getElementById('sen-stage');
-    const heroSection = document.getElementById('hello');
     const typeTarget = document.getElementById('type-target');
     const eyebrowEl = document.getElementById('hero-eyebrow');
     const headingEl = document.getElementById('hero-heading');
@@ -3081,14 +3077,6 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       document.querySelectorAll('.stats-row .stat-card').forEach(el => el.classList.add('in-view'));
     }
 
-    function startYashSignature(){
-      if(reducedMotion) return;
-      window.setTimeout(()=>{
-        if(stage) stage.classList.add('yash-intro-active');
-        if(heroSection) heroSection.classList.add('yash-intro-active');
-      }, 100);
-    }
-
     /* Cinematic staggered hero reveal: photo -> eyebrow -> heading -> description ->
        buttons -> stat cards (one by one, via their existing nth-child stagger).
        ~110ms between each step, smooth Apple/Linear-style ease-out. */
@@ -3103,7 +3091,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       setTimeout(()=>{ if(eyebrowEl) eyebrowEl.classList.add('entrance-in'); }, STEP * 1);  // 2. eyebrow
       setTimeout(()=>{                                                               // 3. heading
         if(headingEl) headingEl.classList.add('entrance-in');
-        if(typeTarget) typeText(typeTarget, text, 45, startYashSignature);
+        if(typeTarget) typeText(typeTarget, text, 45);
       }, STEP * 2);
       setTimeout(()=>{ if(lede) lede.classList.add('entrance-in'); }, STEP * 3);      // 4. description
       setTimeout(()=>{ if(cta) cta.classList.add('entrance-in'); }, STEP * 4);        // 5. buttons
