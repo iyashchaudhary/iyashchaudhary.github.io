@@ -1916,7 +1916,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <link rel="stylesheet" href="portfolio-premium-finish.css?v=20261023-22">
   <link rel="stylesheet" href="portfolio-smooth-lite.css?v=20261024-10">
   <link rel="stylesheet" href="portfolio-clay.css?v=20261023-3">
-  <link rel="stylesheet" href="portfolio-readability.css?v=20261023-7">
+  <link rel="stylesheet" href="portfolio-readability.css?v=20261024-8">
   <link rel="stylesheet" href="portfolio-desktop-hero.css?v=20261024-1">
   <link rel="stylesheet" href="portfolio-ai-guide.css?v=20261024-3">
   <script src="portfolio-ai-guide.js?v=20261024-3" defer></script>
@@ -2518,13 +2518,53 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     // Skills
     const skillsContainer = document.getElementById('skills-container');
     if(skillsContainer && window.SKILLS_DATA) {
-      skillsContainer.innerHTML = window.SKILLS_DATA.map(s => `
-        <div class="skill-card lift reveal">
-          <h3>${esc(s.title)}</h3>
-          <span class="skill-level">${esc(s.level)}</span>
-          <p>${esc(s.desc)}</p>
-          ${s.image ? `<button class="portfolio-inline-image" type="button" onclick="openImageLightbox('${s.image}', '${esc(s.imageAlt || s.title)}')"><img src="${s.image}" alt="${esc(s.imageAlt || s.title)}" loading="lazy"></button>` : ''}
-        </div>`).join('');
+      skillsContainer.innerHTML = window.SKILLS_DATA.map((s, index) => `
+        <article class="skill-card lift reveal skill-flip-card" data-flipped="false">
+          <button class="skill-flip-toggle" type="button" aria-expanded="false" aria-controls="skill-detail-${index}">
+            <span class="skill-flip-inner">
+              <span class="skill-flip-face skill-flip-front" aria-hidden="false">
+                <span class="skill-flip-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                <h3>${esc(s.title)}</h3>
+                <span class="skill-flip-cue" data-en="Click or tap to reveal" data-hi="विवरण देखने के लिए टैप करें">Click or tap to reveal</span>
+              </span>
+              <span class="skill-flip-face skill-flip-back" id="skill-detail-${index}" aria-hidden="true">
+                <span class="skill-flip-back-title">${esc(s.title)}</span>
+                <span class="skill-level">${esc(s.level)}</span>
+                <span class="skill-desc">${esc(s.desc)}</span>
+                <span class="skill-flip-cue skill-flip-cue--back" data-en="Click or tap to return" data-hi="वापस जाने के लिए टैप करें">Click or tap to return</span>
+              </span>
+            </span>
+          </button>
+          ${s.image ? `<button class="portfolio-inline-image skill-flip-image" type="button" aria-label="View ${esc(s.imageAlt || s.title)}" onclick="openImageLightbox('${s.image}', '${esc(s.imageAlt || s.title)}')" aria-hidden="true" hidden inert><img src="${s.image}" alt="${esc(s.imageAlt || s.title)}" loading="lazy" decoding="async"></button>` : ''}
+        </article>`).join('');
+
+      const toggles = Array.from(skillsContainer.querySelectorAll('.skill-flip-toggle'));
+      const setSkillCardOpen = (toggle, open) => {
+        const card = toggle.closest('.skill-flip-card');
+        toggle.setAttribute('aria-expanded', String(open));
+        card.dataset.flipped = String(open);
+        toggle.querySelector('.skill-flip-front').setAttribute('aria-hidden', String(open));
+        toggle.querySelector('.skill-flip-back').setAttribute('aria-hidden', String(!open));
+        const image = card.querySelector('.skill-flip-image');
+        if (image) {
+          image.hidden = !open;
+          image.inert = !open;
+          image.setAttribute('aria-hidden', String(!open));
+        }
+      };
+      toggles.forEach(toggle => toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        if (open) toggles.forEach(other => { if (other !== toggle) setSkillCardOpen(other, false); });
+        setSkillCardOpen(toggle, open);
+      }));
+      skillsContainer.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        const openToggle = skillsContainer.querySelector('.skill-flip-toggle[aria-expanded="true"]');
+        if (!openToggle) return;
+        setSkillCardOpen(openToggle, false);
+        openToggle.focus({ preventScroll: true });
+        event.stopPropagation();
+      });
     }
   })();
 
