@@ -1918,6 +1918,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   <link rel="stylesheet" href="portfolio-clay.css?v=20261023-3">
   <link rel="stylesheet" href="portfolio-readability.css?v=20261023-7">
   <link rel="stylesheet" href="portfolio-desktop-hero.css?v=20261024-1">
+  <link rel="stylesheet" href="portfolio-ai-guide.css?v=20261024-2">
+  <script src="portfolio-ai-guide.js?v=20261024-2" defer></script>
 </head>
 <body>
 
@@ -2113,14 +2115,14 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     </svg>
   </button>
 
-  <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Ask Yash AI assistant" aria-hidden="true" inert>
+  <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Portfolio guide chat" aria-hidden="true" inert>
     <div class="ai-header">
       <div class="ai-header-avatar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg>
+        <img src="assets/anime/ai-guide-mascot.webp" alt="" width="34" height="34" decoding="async">
       </div>
       <div class="ai-header-text">
-        <div class="ai-header-title">Ask Yash</div>
-        <div class="ai-header-status">Portfolio intelligence · public site knowledge</div>
+        <div class="ai-header-title">Portfolio guide</div>
+        <div class="ai-header-status">Offline · public site knowledge</div>
       </div>
       <button class="ai-header-voice" id="ai-voice-toggle" type="button" aria-label="Toggle voice replies" aria-pressed="false">🔇</button>
       <button class="ai-header-close" id="ai-close" type="button" aria-label="Close assistant">
@@ -2297,20 +2299,19 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     }
   </script>
 
-  <!-- Study Buddy mascot — small, rare, infrequent poses. Remove this div + its CSS + its JS block to delete entirely. -->
-  <div id="study-buddy" aria-hidden="true">
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- body -->
-      <ellipse cx="50" cy="58" rx="22" ry="26" fill="currentColor" opacity="0.14"/>
-      <circle cx="50" cy="40" r="17" fill="currentColor" opacity="0.9"/>
-      <!-- glasses -->
-      <rect x="34" y="36" width="12" height="9" rx="3" fill="none" stroke="var(--bg)" stroke-width="2.4"/>
-      <rect x="54" y="36" width="12" height="9" rx="3" fill="none" stroke="var(--bg)" stroke-width="2.4"/>
-      <line x1="46" y1="40" x2="54" y2="40" stroke="var(--bg)" stroke-width="2.4"/>
-      <!-- arms holding a book -->
-      <rect x="30" y="62" width="40" height="26" rx="4" fill="currentColor" opacity="0.85" transform="rotate(-6 50 75)"/>
-      <line x1="50" y1="64" x2="50" y2="86" stroke="var(--bg)" stroke-width="2" transform="rotate(-6 50 75)"/>
-    </svg>
+  <!-- Section-aware portfolio guide; it moves with the active page chapter. -->
+  <div id="ai-guide" data-side="right" role="group" aria-label="Section-aware portfolio guide">
+    <div id="ai-guide-bubble" role="group" aria-labelledby="ai-guide-heading" aria-hidden="true" hidden>
+      <div class="ai-guide-bubble-head">
+        <span class="ai-guide-label" id="ai-guide-heading">Your portfolio guide</span>
+        <button id="ai-guide-dismiss" type="button" aria-label="Dismiss guide tip">×</button>
+      </div>
+      <p id="ai-guide-copy" aria-live="polite" aria-atomic="true"></p>
+      <button id="ai-guide-ask" type="button">Ask about this section ↗</button>
+    </div>
+    <button id="ai-guide-trigger" type="button" aria-label="Open portfolio guide chat" aria-controls="ai-panel" aria-haspopup="dialog" aria-expanded="false" title="Talk to the portfolio guide">
+      <img src="assets/anime/ai-guide-mascot.webp" alt="" width="512" height="512" decoding="async" fetchpriority="low">
+    </button>
   </div>
 
   <div id="lightbox">
@@ -3112,30 +3113,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   })();
 
 
-  /* ---- STUDY BUDDY: rare, infrequent pose changes (not continuous bouncing) ---- */
-  const buddy = document.getElementById('study-buddy');
-  if(buddy && !prefersReduced){
-    const poses = [
-      { style:{ bottom:'90px', right:'26px', left:'auto', top:'auto' }, rotate:0 },     // sitting, reading normally
-      { style:{ top:'110px', right:'18px', left:'auto', bottom:'auto' }, rotate:180 },  // hanging upside down, Spider-Man style
-      { style:{ bottom:'140px', left:'22px', right:'auto', top:'auto' }, rotate:-12 },  // perched at an angle
-      { style:{ top:'46%', right:'14px', left:'auto', bottom:'auto' }, rotate:8 },      // leaning on the edge
-    ];
-    let poseIndex = 0;
-    Object.assign(buddy.style, poses[0].style);
-    function nextPose(){
-      buddy.classList.add('jumping');
-      setTimeout(()=>{
-        poseIndex = (poseIndex + 1) % poses.length;
-        const p = poses[poseIndex];
-        Object.assign(buddy.style, { top:'auto', left:'auto', right:'auto', bottom:'auto' });
-        Object.assign(buddy.style, p.style);
-        buddy.style.transform = `rotate(${p.rotate}deg)`;
-        buddy.classList.remove('jumping');
-      }, 350);
-    }
-    setInterval(nextPose, 22000);
-  }
+  /* The old random mascot poses are replaced by the section-aware guide runtime. */
 
   /* ============================================================
      PHASE 7 · SYSTEM 1 — FLOATING DOCK NAVIGATION
@@ -3511,6 +3489,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
   ============================================================ */
   (function(){
     const orb = document.getElementById('ai-orb');
+    const guide = document.getElementById('ai-guide');
+    const guideTrigger = document.getElementById('ai-guide-trigger');
     const panel = document.getElementById('ai-panel');
     const closeBtn = document.getElementById('ai-close');
     const messagesEl = document.getElementById('ai-messages');
@@ -3544,8 +3524,11 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(clean);
       utter.rate = 1; utter.pitch = 1;
+      utter.lang = document.documentElement.lang === 'hi' ? 'hi-IN' : 'en-IN';
       speechSynthesis.speak(utter);
     }
+    window.portfolioAssistantVoiceEnabled = () => voiceEnabled;
+    window.speakPortfolioAssistant = speakText;
 
     /* ---- Voice Input: native browser SpeechRecognition, mic button in input row ---- */
     const micBtn = document.getElementById('ai-mic-btn');
@@ -3681,6 +3664,17 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         return `<strong>${t}</strong> <span style="opacity:.65">(${d})</span>`;
       }).join('<br>');
     }
+    function experienceSummary(){
+      const roles = Array.from(document.querySelectorAll('#experience .exp-role')).slice(0, 8);
+      if(!roles.length) return null;
+      return roles.map(role=>{
+        const title = aiEsc(clean(role.querySelector('.exp-role-heading h3')?.textContent));
+        const date = aiEsc(clean(role.querySelector('.exp-role-date')?.textContent));
+        const org = aiEsc(clean(role.querySelector('.exp-role-org')?.textContent));
+        const description = aiEsc(clean(role.querySelector('p')?.textContent));
+        return `${title}${date ? ` · ${date}` : ''}<br>${org}${description ? `<br>${description}` : ''}`;
+      }).join('<br><br>');
+    }
     function sectionSummary(id){
       const sec = document.getElementById(id);
       if(!sec) return null;
@@ -3739,8 +3733,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       "All good on my end — ready to chat about Yash or anything else."
     ];
     const GREETINGS = [
-      "Hey! Good to see you. Ask me about Yash, or just say hi anytime. 👋",
-      "Hello! I'm Yash's assistant — happy to talk site stuff or just chat.",
+      "Hey! Good to see you. Ask me about Yash or any section of this portfolio. 👋",
+      "Hello! I'm Yash's portfolio guide — happy to help you explore the site.",
       "Hi there! What's on your mind today?"
     ];
     const THANKS = [
@@ -3769,13 +3763,13 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         return pick(JOKES);
       }
       if(/who (are|r) you|what are you|apna naam/.test(m)){
-        return "I'm a small offline assistant built into Yash's portfolio — no external AI, just JavaScript that knows this site inside out (and enjoys a bit of small talk too).";
+        return "I'm Yash's offline portfolio guide. I use public information on this website and browser-native voice; no cloud AI service is connected.";
       }
       if(/who (made|built|created) you|kisne banaya/.test(m)){
-        return "Yash built me himself, right into this site — no third-party AI service involved.";
+        return "Yash built me into this portfolio. I answer from its public content, with no third-party AI service involved.";
       }
       if(/what can you do|help\b|your capabilities/.test(m)){
-        return "I can tell you about Yash's background, skills, credentials, journey, and contact info — and I'm also happy to just chat, crack a joke, or say hi. Try the suggestion chips below if you want a quick start.";
+        return "I can guide you section by section and answer questions about Yash's public background, roles, journey, skills, credentials, and contact links. Voice replies and voice input use your browser when supported. Try the suggestion chips below.";
       }
       if(/good (bot|job)|nice work|you'?re smart|impressive/.test(m)){
         return "Thank you! That means a lot for a bunch of if-statements. 😄";
@@ -3784,7 +3778,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         return "Ha, flattered! I'm just here to help you learn about Yash though. 😄";
       }
       if(/what'?s your name/.test(m)){
-        return "I don't have an official name yet — just call me Yash's assistant!";
+        return "You can call me Yash's portfolio guide — I don't have a separate name.";
       }
       return null;
     }
@@ -3841,7 +3835,8 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
         return { text: list ? `Yash's journey so far:<br><br>${list}` : "That information isn't available on Yash's website yet.", nav: 'journey' };
       }
       if(section === 'experience' || msg.includes('experience')){
-        const text = sectionSummary('experience');
+        const roles = experienceSummary();
+        const text = roles ? `Here are Yash's public experience roles:<br><br>${roles}` : sectionSummary('experience');
         return { text: text || "That information isn't available on Yash's website yet.", nav: nav ? 'experience' : null };
       }
       if(section === 'focus' || msg.includes('focus') || msg.includes('currently working') || msg.includes('studying')){
@@ -3876,7 +3871,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       const row = document.createElement('div');
       row.className = 'ai-msg ai-msg-' + who + (who === 'bot' ? ' ai-msg-streaming' : '');
       row.innerHTML = who === 'bot'
-        ? `<span class="ai-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg></span><span class="ai-bubble">${text}</span>`
+        ? `<span class="ai-msg-avatar"><img src="assets/anime/ai-guide-mascot.webp" alt="" width="26" height="26" decoding="async"></span><span class="ai-bubble">${text}</span>`
         : `<span class="ai-bubble"></span>`;
       if(who === 'user') row.querySelector('.ai-bubble').textContent = text;
       if(who === 'bot' && nav && exploreLabels[nav]){
@@ -3888,7 +3883,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     }
     function streamMessage(text, nav=null){
       const row=document.createElement('div'); row.className='ai-msg ai-msg-bot ai-msg-streaming';
-      row.innerHTML=`<span class="ai-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"/></svg></span><span class="ai-bubble"></span>`;
+      row.innerHTML=`<span class="ai-msg-avatar"><img src="assets/anime/ai-guide-mascot.webp" alt="" width="26" height="26" decoding="async"></span><span class="ai-bubble"></span>`;
       const bubble=row.querySelector('.ai-bubble'); messagesEl.appendChild(row);
       const words=String(text).split(/(\s+)/); let i=0;
       return new Promise(resolve=>{const tick=()=>{if(i<words.length){bubble.innerHTML+=words[i++];scrollToBottom();setTimeout(tick,Math.min(24,9+String(words[i-1]||'').length*1.2));}else{if(nav&&exploreLabels[nav]){const action=document.createElement('button');action.className='ai-explore';action.type='button';action.dataset.target=nav;action.textContent=exploreLabels[nav]+' ↗';row.appendChild(action);}speakText(text);resolve();}}; tick();});
@@ -3919,6 +3914,11 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       }, delay);
     }
 
+    function hideNudge(){
+      const oldNudge = document.getElementById('ai-nudge');
+      oldNudge?.classList.remove('ai-nudge-in');
+      oldNudge?.setAttribute('aria-hidden', 'true');
+    }
     function applyPanelVisual(v){
       panel.style.transform = `scale(${(0.96 + 0.04 * v).toFixed(4)}) translateY(${(14 * (1 - v)).toFixed(2)}px)`;
       panel.style.opacity = v;
@@ -3926,16 +3926,21 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
     function openPanel(){
       isOpen = true;
       hideNudge();
+      window.hidePortfolioGuideBubble?.();
       panel.classList.add('ai-open');
       document.body.classList.add('ai-panel-lock');
+      guide?.setAttribute('inert', '');
       panel.setAttribute('aria-hidden','false');
       panel.removeAttribute('inert');
       orb.classList.add('ai-active');
       orb.setAttribute('aria-expanded','true');
+      guideTrigger?.setAttribute('aria-expanded','true');
       springTo(panel, 'ai', 1, { preset:'panel', onUpdate: applyPanelVisual });
       if(!greeted){
         greeted = true;
-        setTimeout(()=> addMessage("Hi! I'm Ask Yash — I answer from the public information on this website only.", 'bot'), 260);
+        const activeId = document.documentElement.dataset.activeChapter;
+        const activeTitle = clean(document.getElementById(activeId)?.querySelector('h2')?.textContent || activeId || 'this portfolio');
+        setTimeout(()=> addMessage(`Hi! I'm Yash's portfolio guide. I answer from public site content, not a cloud AI. You're exploring ${aiEsc(activeTitle)} — ask me about it or any other section.`, 'bot'), 260);
       }
       setTimeout(()=> inputEl.focus(), 300);
     }
@@ -3944,13 +3949,22 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       panel.setAttribute('aria-hidden','true');
       panel.setAttribute('inert','');
       document.body.classList.remove('ai-panel-lock');
+      guide?.removeAttribute('inert');
       orb.classList.remove('ai-active');
       orb.setAttribute('aria-expanded','false');
+      guideTrigger?.setAttribute('aria-expanded','false');
       if(speechSupported) speechSynthesis.cancel();
       springTo(panel, 'ai', 0, { preset:'panel', onUpdate: applyPanelVisual,
         onSettle: ()=> panel.classList.remove('ai-open') });
     }
     function togglePanel(){ isOpen ? closePanel() : openPanel(); }
+    window.isYashAssistantOpen = () => isOpen;
+    window.toggleYashAssistant = togglePanel;
+    window.openYashAssistant = (question='') => {
+      const wasOpen = isOpen;
+      if(!isOpen) openPanel();
+      if(question) setTimeout(()=>handleUserMessage(question), wasOpen ? 0 : 520);
+    };
 
     orb.addEventListener('click', togglePanel);
     closeBtn.addEventListener('click', closePanel);
@@ -3967,7 +3981,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
 
     document.addEventListener('click', (e)=>{
       if(!isOpen) return;
-      if(panel.contains(e.target) || orb.contains(e.target)) return;
+      if(panel.contains(e.target) || orb.contains(e.target) || guide?.contains(e.target)) return;
       closePanel();
     });
 
@@ -3977,46 +3991,7 @@ html[data-theme="dark"] .peak-tilt:hover{box-shadow:0 28px 70px -34px rgba(0,0,0
       if(e.key === 'Escape' && isOpen) closePanel();
     });
 
-    /* ---- AI Idle Nudge: proactive peek bubble after inactivity, capped per session ---- */
-    const nudgeEl = document.getElementById('ai-nudge');
-    const NUDGE_MESSAGES = [
-      "Stuck? Ask me anything 👋",
-      "Curious about his skills? Ask me!",
-      "Want the quick version of his journey?",
-      "Need his contact info fast? Just ask."
-    ];
-    const NUDGE_LIMIT = 2, IDLE_MS = 20000;
-    let idleTimer = null, nudgeShownCount = 0, lastActivity = 0, nudgeHideTimer = null;
-
-    function showNudge(){
-      if(isOpen || document.hidden || nudgeShownCount >= NUDGE_LIMIT) return;
-      nudgeShownCount++;
-      nudgeEl.textContent = NUDGE_MESSAGES[Math.floor(Math.random() * NUDGE_MESSAGES.length)];
-      nudgeEl.setAttribute('aria-hidden', 'false');
-      nudgeEl.classList.add('ai-nudge-in');
-      clearTimeout(nudgeHideTimer);
-      nudgeHideTimer = setTimeout(hideNudge, 8000);
-    }
-    function hideNudge(){
-      nudgeEl.classList.remove('ai-nudge-in');
-      nudgeEl.setAttribute('aria-hidden', 'true');
-    }
-    function scheduleIdleNudge(){
-      clearTimeout(idleTimer);
-      if(prefersReducedGlobal || isOpen || nudgeShownCount >= NUDGE_LIMIT) return;
-      idleTimer = setTimeout(showNudge, IDLE_MS);
-    }
-    function onActivity(){
-      const now = Date.now();
-      if(now - lastActivity < 500) return;
-      lastActivity = now;
-      scheduleIdleNudge();
-    }
-    nudgeEl.addEventListener('click', ()=>{ hideNudge(); openPanel(); });
-    ['mousemove','scroll','keydown','touchstart'].forEach(evt=>{
-      document.addEventListener(evt, onActivity, {passive:true});
-    });
-    onActivity();
+    /* Section-aware guide tips replace the old random idle nudge. */
   })();
 
   /* Scroll-depth section transforms intentionally removed for native scrolling performance. */
