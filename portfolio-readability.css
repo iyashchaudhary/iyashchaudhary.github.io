@@ -287,3 +287,58 @@ html.performance-lite body #main-content #hello #hero-cta .liquid-cta::after{dis
 html.performance-lite body #main-content #hello #hero-cta .liquid-cta.peak-tilt:hover,
 html.performance-lite body #main-content #hello #hero-cta .liquid-cta:active,
 html.performance-lite body #main-content #hello #hero-cta .liquid-cta:focus-visible{transform:none!important;}
+
+
+/* VENOM-INSPIRED FINISH: original symbiote-like gloss, not character artwork. */
+body #main-content #hello #hero-cta .liquid-cta.venom-cta{
+  border-color:rgba(225,240,250,.64)!important;
+  background:
+    radial-gradient(ellipse 78% 130% at 8% -8%,rgba(255,255,255,.25),transparent 58%),
+    radial-gradient(ellipse 46% 95% at 100% 112%,rgba(167,205,226,.22),transparent 68%),
+    linear-gradient(145deg,#050607 0%,#151a20 38%,#303943 51%,#0b0d11 78%,#040506 100%)!important;
+  box-shadow:0 12px 26px -14px rgba(0,0,0,.84),0 0 13px rgba(197,226,242,.12),inset 1px 1px 1px rgba(255,255,255,.72),inset -3px -5px 9px rgba(0,0,0,.72)!important;
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label{padding-inline:10px;letter-spacing:.012em;}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::before,
+body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::after{
+  content:"";position:absolute;top:50%;width:8px;height:12px;pointer-events:none;
+  border-radius:88% 18% 78% 24%;
+  background:linear-gradient(180deg,#fff 0%,rgba(223,240,250,.92) 48%,rgba(129,158,177,.62) 100%);
+  box-shadow:0 0 8px rgba(217,239,251,.38);opacity:.9;
+  transition:transform .24s cubic-bezier(.2,.75,.25,1),opacity .2s ease;
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::before{
+  left:-14px;transform:translateY(-50%) rotate(25deg) skewY(-8deg);
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::after{
+  right:-14px;transform:translateY(-50%) rotate(-25deg) skewY(8deg);
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta.peak-tilt::before{
+  background:
+    radial-gradient(ellipse 5.5rem 3.2rem at var(--peak-light-x,38%) var(--peak-light-y,12%),rgba(255,255,255,.94),transparent 72%),
+    radial-gradient(ellipse 9rem 4.6rem at var(--peak-light-x,38%) var(--peak-light-y,12%),rgba(172,213,235,.5),transparent 78%);
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta::after{
+  border-radius:62% 38% 72% 28%;
+  background:
+    radial-gradient(ellipse 56% 18% at 32% 42%,rgba(255,255,255,.88),transparent 78%),
+    radial-gradient(ellipse 42% 15% at 69% 58%,rgba(197,226,243,.62),transparent 76%),
+    linear-gradient(90deg,transparent 0%,rgba(232,246,255,.12) 30%,rgba(255,255,255,.9) 49%,rgba(168,204,223,.46) 62%,transparent 100%);
+  clip-path:polygon(0 46%,15% 36%,31% 45%,49% 29%,65% 41%,83% 32%,100% 22%,91% 55%,74% 68%,57% 57%,40% 76%,24% 62%,10% 73%);
+}
+@media(hover:hover) and (pointer:fine){
+  body #main-content #hello #hero-cta .liquid-cta.venom-cta:hover .liquid-label::before{
+    transform:translateY(-50%) rotate(34deg) skewY(-11deg) scale(1.06,1.16);opacity:1;
+  }
+  body #main-content #hello #hero-cta .liquid-cta.venom-cta:hover .liquid-label::after{
+    transform:translateY(-50%) rotate(-34deg) skewY(11deg) scale(1.06,1.16);opacity:1;
+  }
+}
+body #main-content #hello #hero-cta .liquid-cta.venom-cta:active .liquid-label::before,
+body #main-content #hello #hero-cta .liquid-cta.venom-cta:active .liquid-label::after{opacity:1;}
+@media(prefers-reduced-motion:reduce){
+  body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::before,
+  body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::after{transition:none!important;}
+}
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::before,
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta.venom-cta .liquid-label::after{transition:none!important;}
