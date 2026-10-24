@@ -221,3 +221,69 @@ html.performance-lite #main-content #skills .skill-flip-toggle[aria-expanded="tr
     animation:sen-wave-sticker-float 5.4s ease-in-out infinite,portfolio-hello-wave .56s cubic-bezier(.22,.72,.24,1) 1 both!important;
   }
 }
+
+
+/* REEL-INSPIRED LIQUID CTA — one primary action, reusing the existing peak pointer tracker. */
+body #main-content #hello #hero-cta .liquid-cta{
+  position:relative!important;isolation:isolate;overflow:hidden;transform-style:preserve-3d;
+  min-height:48px!important;padding:13px 26px!important;border:1px solid rgba(255,255,255,.42)!important;border-radius:18px!important;
+  background:
+    radial-gradient(ellipse 100% 130% at 16% 0%,rgba(255,255,255,.22),transparent 55%),
+    radial-gradient(ellipse 85% 110% at 100% 105%,color-mix(in srgb,var(--clay-action) 36%,transparent),transparent 65%),
+    linear-gradient(145deg,#2b3445 0%,#151b27 48%,#090d15 100%)!important;
+  color:#fbfcff!important;-webkit-text-fill-color:#fbfcff!important;
+  box-shadow:0 12px 25px -14px rgba(8,15,27,.72),inset 1px 1px 1px rgba(255,255,255,.56),inset -3px -5px 8px rgba(0,0,0,.48)!important;
+  transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease,border-color .24s ease!important;
+  will-change:auto!important;
+}
+body #main-content #hello #hero-cta .liquid-cta .liquid-label{
+  position:relative;z-index:2;color:#fbfcff!important;-webkit-text-fill-color:#fbfcff!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.38);
+}
+body #main-content #hello #hero-cta .liquid-cta.peak-tilt::before{
+  z-index:0;inset:1px;border-radius:inherit;opacity:var(--peak-sheen,0);
+  background:
+    radial-gradient(ellipse 5.5rem 3.2rem at var(--peak-light-x,38%) var(--peak-light-y,12%),rgba(255,255,255,.88),transparent 74%),
+    radial-gradient(ellipse 9rem 4.6rem at var(--peak-light-x,38%) var(--peak-light-y,12%),color-mix(in srgb,var(--clay-focus) 34%,transparent),transparent 78%);
+  mix-blend-mode:screen;transition:opacity .24s ease;
+}
+body #main-content #hello #hero-cta .liquid-cta::after{
+  content:"";position:absolute;z-index:1;top:-145%;left:-44%;width:66%;height:390%;
+  border-radius:50%;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 29%,rgba(255,255,255,.76) 48%,rgba(151,199,255,.34) 61%,transparent 100%);
+  transform:translateX(-165%) rotate(24deg);
+  transition:transform .68s cubic-bezier(.16,1,.3,1),opacity .16s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  body #main-content #hello #hero-cta .liquid-cta.peak-tilt:hover{
+    transform:perspective(760px) rotateX(var(--peak-card-y,0deg)) rotateY(var(--peak-card-x,0deg)) translateY(-2px) scale(1.015)!important;
+    border-color:rgba(255,255,255,.82)!important;
+    box-shadow:0 20px 30px -18px rgba(7,15,29,.76),0 1px 0 rgba(255,255,255,.24) inset,inset 1px 1px 1px rgba(255,255,255,.48),inset -3px -5px 8px rgba(0,0,0,.5)!important;
+  }
+  body #main-content #hello #hero-cta .liquid-cta:hover::after,
+  body #main-content #hello #hero-cta .liquid-cta:focus-visible::after{opacity:.96;transform:translateX(265%) rotate(24deg);}
+}
+body #main-content #hello #hero-cta .liquid-cta:active{
+  transform:scale(.985)!important;border-color:rgba(255,255,255,.8)!important;
+  box-shadow:0 5px 12px -9px rgba(7,15,29,.74),inset 1px 1px 2px rgba(255,255,255,.32),inset -3px -5px 9px rgba(0,0,0,.58)!important;
+}
+body #main-content #hello #hero-cta .liquid-cta:active::after{opacity:.9;transform:translateX(210%) rotate(24deg);transition-duration:.32s,.1s;}
+body #main-content #hello #hero-cta .liquid-cta:focus-visible{outline:3px solid var(--clay-focus)!important;outline-offset:3px!important;}
+@media(prefers-reduced-motion:reduce){
+  body #main-content #hello #hero-cta .liquid-cta{transform:none!important;transition:none!important;}
+  body #main-content #hello #hero-cta .liquid-cta::before,
+  body #main-content #hello #hero-cta .liquid-cta::after{display:none!important;}
+}
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta{transform:none!important;transition:none!important;will-change:auto!important;}
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta::before,
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta::after{display:none!important;}
+
+/* Higher-specificity hover guards: these must also win while the pointer is over the CTA. */
+@media(prefers-reduced-motion:reduce){
+  body #main-content #hello #hero-cta .liquid-cta.peak-tilt:hover,
+  body #main-content #hello #hero-cta .liquid-cta:active,
+  body #main-content #hello #hero-cta .liquid-cta:focus-visible{transform:none!important;}
+}
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta.peak-tilt:hover,
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta:active,
+html.performance-lite body #main-content #hello #hero-cta .liquid-cta:focus-visible{transform:none!important;}
