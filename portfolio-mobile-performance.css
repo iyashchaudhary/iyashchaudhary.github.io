@@ -1,0 +1,46 @@
+/* Phone rendering budget: preserve the pastel surfaces and character, skip costly backdrop sampling. */
+@media (max-width: 760px), (pointer: coarse) {
+  /* Broad roots handle cards, the fixed stage, navigation and popovers. */
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel),
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel) *,
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel)::before,
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel)::after,
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel) *::before,
+  html[data-theme] body :is(#main-content, #sen-stage, #topnav, .dock, .dock-more-panel, .ai-panel, .ai-nudge, .cmdk-overlay, .cmdk-panel) *::after,
+  /* These match premium-finish.css's more-specific !important rules. */
+  html[data-theme] body #main-content .section.bento-card[id],
+  html[data-theme] body #main-content .section.bento-card[id] :is(.yash-os-shell, .currently-grid, .glass-card, .folio, .skill-card, .pursuing-card, .card, .currently-card, .journey-year-panel, .journey-years, .timeline-node, .exp-node, .learning-strip, .yash-os-item, .card-grid, .accordion-body),
+  html[data-theme] body #main-content #currently #currently-container .currently-item,
+  html[data-theme] body #main-content #journey .journey-year-panel,
+  html[data-theme] body #main-content #focus .glass-card,
+  html[data-theme] body #main-content #yash-os .yash-os-shell {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* These oversized transparent character layers move during scroll; their shadows force extra offscreen paints. */
+  #sen-stage .sen-stage-body,
+  #sen-stage .sen-stage-portrait,
+  #sen-stage .sen-stage-closeup {
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* Cards still keep their tinted clay/glass fills; they do not need permanent GPU promotion hints. */
+  html :is(
+    .topnav, .hero-glass, .section.bento-card, .glass-card, .card, .card-grid,
+    .folio, .skill-card, .currently-card, .yash-os-shell, .exp-collection,
+    .journey-year-card, .journey-story, .stat-card, .dock, .ai-panel,
+    .ai-nudge, .btn, .btn-ghost
+  ) {
+    will-change: auto !important;
+  }
+
+  /* Keep the floating labels readable after backdrop blur is removed. */
+  #sen-stage .sen-sticker-hi,
+  #sen-stage .sen-sticker-mood {
+    background-color: var(--card) !important;
+    color: var(--text) !important;
+    border-color: var(--line) !important;
+  }
+}

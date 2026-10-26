@@ -19,6 +19,8 @@
   const stickers = Array.from(stage.querySelectorAll('.sen-sticker'));
   const closeupFrames = Array.from(stage.querySelectorAll('.sen-stage-closeup [data-scene-portrait]'));
   const chapters = Array.from(document.querySelectorAll('#main-content .section[data-scene]'));
+  // Stagger is static; avoid rewriting the same sticker styles on every scroll frame.
+  stickers.forEach((sticker, index) => sticker.style.setProperty('--sticker-delay', `${index * 45}ms`));
   if (!frames.length) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -396,19 +398,33 @@
     stage.style.setProperty('--portrait-opacity', portraitOpacity.toFixed(3));
     stage.style.setProperty('--expression-opacity', expressionOpacity.toFixed(3));
 
-    // Inertial pointer/touch parallax remains independent from the scroll-directed face camera.
-    const pointerEase = isMobile ? 0.16 : 0.12;
-    pointerX += (pointerTargetX - pointerX) * pointerEase;
-    pointerY += (pointerTargetY - pointerY) * pointerEase;
-    stage.style.setProperty('--parallax-x', `${pointerX.toFixed(2)}px`);
-    stage.style.setProperty('--parallax-y', `${pointerY.toFixed(2)}px`);
-    stage.style.setProperty('--parallax-depth-x', `${(pointerX * 0.58).toFixed(2)}px`);
-    stage.style.setProperty('--parallax-depth-y', `${(pointerY * 0.54).toFixed(2)}px`);
-    stage.style.setProperty('--parallax-depth-yaw', `${(pointerX * (isMobile ? 0.05 : 0.047)).toFixed(2)}deg`);
-    stage.style.setProperty('--parallax-depth-pitch', `${(-pointerY * 0.025).toFixed(2)}deg`);
-    stage.style.setProperty('--parallax-yaw', `${(pointerX * (isMobile ? 0.12 : 0.13)).toFixed(2)}deg`);
-    stage.style.setProperty('--parallax-pitch', `${(-pointerY * 0.06).toFixed(2)}deg`);
-    if (Math.abs(pointerTargetX - pointerX) > 0.25 || Math.abs(pointerTargetY - pointerY) > 0.25) requestPaint();
+    // Touch devices have no mouse-parallax target; skip eight unchanged style writes per frame.
+    // The scroll-directed camera, zoom and expression transitions above remain active.
+    if (!isMobile) {
+      const pointerEase = 0.12;
+      pointerX += (pointerTargetX - pointerX) * pointerEase;
+      pointerY += (pointerTargetY - pointerY) * pointerEase;
+      stage.style.setProperty('--parallax-x', `${pointerX.toFixed(2)}px`);
+      stage.style.setProperty('--parallax-y', `${pointerY.toFixed(2)}px`);
+      stage.style.setProperty('--parallax-depth-x', `${(pointerX * 0.58).toFixed(2)}px`);
+      stage.style.setProperty('--parallax-depth-y', `${(pointerY * 0.54).toFixed(2)}px`);
+      stage.style.setProperty('--parallax-depth-yaw', `${(pointerX * 0.047).toFixed(2)}deg`);
+      stage.style.setProperty('--parallax-depth-pitch', `${(-pointerY * 0.025).toFixed(2)}deg`);
+      stage.style.setProperty('--parallax-yaw', `${(pointerX * 0.13).toFixed(2)}deg`);
+      stage.style.setProperty('--parallax-pitch', `${(-pointerY * 0.06).toFixed(2)}deg`);
+      if (Math.abs(pointerTargetX - pointerX) > 0.25 || Math.abs(pointerTargetY - pointerY) > 0.25) requestPaint();
+    } else if (pointerX || pointerY || pointerTargetX || pointerTargetY) {
+      // A desktop-to-phone resize should clear any previous pointer offset once.
+      pointerTargetX = pointerTargetY = pointerX = pointerY = 0;
+      stage.style.setProperty('--parallax-x', '0px');
+      stage.style.setProperty('--parallax-y', '0px');
+      stage.style.setProperty('--parallax-depth-x', '0px');
+      stage.style.setProperty('--parallax-depth-y', '0px');
+      stage.style.setProperty('--parallax-depth-yaw', '0deg');
+      stage.style.setProperty('--parallax-depth-pitch', '0deg');
+      stage.style.setProperty('--parallax-yaw', '0deg');
+      stage.style.setProperty('--parallax-pitch', '0deg');
+    }
 
     const stickerIn = 0.38 + 0.62 * smooth(y / (viewport * 0.44));
     const stickerOut = smooth((y - viewport * 1.0) / (viewport * 0.58));
@@ -416,7 +432,6 @@
     const stickerOpacity = stickerReveal * portraitOpacity;
     stage.style.setProperty('--sticker-reveal', stickerReveal.toFixed(3));
     stage.style.setProperty('--sticker-opacity', stickerOpacity.toFixed(3));
-    stickers.forEach((sticker, index) => sticker.style.setProperty('--sticker-delay', `${index * 45}ms`));
   }
 
   function requestPaint() {
